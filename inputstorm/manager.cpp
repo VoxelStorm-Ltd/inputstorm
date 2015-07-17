@@ -190,9 +190,13 @@ manager::manager(GLFWwindow &thiswindow)
             ss << " mods " << get_keymod_name(mods);
           }
           ss << " action " << get_keyaction_name(action);
-          key_binding_at(key, action, mods) = [s = ss.str()]{
-            std::cout << s << std::endl;;
-          };
+          if(action == keyactiontype::PRESS) {
+            key_binding_at(key, action, mods) = [s = ss.str()]{
+              std::cout << s << std::endl;;
+            };
+          } else {
+            key_binding_at(key, action, mods) = []{};
+          }
         #else
           key_binding_at(key, action, mods) = []{};                             // default to noop
         #endif // NDEBUG
@@ -264,6 +268,11 @@ std::string const &manager::get_keyaction_name(keyactiontype action) const {
 std::string const &manager::get_keymod_name(keymodtype mods) const {
   /// Return a human-readable name for this key modifier
   return key_mod_names[static_cast<int>(mods)];
+}
+
+void manager::bind_key(keytype key, keyactiontype action, keymodtype mods, std::function<void()> func) {
+  /// Bind a function to a key
+  key_binding_at(key, action, mods) = func;
 }
 
 void manager::execute_key(keytype key, keyactiontype action, keymodtype mods) {

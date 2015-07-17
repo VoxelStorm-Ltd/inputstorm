@@ -95,6 +95,7 @@ public:
   std::string const &get_keyaction_name(keyactiontype action) const;
   std::string const &get_keymod_name(   keymodtype mods)      const;
 
+  void bind_key(keytype key, keyactiontype action, keymodtype mods, std::function<void()> func);
   void execute_key(keytype key, keyactiontype action, keymodtype mods = keymodtype::NONE);
 };
 
