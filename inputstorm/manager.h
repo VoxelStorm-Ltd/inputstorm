@@ -5,6 +5,7 @@
 #include <functional>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <vmath.h>
 
 namespace inputstorm {
 
@@ -66,6 +67,7 @@ inline keymodtype &operator|=(keymodtype &lhs, int rhs) {
 
 class manager {
 private:
+  // keys
   /// Sparse 3D array of key names for each GLFW key code and functions.
   /// Functions are kept separate for cache performance during key lookup.
   /// Dimensions are arranged for speed, lowest first to minimise total number of array objects.
@@ -75,11 +77,15 @@ private:
   static unsigned int constexpr max_key        = GLFW_KEY_LAST + 1;
   static unsigned int constexpr max_key_mods   = static_cast<int>(keymodtype::END);     // modifiers can be combined, we store all options to save processing
   static unsigned int constexpr max_key_action = static_cast<int>(keyactiontype::END);
-
   std::array<std::string, max_key>        key_names;                            // cached human-readable names of keys
   std::array<std::string, max_key_mods>   key_mod_names;                        // cached human-readable names of key modifiers
   std::array<std::string, max_key_action> key_action_names;                     // cached human-readable names of key actions
-  std::array<std::array<std::array<std::function<void()>, max_key>, max_key_mods>, max_key_action> key_bindings;
+  std::array<std::array<std::array<std::function<void()>, max_key>, max_key_mods>, max_key_action> key_bindings;    // callback functions for keys
+
+  // cursor
+  std::function<void(Vector2d const&)> cursor_binding = [](Vector2d const &change __attribute__((__unused__))){};   // callback function for cursor movement
+  std::function<void()> cursor_enter_binding = []{};                            // cursor enters the window
+  std::function<void()> cursor_leave_binding = []{};                            // cursor leaves the window
 
   GLFWwindow *current_window = nullptr;                                         // the GLFW window this input manager is handling
 
@@ -96,7 +102,11 @@ public:
   std::string const &get_keymod_name(   keymodtype mods)      const;
 
   void bind_key(keytype key, keyactiontype action, keymodtype mods, std::function<void()> func);
+  void bind_cursor(std::function<void(Vector2d const&)> func);
   void execute_key(keytype key, keyactiontype action, keymodtype mods = keymodtype::NONE);
+  void execute_cursor(Vector2d const &change);
+  void execute_cursor_enter();
+  void execute_cursor_leave();
 };
 
 }

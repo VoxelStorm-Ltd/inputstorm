@@ -1,9 +1,8 @@
+#include "callbacks.h"
 #include "inputstorm/manager.h"
 #ifndef NDEBUG
   #include <iostream>
 #endif
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
 namespace inputstorm {
 
@@ -18,7 +17,7 @@ void key(GLFWwindow *thiswindow,
   if(key < 0) {
     #ifndef NDEBUG
       std::cout << "InputStorm: DEBUG: Unknown key pressed, scancode " << scancode << std::endl;
-    #endif
+    #endif // NDEBUG
     return;
   }
   parent->execute_key(static_cast<keytype>(key),

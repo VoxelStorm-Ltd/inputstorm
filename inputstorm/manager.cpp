@@ -165,40 +165,22 @@ manager::manager(GLFWwindow &thiswindow)
   for(keymodtype mods = keymodtype::NONE; mods != keymodtype::END; mods = static_cast<keymodtype>(static_cast<int>(mods) + 1)) {
     for(keyactiontype action = keyactiontype::RELEASE; action != keyactiontype::END; action = static_cast<keyactiontype>(static_cast<int>(action) + 1)) {
       for(keytype key = 0; key <= GLFW_KEY_LAST; ++key) {
-        /*
-        key_binding_at(key, action, mods) = [this, key, action, mods]{
-        // default to noop
         #ifndef NDEBUG
           std::stringstream ss;
-          ss << "DEBUG: unbound key function called on key " << key << " (" << get_key_name(key) << ")";
-          if(mods != keymodtype::NONE) {
-            ss << " mods " << get_keymod_name(mods);
-          }
-          ss << " action " << get_keyaction_name(action);
-          key_binding_at(key, action, mods) = [s = ss.str()]{
-            std::cout << s << std::endl;;
-          };
-        #else
-          key_binding_at(key, action, mods) = []{};                             // default to noop
-        #endif // NDEBUG
-        };
-        */
-        #ifndef NDEBUG
-          std::stringstream ss;
-          ss << "DEBUG: unbound key function called on key " << key << " (" << get_key_name(key) << ")";
+          ss << "InputStorm: DEBUG: unbound key function called on key " << key << " (" << get_key_name(key) << ")";
           if(mods != keymodtype::NONE) {
             ss << " mods " << get_keymod_name(mods);
           }
           ss << " action " << get_keyaction_name(action);
           if(action == keyactiontype::PRESS) {
-            key_binding_at(key, action, mods) = [s = ss.str()]{
+            bind_key(key, action, mods, [s = ss.str()]{
               std::cout << s << std::endl;;
-            };
+            });
           } else {
-            key_binding_at(key, action, mods) = []{};
+            bind_key(key, action, mods, []{});
           }
         #else
-          key_binding_at(key, action, mods) = []{};                             // default to noop
+          bind_key(key, action, mods, []{});                                    // default to noop
         #endif // NDEBUG
       }
     }
@@ -206,27 +188,30 @@ manager::manager(GLFWwindow &thiswindow)
 
   // set callbacks
   //std::cout << "InputStorm: Setting callbacks..." << std::endl;
-  glfwSetWindowUserPointer(current_window, this);                               // have this class passed to future callbacks
-  glfwSetKeyCallback(current_window, key);
-  //std::cout << "InputStorm: Initialisation complete." << std::endl;
+  glfwSetWindowUserPointer(  current_window, this);                             // have this class passed to future callbacks
+  glfwSetKeyCallback(        current_window, key);
+  glfwSetCursorPosCallback(  current_window, cursor);
+  glfwSetCursorEnterCallback(current_window, cursor_enter);
 }
 
 manager::~manager() {
   /// Default destructor
   std::cout << "InputStorm: Shutting down." << std::endl;
-  glfwSetWindowUserPointer(current_window, nullptr);                            // clear the user pointer
-  glfwSetKeyCallback(current_window, nullptr);                                  // unset callbacks to avoid unpleasant accidents
+  glfwSetWindowUserPointer(  current_window, nullptr);                          // clear the user pointer
+  glfwSetKeyCallback(        current_window, nullptr);                          // unset callbacks to avoid unpleasant accidents
+  glfwSetCursorPosCallback(  current_window, nullptr);
+  glfwSetCursorEnterCallback(current_window, nullptr);
 }
 
 std::string &manager::key_name_at(keytype key) {
   /// Accessor for the key function sparse arrays
   #ifndef NDEBUG
     if(key < 0) {
-      std::cout << "ERROR! get_key_name_at called with a key number " << key << " which is below zero - aborting!" << std::endl;
+      std::cout << "InputStorm: ERROR! get_key_name_at called with a key number " << key << " which is below zero - aborting!" << std::endl;
       abort();
     }
     if(key > GLFW_KEY_LAST) {
-      std::cout << "ERROR! get_key_name_at called with a key number " << key << " which is past the last key " << GLFW_KEY_LAST << ", aborting!" << std::endl;
+      std::cout << "InputStorm: ERROR! get_key_name_at called with a key number " << key << " which is past the last key " << GLFW_KEY_LAST << ", aborting!" << std::endl;
       abort();
     }
   #endif // NDEBUG
@@ -236,11 +221,11 @@ std::function<void()> &manager::key_binding_at(keytype key, keyactiontype action
   /// Accessor for the key function sparse arrays
   #ifndef NDEBUG
     if(key < 0) {
-      std::cout << "ERROR! get_key_binding_at called with a key number " << key << " which is below zero - aborting!" << std::endl;
+      std::cout << "InputStorm: ERROR! get_key_binding_at called with a key number " << key << " which is below zero - aborting!" << std::endl;
       abort();
     }
     if(key > GLFW_KEY_LAST) {
-      std::cout << "ERROR! get_key_binding_at called with a key number " << key << " which is past the last key " << GLFW_KEY_LAST << ", aborting!" << std::endl;
+      std::cout << "InputStorm: ERROR! get_key_binding_at called with a key number " << key << " which is past the last key " << GLFW_KEY_LAST << ", aborting!" << std::endl;
       abort();
     }
   #endif // NDEBUG
@@ -255,7 +240,7 @@ std::string const &manager::get_key_name(keytype key) const {
   }
   #ifndef NDEBUG
     if(key > GLFW_KEY_LAST) {
-      std::cout << "ERROR! get_key_name called with a key number " << key << " which is past the last key " << GLFW_KEY_LAST << ", aborting!" << std::endl;
+      std::cout << "InputStorm: ERROR! get_key_name called with a key number " << key << " which is past the last key " << GLFW_KEY_LAST << ", aborting!" << std::endl;
       abort();
     }
   #endif // NDEBUG
@@ -272,12 +257,46 @@ std::string const &manager::get_keymod_name(keymodtype mods) const {
 
 void manager::bind_key(keytype key, keyactiontype action, keymodtype mods, std::function<void()> func) {
   /// Bind a function to a key
+  #ifndef NDEBUG
+    if(!func) {
+      std::cout << "InputStorm: WARNING: Binding a null function to key " << get_key_name(key) << ", this will throw an exception if called!" << std::endl;
+    }
+  #endif
   key_binding_at(key, action, mods) = func;
 }
 
 void manager::execute_key(keytype key, keyactiontype action, keymodtype mods) {
   /// Call the function associated with a given key
+  #ifndef NDEBUG
+    if(!key_binding_at(key, action, mods)) {
+      std::cout << "InputStorm: ERROR: Called key " << get_key_name(key) << " which has a null function, fix this for release!" << std::endl;
+      return;
+    }
+  #endif
   key_binding_at(key, action, mods)();
+}
+
+void manager::bind_cursor(std::function<void(Vector2d const&)> func) {
+  /// Bind a function to cursor movement
+  #ifndef NDEBUG
+    if(!func) {
+      std::cout << "InputStorm: WARNING: Binding a null function to cursor movement, this will throw an exception if called!" << std::endl;
+    }
+  #endif
+  cursor_binding = func;
+}
+
+void manager::execute_cursor(Vector2d const &change) {
+  /// Call the function associated with cursor movements
+  cursor_binding(change);
+}
+void manager::execute_cursor_enter() {
+  /// Call the function associated with the cursor entering the window
+  cursor_enter_binding();
+}
+void manager::execute_cursor_leave() {
+  /// Call the function associated with the cursor leaving the window
+  cursor_leave_binding();
 }
 
 }
