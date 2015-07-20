@@ -429,6 +429,18 @@ void manager::bind_key(keytype key, keyactiontype action, keymodtype mods, std::
   #endif // NDEBUG
   key_binding_at(key, action, mods) = func;
 }
+void manager::bind_key_any_mod(keytype key, keyactiontype action, std::function<void()> func) {
+  /// Helper function to bind a callback to a key with any modifier combination
+  for(keymodtype mods = keymodtype::NONE; mods != static_cast<keymodtype>(max_key_mods); mods = static_cast<keymodtype>(static_cast<int>(mods) + 1)) {
+    bind_key(key, action, mods, func);
+  }
+}
+void manager::bind_key_any(std::function<void()> func) {
+  /// Helper function to bind a callback to all keys, press event only
+  for(keytype key = 0; key != max_key; ++key) {
+    bind_key_any_mod(key, keyactiontype::PRESS, func);
+  }
+}
 
 void manager::bind_cursor(std::function<void(Vector2d const&)> func) {
   /// Bind a function to cursor movement
@@ -465,6 +477,18 @@ void manager::bind_mousebutton(mousebuttontype button, keyactiontype action, key
     }
   #endif // NDEBUG
   mousebutton_binding_at(button, action, mods) = func;
+}
+void manager::bind_mousebutton_any_mod(mousebuttontype button, keyactiontype action, std::function<void()> func) {
+  /// Helper function to bind a callback to a key with any modifier combination
+  for(keymodtype mods = keymodtype::NONE; mods != static_cast<keymodtype>(max_key_mods); mods = static_cast<keymodtype>(static_cast<int>(mods) + 1)) {
+    bind_mousebutton(button, action, mods, func);
+  }
+}
+void manager::bind_mousebutton_any(std::function<void()> func) {
+  /// Helper function to bind a callback to all mouse buttons, press event only
+  for(mousebuttontype button = 0; button != max_mousebutton; ++button) {
+    bind_mousebutton_any_mod(button, keyactiontype::PRESS, func);
+  }
 }
 void manager::bind_scroll(std::function<void(Vector2d const&)> func) {
   /// Bind a function to scrolling
@@ -504,6 +528,18 @@ void manager::bind_joystick_button(unsigned int joystick, unsigned int button, k
     }
   #endif // NDEBUG
   joystick_button_binding_at(joystick, button, action) = func;
+}
+void manager::bind_joystick_button_any(unsigned int joystick, std::function<void()> func) {
+  /// Helper function to bind a callback to all joystick buttons, press event only
+  for(unsigned int button = 0; button != max_joystick_button; ++button) {
+    bind_joystick_button(joystick, button, keyactiontype::PRESS, func);
+  }
+}
+void manager::bind_joystick_button_any_all(std::function<void()> func) {
+  /// Helper function to bind a callback to all joystick buttons on all joysticks, press event only
+  for(unsigned int joystick = 0; joystick != max_joystick; ++joystick) {
+    bind_joystick_button_any(joystick, func);
+  }
 }
 
 void manager::execute_key(keytype key, keyactiontype action, keymodtype mods) {

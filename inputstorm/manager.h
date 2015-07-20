@@ -154,13 +154,19 @@ public:
   std::string const &get_mousebutton_name(mousebuttontype button) const;
 
   void bind_key(keytype key, keyactiontype action, keymodtype mods, std::function<void()> func);
+  void bind_key_any_mod(keytype key, keyactiontype action, std::function<void()> func);
+  void bind_key_any(std::function<void()> func);
   void bind_cursor(std::function<void(Vector2d const&)> func);
   void bind_cursor_enter(std::function<void()> func);
   void bind_cursor_leave(std::function<void()> func);
   void bind_mousebutton(mousebuttontype button, keyactiontype action, keymodtype mods, std::function<void()> func);
+  void bind_mousebutton_any_mod(mousebuttontype button, keyactiontype action, std::function<void()> func);
+  void bind_mousebutton_any(std::function<void()> func);
   void bind_scroll(std::function<void(Vector2d const&)> func);
   void bind_joystick_axis(unsigned int joystick, unsigned int axis, std::function<void(float)> func, float deadzone_min = 0.0f, float deadzone_max = 0.0f, float saturation_min = -1.0f, float saturation_max = 1.0f);
   void bind_joystick_button(unsigned int joystick, unsigned int button, keyactiontype action, std::function<void()> func);
+  void bind_joystick_button_any(unsigned int joystick, std::function<void()> func);
+  void bind_joystick_button_any_all(std::function<void()> func);
 
   // TODO: add unbind functions
 
