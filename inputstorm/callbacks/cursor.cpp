@@ -12,9 +12,6 @@ void cursor(GLFWwindow *thiswindow __attribute__((__unused__)),
   /// React to cursor position updates
   // get our manager's handle back from GLFW
   manager *parent = static_cast<manager*>(glfwGetWindowUserPointer(thiswindow));
-  #ifndef NDEBUG
-    std::cout << "InputStorm: DEBUG: Cursor position " << x << " " << y << std::endl;
-  #endif // NDEBUG
   parent->execute_cursor({x, y});
 }
 
