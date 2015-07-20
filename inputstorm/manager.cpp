@@ -16,10 +16,19 @@ unsigned int constexpr manager::max_joystick_axis;
 unsigned int constexpr manager::max_joystick_button;
 unsigned int constexpr manager::max_joystick_button_action;
 
+manager::manager() {
+  /// Default constructor - requires separate init() call
+}
 manager::manager(GLFWwindow &thiswindow)
   : current_window(&thiswindow) {
-  /// Default constructor
+  /// Specific initialising constructor
+  init(thiswindow);
+}
+
+void manager::init(GLFWwindow &thiswindow) {
+  /// Initialise
   timestorm::timer<unsigned int> timer("InputStorm: Initialised in ");
+  current_window = &thiswindow;
   //std::cout << "InputStorm: Initialising keymap..." << std::endl;
   // create default key bindings and initialise key names
   for(keytype key = 0; key <= GLFW_KEY_LAST; ++key) {

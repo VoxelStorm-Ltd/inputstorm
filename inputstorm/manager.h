@@ -134,8 +134,11 @@ private:
   GLFWwindow *current_window = nullptr;                                         // the GLFW window this input manager is handling
 
 public:
+  manager();
   manager(GLFWwindow &thiswindow);
   ~manager();
+
+  void init(GLFWwindow &thiswindow);
 
 private:
   std::string &key_name_at(keytype key);
