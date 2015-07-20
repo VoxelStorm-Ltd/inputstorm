@@ -676,6 +676,9 @@ unsigned int manager::save_bindings() {
 }
 void manager::save_bindings(unsigned int savenumber) {
   /// Back up the current bindings to a specific ID in the internal store, overwriting if it exists already
+  std::stringstream ss;
+  ss << "InputStorm: Saved bindings to slot " << savenumber << " in ";
+  timestorm::timer<unsigned int> timer(ss.str());
   saved_bindingtype &save = saved_bindings[savenumber];
   save.key_bindings             = key_bindings;
   save.cursor_binding           = cursor_binding;
@@ -689,6 +692,9 @@ void manager::save_bindings(unsigned int savenumber) {
 }
 void manager::load_bindings(unsigned int savenumber) {
   /// Load a saved set of bindings referenced by the specified ID
+  std::stringstream ss;
+  ss << "InputStorm: Loaded bindings from slot " << savenumber << " in ";
+  timestorm::timer<unsigned int> timer(ss.str());
   //saved_bindingtype const &save(saved_bindings.at(savenumber));
   saved_bindingtype &save = saved_bindings[savenumber];
   key_bindings             = save.key_bindings;
@@ -703,6 +709,9 @@ void manager::load_bindings(unsigned int savenumber) {
 }
 void manager::free_bindings(unsigned int savenumber) {
   /// Delete a binding save referenced by the specified ID
+  std::stringstream ss;
+  ss << "InputStorm: Erased the saved binding at slot " << savenumber << " in ";
+  timestorm::timer<unsigned int> timer(ss.str());
   saved_bindings.erase(savenumber);
 }
 std::vector<unsigned int> manager::list_saved_bindings() {
