@@ -641,4 +641,77 @@ void manager::poll_joysticks() {
   }
 }
 
+void manager::copy_bindings(manager const &other) {
+  /// Duplicate the bindings from a different input manager object
+  timestorm::timer<unsigned int> timer("InputStorm: Copied bindings in ");
+  key_names                = other.key_names;
+  key_mod_names            = other.key_mod_names;
+  key_action_names         = other.key_action_names;
+  mousebutton_names        = other.mousebutton_names;
+  joystick_names           = other.joystick_names;
+
+  key_bindings             = other.key_bindings;
+  cursor_binding           = other.cursor_binding;
+  cursor_enter_binding     = other.cursor_enter_binding;
+  cursor_leave_binding     = other.cursor_leave_binding;
+  mousebutton_bindings     = other.mousebutton_bindings;
+  scroll_binding           = other.scroll_binding;
+  joystick_axis_bindings   = other.joystick_axis_bindings;
+  joystick_button_bindings = other.joystick_button_bindings;
+
+  joystick_enabled         = other.joystick_enabled;
+}
+
+unsigned int manager::save_bindings() {
+  /// Back up the current bindings to the internal store and return a unique ID
+  unsigned int i = 0;
+  for(; i != std::numeric_limits<unsigned int>::max(); ++i) {
+    // iterate until we find a free integer
+    if(saved_bindings.find(i) == saved_bindings.end()) {
+      break;
+    }
+  }
+  save_bindings(i);
+  return i;
+}
+void manager::save_bindings(unsigned int savenumber) {
+  /// Back up the current bindings to a specific ID in the internal store, overwriting if it exists already
+  saved_bindingtype &save = saved_bindings[savenumber];
+  save.key_bindings             = key_bindings;
+  save.cursor_binding           = cursor_binding;
+  save.cursor_enter_binding     = cursor_enter_binding;
+  save.cursor_leave_binding     = cursor_leave_binding;
+  save.mousebutton_bindings     = mousebutton_bindings;
+  save.scroll_binding           = scroll_binding;
+  save.joystick_axis_bindings   = joystick_axis_bindings;
+  save.joystick_button_bindings = joystick_button_bindings;
+  save.joystick_enabled         = joystick_enabled;
+}
+void manager::load_bindings(unsigned int savenumber) {
+  /// Load a saved set of bindings referenced by the specified ID
+  //saved_bindingtype const &save(saved_bindings.at(savenumber));
+  saved_bindingtype &save = saved_bindings[savenumber];
+  key_bindings             = save.key_bindings;
+  cursor_binding           = save.cursor_binding;
+  cursor_enter_binding     = save.cursor_enter_binding;
+  cursor_leave_binding     = save.cursor_leave_binding;
+  mousebutton_bindings     = save.mousebutton_bindings;
+  scroll_binding           = save.scroll_binding;
+  joystick_axis_bindings   = save.joystick_axis_bindings;
+  joystick_button_bindings = save.joystick_button_bindings;
+  joystick_enabled         = save.joystick_enabled;
+}
+void manager::free_bindings(unsigned int savenumber) {
+  /// Delete a binding save referenced by the specified ID
+  saved_bindings.erase(savenumber);
+}
+std::vector<unsigned int> manager::list_saved_bindings() {
+  /// Return all saved bindings we know about
+  std::vector<unsigned int> out;
+  for(auto const &it : saved_bindings) {
+    out.emplace_back(it.first);
+  }
+  return out;
+}
+
 }

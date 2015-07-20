@@ -3,6 +3,7 @@
 
 #include <array>
 #include <functional>
+#include <unordered_map>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <vmath.h>
@@ -133,6 +134,19 @@ private:
 
   GLFWwindow *current_window = nullptr;                                         // the GLFW window this input manager is handling
 
+  struct saved_bindingtype {
+    std::array<std::array<std::array<std::function<void()>, max_key>, max_key_mods>, max_key_action> key_bindings;    // callback functions for keys
+    std::function<void(Vector2d const&)> cursor_binding = [](Vector2d const &change __attribute__((__unused__))){};   // callback function for cursor movement
+    std::function<void()> cursor_enter_binding = []{};                          // cursor enters the window
+    std::function<void()> cursor_leave_binding = []{};                          // cursor leaves the window
+    std::array<std::array<std::array<std::function<void()>, max_mousebutton>, max_key_mods>, max_mouse_action> mousebutton_bindings;  // callback functions for keys
+    std::function<void(Vector2d const&)> scroll_binding = [](Vector2d const &change __attribute__((__unused__))){};   // callback function for scroll
+    std::array<std::array<joystick_axis_bindingtype, max_joystick>, max_joystick_axis> joystick_axis_bindings;        // callback functions for joystick axes
+    std::array<std::array<std::array<std::function<void()>, max_joystick>, max_joystick_button>, max_joystick_button_action> joystick_button_bindings;    // callback functions for joystick buttons
+    std::array<bool, max_joystick> joystick_enabled;                            // whether each joystick is enabled or not
+  };
+  std::unordered_map<unsigned int, saved_bindingtype> saved_bindings;           // a collection of bindings we can load at any time
+
 public:
   manager();
   manager(GLFWwindow &thiswindow);
@@ -183,6 +197,14 @@ public:
 
   void update_joystick_names();
   void poll_joysticks();
+
+  void copy_bindings(manager const &other);
+
+  unsigned int save_bindings();
+  void save_bindings(unsigned int savenumber);
+  void load_bindings(unsigned int savenumber);
+  void free_bindings(unsigned int savenumber);
+  std::vector<unsigned int> list_saved_bindings();
 };
 
 }
