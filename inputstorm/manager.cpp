@@ -501,6 +501,7 @@ void manager::bind_scroll(std::function<void(Vector2d const&)> func) {
 }
 void manager::bind_joystick_axis(unsigned int joystick,
                                  unsigned int axis, std::function<void(float)> func,
+                                 bool flip,
                                  float deadzone_min,
                                  float deadzone_max,
                                  float saturation_min,
@@ -512,10 +513,17 @@ void manager::bind_joystick_axis(unsigned int joystick,
     }
   #endif // NDEBUG
   joystick_axis_bindingtype &binding = joystick_axis_binding_at(joystick, axis);
-  binding.deadzone_min = deadzone_min;
-  binding.deadzone_max = deadzone_max;
-  binding.saturation_min = saturation_min;
-  binding.saturation_max = saturation_max;
+  if(flip) {                                                                    // flipping these two around inverts the entire axis
+    binding.deadzone_min = deadzone_max;
+    binding.deadzone_max = deadzone_min;
+    binding.saturation_min = saturation_max;
+    binding.saturation_max = saturation_min;
+  } else {
+    binding.deadzone_min = deadzone_min;
+    binding.deadzone_max = deadzone_max;
+    binding.saturation_min = saturation_min;
+    binding.saturation_max = saturation_max;
+  }
   binding.update_scales();
   binding.func = func;
   binding.enabled = true;

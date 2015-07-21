@@ -123,8 +123,8 @@ private:
     std::function<void(float)> func = [](float value __attribute__((__unused__))){};  // the function to call
     void update_scales() {
       /// Re-cache scale values after changing deadzones or saturation values
-      scale_pos = saturation_max - deadzone_max;
-      scale_neg = deadzone_min - saturation_min;
+      scale_pos = 1.0f / (saturation_max - deadzone_max);
+      scale_neg = 1.0f / (deadzone_min - saturation_min);
     }
   };
   std::array<bool, max_joystick> joystick_enabled;                              // whether each joystick is enabled or not
@@ -177,7 +177,7 @@ public:
   void bind_mousebutton_any_mod(mousebuttontype button, keyactiontype action, std::function<void()> func);
   void bind_mousebutton_any(std::function<void()> func);
   void bind_scroll(std::function<void(Vector2d const&)> func);
-  void bind_joystick_axis(unsigned int joystick, unsigned int axis, std::function<void(float)> func, float deadzone_min = 0.0f, float deadzone_max = 0.0f, float saturation_min = -1.0f, float saturation_max = 1.0f);
+  void bind_joystick_axis(unsigned int joystick, unsigned int axis, std::function<void(float)> func, bool flip = false, float deadzone_min = 0.0f, float deadzone_max = 0.0f, float saturation_min = -1.0f, float saturation_max = 1.0f);
   void bind_joystick_button(unsigned int joystick, unsigned int button, keyactiontype action, std::function<void()> func);
   void bind_joystick_button_any(unsigned int joystick, std::function<void()> func);
   void bind_joystick_button_any_all(std::function<void()> func);
