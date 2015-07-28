@@ -505,7 +505,8 @@ void manager::bind_joystick_axis(unsigned int joystick,
                                  float deadzone_min,
                                  float deadzone_max,
                                  float saturation_min,
-                                 float saturation_max) {
+                                 float saturation_max,
+                                 float centre) {
   /// Bind a function to a joystick axis, with the specified parameters
   #ifndef NDEBUG
     if(!func) {
@@ -518,15 +519,21 @@ void manager::bind_joystick_axis(unsigned int joystick,
     binding.deadzone_max = deadzone_min;
     binding.saturation_min = saturation_max;
     binding.saturation_max = saturation_min;
+    binding.centre = -centre;
   } else {
     binding.deadzone_min = deadzone_min;
     binding.deadzone_max = deadzone_max;
     binding.saturation_min = saturation_min;
     binding.saturation_max = saturation_max;
+    binding.centre = centre;
   }
   binding.update_scales();
   binding.func = func;
   binding.enabled = true;
+}
+void manager::bind_joystick_axis_half(unsigned int joystick, unsigned int axis, std::function<void(float)> func, bool flip) {
+  /// Helper function for binding to output on a half-axis, for instance with a throttle control that ranges -1 to 1
+  bind_joystick_axis(joystick, axis, func, flip, 0.0f, 0.0f, -1.0f, 2.0f, -1.0f);
 }
 void manager::bind_joystick_button(unsigned int joystick, unsigned int button, keyactiontype action, std::function<void()> func) {
   /// Bind a function to a joystick button
@@ -595,13 +602,15 @@ void manager::execute_joystick_axis(unsigned int joystick, unsigned int axis, fl
   if(!binding.enabled) {
     return;                                                                     // early exit in case this binding isn't in use
   }
-  float value_transformed = value;
-  if(value_transformed >= 0) {
+  float value_transformed = value - binding.centre;
+  if(value_transformed >= 0.0f) {
     value_transformed -= binding.deadzone_max;
     value_transformed *= binding.scale_pos;
+    //std::cout << "InputStorm: DEBUG: binding before " << value << " after " << value_transformed << " pos " << std::endl;
   } else {
     value_transformed -= binding.deadzone_min;
     value_transformed *= binding.scale_neg;
+    //std::cout << "InputStorm: DEBUG: binding before " << value << " after " << value_transformed << " neg " << std::endl;
   }
   // TODO: optimise this - perhaps use integer flags and multiplication instead of the branch
   binding.func(value_transformed);
