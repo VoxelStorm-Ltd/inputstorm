@@ -621,11 +621,11 @@ void manager::execute_joystick_button(unsigned int joystick, unsigned int button
 void manager::update_joystick_names() {
   /// Update the list of joystick names
   for(unsigned int joystick = 0; joystick != max_joystick; ++joystick) {
-    //if(glfwJoystickPresent(joystick)) {
+    if(glfwJoystickPresent(joystick)) {
       joystick_names[joystick] = glfwGetJoystickName(GLFW_JOYSTICK_1);
-    //} else {
-    //  joystick_names[joystick].clear();
-    //}
+    } else {
+      joystick_names[joystick].clear();
+    }
   }
 }
 
