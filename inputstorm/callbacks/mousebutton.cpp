@@ -1,9 +1,11 @@
 #include "inputstorm/manager.h"
+#include "inputstorm/input/mousebutton.h"
 #ifndef NDEBUG
   #include <iostream>
 #endif
 
 namespace inputstorm {
+namespace callback {
 
 void mousebutton(GLFWwindow *thiswindow,
                  int button,
@@ -18,9 +20,10 @@ void mousebutton(GLFWwindow *thiswindow,
     #endif // NDEBUG
     return;
   }
-  parent->execute_mousebutton(static_cast<mousebuttontype>(button),
-                              static_cast<keyactiontype>(action),
-                              static_cast<keymodtype>(mods));
+  parent->mousebutton.execute(static_cast<input::mousebutton::buttontype>(button),
+                              static_cast<input::key::action>(action),
+                              static_cast<input::key::mod>(mods));
 }
 
+}
 }

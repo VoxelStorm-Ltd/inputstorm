@@ -1,9 +1,11 @@
 #include "inputstorm/manager.h"
+#include "inputstorm/input/key.h"
 #ifndef NDEBUG
   #include <iostream>
 #endif
 
 namespace inputstorm {
+namespace callback {
 
 void key(GLFWwindow *thiswindow,
          int key,
@@ -19,9 +21,10 @@ void key(GLFWwindow *thiswindow,
     #endif // NDEBUG
     return;
   }
-  parent->execute_key(static_cast<keytype>(key),
-                      static_cast<keyactiontype>(action),
-                      static_cast<keymodtype>(mods));
+  parent->key.execute(static_cast<input::key::keytype>(key),
+                      static_cast<input::key::action>(action),
+                      static_cast<input::key::mod>(mods));
 }
 
+}
 }

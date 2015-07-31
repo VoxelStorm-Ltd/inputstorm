@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 
 namespace inputstorm {
+namespace callback {
 
 void key(         GLFWwindow *thiswindow, int key, int scancode, int action, int mods);
 void cursor(      GLFWwindow *thiswindow, double x, double y);
@@ -12,6 +13,7 @@ void cursor_enter(GLFWwindow *thiswindow, int entered);
 void mousebutton( GLFWwindow *thiswindow, int button, int action, int mods);
 void scroll(      GLFWwindow *thiswindow, double xoffset, double yoffset);
 
+}
 }
 
 #endif // CALLBACKS_H_INCLUDED

@@ -4,6 +4,7 @@
 #endif
 
 namespace inputstorm {
+namespace callback {
 
 void scroll(GLFWwindow *thiswindow,
             double xoffset,
@@ -14,7 +15,8 @@ void scroll(GLFWwindow *thiswindow,
   #ifndef NDEBUG
     std::cout << "InputStorm: DEBUG: Scrolled " << xoffset << ", " << yoffset << std::endl;
   #endif // NDEBUG
-  parent->execute_scroll({xoffset, yoffset});
+  parent->scroll.execute({xoffset, yoffset});
 }
 
+}
 }
