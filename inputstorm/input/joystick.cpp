@@ -165,7 +165,7 @@ void joystick::update_names() {
   /// Update the list of joystick names
   for(unsigned int joystick = 0; joystick != max; ++joystick) {
     if(glfwJoystickPresent(joystick)) {
-      names[joystick] = glfwGetJoystickName(GLFW_JOYSTICK_1);
+      names[joystick] = glfwGetJoystickName(joystick);
     } else {
       names[joystick].clear();
     }
