@@ -15,6 +15,9 @@ manager::manager(GLFWwindow &thiswindow)
 
 void manager::init(GLFWwindow &thiswindow) {
   /// Initialise
+  if(initialised) {
+    return;
+  }
   timestorm::timer<unsigned int> timer("InputStorm: Initialised in ");
   current_window = &thiswindow;
   key.init();
@@ -29,10 +32,20 @@ void manager::init(GLFWwindow &thiswindow) {
   glfwSetCursorEnterCallback(current_window, callback::cursor_enter);
   glfwSetMouseButtonCallback(current_window, callback::mousebutton);
   glfwSetScrollCallback(     current_window, callback::scroll);
+
+  initialised = true;
 }
 
 manager::~manager() {
   /// Default destructor
+  shutdown();
+}
+
+void manager::shutdown() {
+  /// Shut down and release callbacks
+  if(!initialised) {
+    return;
+  }
   std::cout << "InputStorm: Shutting down." << std::endl;
   glfwSetWindowUserPointer(  current_window, nullptr);                          // clear the user pointer
   glfwSetKeyCallback(        current_window, nullptr);                          // unset callbacks to avoid unpleasant accidents
@@ -40,6 +53,12 @@ manager::~manager() {
   glfwSetCursorEnterCallback(current_window, nullptr);
   glfwSetMouseButtonCallback(current_window, nullptr);
   glfwSetScrollCallback(     current_window, nullptr);
+
+  initialised = false;
+}
+
+bool manager::is_initialised() {
+  return initialised;
 }
 
 void manager::copy_bindings(manager const &other) {

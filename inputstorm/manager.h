@@ -20,6 +20,7 @@ public:
 
 private:
   GLFWwindow *current_window = nullptr;                                         // the GLFW window this input manager is handling
+  bool initialised = false;                                                     // whether this has been initialised
 
   struct saved_bindingtype {
     input::key         key;                                                     // keyboard
@@ -36,6 +37,9 @@ public:
   ~manager();
 
   void init(GLFWwindow &thiswindow);
+  void shutdown();
+
+  bool is_initialised();
 
 public:
   void copy_bindings(manager const &other);
