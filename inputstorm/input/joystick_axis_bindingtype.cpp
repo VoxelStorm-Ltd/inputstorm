@@ -71,8 +71,8 @@ void joystick_axis_bindingtype::draw_graph_console() const {
   }
   // draw a line on the bitmap from the function
   for(unsigned int column = 0; column != columns; ++column) {
-    float const value = (column * range_scale_h) + range_offset_h;
-    unsigned int const row = (get_transformed(value) - range_offset_v) / range_scale_v;
+    float const value = (static_cast<float>(column) * range_scale_h) + range_offset_h;
+    unsigned int const row = static_cast<unsigned int>((get_transformed(value) - range_offset_v) / range_scale_v);
     bitmap[row][column] = char_fill;
   }
 
