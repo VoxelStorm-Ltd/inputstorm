@@ -13,13 +13,13 @@ void cursor_enter(GLFWwindow *thiswindow, int entered) {
   if(static_cast<bool>(entered)) {
     // The cursor entered the client area of the window
     #ifndef NDEBUG
-      std::cout << "InputStorm: DEBUG: The cursor entered the window." << std::endl;
+      //std::cout << "InputStorm: DEBUG: The cursor entered the window." << std::endl;
     #endif // NDEBUG
     parent->cursor.execute_enter();
   } else {
     // The cursor left the client area of the window
     #ifndef NDEBUG
-      std::cout << "InputStorm: DEBUG: The cursor left the window." << std::endl;
+      //std::cout << "InputStorm: DEBUG: The cursor left the window." << std::endl;
     #endif // NDEBUG
     parent->cursor.execute_leave();
   }
