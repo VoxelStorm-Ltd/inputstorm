@@ -75,7 +75,6 @@ void joystick::init() {
   }
 }
 
-
 joystick_axis_bindingtype &joystick::axis_binding_at(unsigned int joystick, unsigned int axis) {
   /// Accessor for the joystick axis structure sparse arrays
   return axis_bindings[axis][joystick];
@@ -88,7 +87,6 @@ std::function<void()> &joystick::button_binding_at(unsigned int joystick, unsign
   /// Accessor for the joystick button function sparse arrays
   return button_bindings[static_cast<unsigned int>(action)][joystick][button];
 }
-
 
 void joystick::bind_axis(unsigned int joystick,
                          unsigned int axis, std::function<void(float)> func,
@@ -142,7 +140,6 @@ void joystick::bind_button_any_all(std::function<void()> func) {
     bind_button_any(joystick, func);
   }
 }
-
 
 void joystick::execute_axis(unsigned int joystick, unsigned int axis, float value) {
   /// Call the function associated with a joystick axis, having transformed the value appropriately

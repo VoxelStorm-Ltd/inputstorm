@@ -3,5 +3,4 @@
 
 #include "manager.h"
 
-
 #endif // INPUTSTORM_H_INCLUDED
