@@ -1,6 +1,7 @@
 #ifndef INPUTSTORM_INPUT_JOYSTICK_H_INCLUDED
 #define INPUTSTORM_INPUT_JOYSTICK_H_INCLUDED
 
+#include <vector>
 #include "key.h"
 #include "joystick_axis_bindingtype.h"
 
@@ -41,6 +42,9 @@ private:
   std::function<void()> &button_binding_at(        unsigned int joystick, unsigned int button, key::action action = key::action::PRESS);
 
 public:
+  std::vector<unsigned int> get_connected_ids() const;
+  std::string get_name(unsigned int joystick_id) const;
+
   void bind_axis(      unsigned int joystick, unsigned int axis, std::function<void(float)> func, bool flip = false, float deadzone_min = 0.0f, float deadzone_max = 0.0f, float saturation_min = -1.0f, float saturation_max = 1.0f, float centre = 0.0f);
   void bind_axis_half( unsigned int joystick, unsigned int axis, std::function<void(float)> func, bool flip = false);
   void bind_button(    unsigned int joystick, unsigned int button, key::action action, std::function<void()> func);
