@@ -1,4 +1,5 @@
 #include "scroll.h"
+#include <iostream>
 
 namespace inputstorm {
 namespace input {

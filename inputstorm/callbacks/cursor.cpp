@@ -1,4 +1,5 @@
 #include "inputstorm/manager.h"
+#include "vmath.h"
 #ifndef NDEBUG
   #include <iostream>
 #endif

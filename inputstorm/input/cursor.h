@@ -2,7 +2,7 @@
 #define INPUTSTORM_INPUT_CURSOR_H_INCLUDED
 
 #include <functional>
-#include "vmath.h"
+#include "vmath_forward_dec.h"
 
 namespace inputstorm {
 namespace input {
