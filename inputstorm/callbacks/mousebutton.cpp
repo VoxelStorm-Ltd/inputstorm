@@ -1,3 +1,4 @@
+#include "callbacks.h"
 #include "inputstorm/manager.h"
 #ifndef NDEBUG
   #include <iostream>
@@ -19,7 +20,7 @@ void mousebutton(GLFWwindow *thiswindow,
     #endif // NDEBUG
     return;
   }
-  parent->mousebutton.execute(static_cast<input::mousebutton::buttontype>(button),
+  parent->mousebutton.execute(button,
                               static_cast<input::key::action>(action),
                               static_cast<input::key::mod>(mods));
 }

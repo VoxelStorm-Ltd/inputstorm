@@ -1,3 +1,4 @@
+#include "callbacks.h"
 #include "inputstorm/manager.h"
 #include "vmath.h"
 #ifndef NDEBUG

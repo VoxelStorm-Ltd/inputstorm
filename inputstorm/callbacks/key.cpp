@@ -1,3 +1,4 @@
+#include "callbacks.h"
 #include "inputstorm/manager.h"
 #ifndef NDEBUG
   #include <iostream>
@@ -20,7 +21,7 @@ void key(GLFWwindow *thiswindow,
     #endif // NDEBUG
     return;
   }
-  parent->key.execute(static_cast<input::key::keytype>(key),
+  parent->key.execute(key,
                       static_cast<input::key::action>(action),
                       static_cast<input::key::mod>(mods));
 }

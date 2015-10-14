@@ -20,7 +20,6 @@ public:
 
 private:
   GLFWwindow *current_window = nullptr;                                         // the GLFW window this input manager is handling
-  bool initialised = false;                                                     // whether this has been initialised
 
   struct saved_bindingtype {
     input::key         key;                                                     // keyboard
@@ -30,6 +29,8 @@ private:
     input::joystick    joystick;                                                // joystick / gamepad / controller
   };
   std::unordered_map<unsigned int, saved_bindingtype> saved_bindings;           // a collection of bindings we can load at any time
+
+  bool initialised = false;                                                     // whether this has been initialised
 
 public:
   manager();
