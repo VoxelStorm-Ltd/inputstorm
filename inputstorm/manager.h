@@ -40,7 +40,7 @@ public:
   void init(GLFWwindow &thiswindow);
   void shutdown();
 
-  bool is_initialised();
+  bool is_initialised() __attribute__((__pure__));
 
 public:
   void copy_bindings(manager const &other);

@@ -19,7 +19,7 @@ struct joystick_axis_bindingtype {
 
   void update_scales();
 
-  float get_transformed(float value) const;
+  float get_transformed(float value) const __attribute__((__pure__));
 
   void execute(float value) const;
 

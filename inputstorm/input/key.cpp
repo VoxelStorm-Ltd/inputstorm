@@ -12,11 +12,11 @@ unsigned int constexpr key::max_action;
 void key::init() {
   /// create default key bindings and initialise key names
   //std::cout << "InputStorm: Initialising keymap..." << std::endl;
-  for(keytype key = 0; key <= GLFW_KEY_LAST; ++key) {
+  for(keytype this_key = 0; this_key <= GLFW_KEY_LAST; ++this_key) {
     // this is a sparse array, and we don't know which we'll name - so default-name them all first, and override the specific ones after
     std::stringstream ss;
-    ss << "UNKNOWN " << key;
-    name_at(key) = ss.str();
+    ss << "UNKNOWN " << this_key;
+    name_at(this_key) = ss.str();
   }
   name_at(0                     ) = "UNKNOWN";                                  // manually set to use 0 instead of negative numbers
   name_at(GLFW_KEY_SPACE        ) = "SPACE";
@@ -168,23 +168,23 @@ void key::init() {
     for(action thisaction = action::RELEASE;
         thisaction != static_cast<action>(max_action);
         thisaction = static_cast<action>(static_cast<int>(thisaction) + 1)) {
-      for(keytype key = 0; key != max; ++key) {
+      for(keytype this_key = 0; this_key != max; ++this_key) {
         #ifdef DEBUG_INPUTSTORM
           std::stringstream ss;
-          ss << "InputStorm: DEBUG: unbound key function called on key " << key << " (" << get_name(key) << ")";
+          ss << "InputStorm: DEBUG: unbound this_key function called on key " << this_key << " (" << get_name(this_key) << ")";
           if(mods != mod::NONE) {
             ss << " mods " << get_mod_name(mods);
           }
           ss << " action " << get_action_name(thisaction);
           if(thisaction == action::PRESS) {
-            bind(key, thisaction, mods, [s = ss.str()]{
+            bind(this_key, thisaction, mods, [s = ss.str()]{
               std::cout << s << std::endl;
             });
           } else {
-            bind(key, thisaction, mods, []{});
+            bind(this_key, thisaction, mods, []{});
           }
         #else
-          bind(key, thisaction, mods, []{});                                    // default to noop
+          bind(this_key, thisaction, mods, []{});                               // default to noop
         #endif // DEBUG_INPUTSTORM
       }
     }
@@ -194,89 +194,89 @@ void key::init() {
   std::cout << "InputStorm: Key bindings:             " << sizeof(bindings) / 1024 << "KB" << std::endl;
 }
 
-std::string &key::name_at(keytype key) {
-  /// Accessor for the key name array
+std::string &key::name_at(keytype this_key) {
+  /// Accessor for the this_key name array
   #ifndef NDEBUG
-    if(key < 0) {
-      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a key number " << key << " which is below zero - aborting!" << std::endl;
+    if(this_key < 0) {
+      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a key number " << this_key << " which is below zero - aborting!" << std::endl;
       abort();
     }
-    if(key > GLFW_KEY_LAST) {
-      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a key number " << key << " which is past the last key " << GLFW_KEY_LAST << ", aborting!" << std::endl;
+    if(this_key > GLFW_KEY_LAST) {
+      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a key number " << this_key << " which is past the last key " << GLFW_KEY_LAST << ", aborting!" << std::endl;
       abort();
     }
   #endif // NDEBUG
-  return names[key];
+  return names[this_key];
 }
-std::function<void()> &key::binding_at(keytype key, action action, mod mods) {
-  /// Accessor for the key function sparse arrays
+std::function<void()> &key::binding_at(keytype this_key, action this_action, mod mods) {
+  /// Accessor for the this_key function sparse arrays
   #ifndef NDEBUG
-    if(key < 0) {
-      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a key number " << key << " which is below zero - aborting!" << std::endl;
+    if(this_key < 0) {
+      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a key number " << this_key << " which is below zero - aborting!" << std::endl;
       abort();
     }
-    if(key > GLFW_KEY_LAST) {
-      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a key number " << key << " which is past the last key " << GLFW_KEY_LAST << ", aborting!" << std::endl;
+    if(this_key > GLFW_KEY_LAST) {
+      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a key number " << this_key << " which is past the last key " << GLFW_KEY_LAST << ", aborting!" << std::endl;
       abort();
     }
   #endif // NDEBUG
-  return bindings[static_cast<unsigned int>(action)][static_cast<unsigned int>(mods)][static_cast<unsigned int>(key)];
+  return bindings[static_cast<unsigned int>(this_action)][static_cast<unsigned int>(mods)][static_cast<unsigned int>(this_key)];
 }
 
-std::string const &key::get_name(keytype key) const {
-  /// Return the key name from its GLFW key ID number
+std::string const &key::get_name(keytype this_key) const {
+  /// Return the this_key name from its GLFW this_key ID number
   // check for negatives first, as GLFW likes to play that game!
-  if(key < 0) {
-    key = 0;          // default this to unknown key
+  if(this_key < 0) {
+    this_key = 0;          // default this to unknown this_key
   }
   #ifndef NDEBUG
-    if(key > GLFW_KEY_LAST) {
-      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a key number " << key << " which is past the last key " << GLFW_KEY_LAST << ", aborting!" << std::endl;
+    if(this_key > GLFW_KEY_LAST) {
+      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a key number " << this_key << " which is past the last key " << GLFW_KEY_LAST << ", aborting!" << std::endl;
       abort();
     }
   #endif // NDEBUG
-  return names[key];
+  return names[this_key];
 }
-std::string const &key::get_action_name(action action) const {
+std::string const &key::get_action_name(action this_action) const {
   /// Return a human-readable name for this key action
-  return action_names[static_cast<int>(action)];
+  return action_names[static_cast<int>(this_action)];
 }
 std::string const &key::get_mod_name(mod mods) const {
   /// Return a human-readable name for this key modifier
   return mod_names[static_cast<int>(mods)];
 }
 
-void key::bind(keytype key, action action, mod mods, std::function<void()> func) {
+void key::bind(keytype this_key, action this_action, mod mods, std::function<void()> func) {
   /// Bind a function to a key
   #ifndef NDEBUG
     if(!func) {
-      std::cout << "InputStorm: WARNING: Binding a null function to key " << get_name(key) << ", this will throw an exception if called!" << std::endl;
+      std::cout << "InputStorm: WARNING: Binding a null function to key " << get_name(this_key) << ", this will throw an exception if called!" << std::endl;
     }
   #endif // NDEBUG
-  binding_at(key, action, mods) = func;
+  binding_at(this_key, this_action, mods) = func;
 }
-void key::bind_any_mod(keytype key, action action, std::function<void()> func) {
+void key::bind_any_mod(keytype this_key, action this_action, std::function<void()> func) {
   /// Helper function to bind a callback to a key with any modifier combination
   for(mod mods = mod::NONE; mods != static_cast<mod>(max_mods); mods = static_cast<mod>(static_cast<int>(mods) + 1)) {
-    bind(key, action, mods, func);
+    bind(this_key, this_action, mods, func);
   }
 }
 void key::bind_any(std::function<void()> func) {
   /// Helper function to bind a callback to all keys, press event only
-  for(keytype key = 0; key != max; ++key) {
-    bind_any_mod(key, action::PRESS, func);
+  for(keytype this_key = 0; this_key != max; ++this_key) {
+    bind_any_mod(this_key, action::PRESS, func);
   }
 }
 
-void key::execute(keytype key, action action, mod mods) {
+void key::execute(keytype this_key, action this_action, mod mods) {
   /// Call the function associated with a given key
   #ifndef NDEBUG
-    if(!binding_at(key, action, mods)) {
-      std::cout << "InputStorm: ERROR: Called key " << get_name(key) << " which has a null function, fix this for release!" << std::endl;
+    if(!binding_at(this_key, this_action, mods)) {
+      std::cout << "InputStorm: ERROR: Called key " << get_name(this_key) << " which has a null function, fix this for release!" << std::endl;
       return;
     }
   #endif // NDEBUG
-  binding_at(key, action, mods)();
+  binding_at(this_key, this_action, mods)();
 }
 
 }

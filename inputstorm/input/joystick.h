@@ -37,9 +37,9 @@ public:
   void init();
 
 private:
-  joystick_axis_bindingtype &axis_binding_at(      unsigned int joystick, unsigned int axis);
-  joystick_axis_bindingtype const &axis_binding_at(unsigned int joystick, unsigned int axis) const;
-  std::function<void()> &button_binding_at(        unsigned int joystick, unsigned int button, key::action action = key::action::PRESS);
+  joystick_axis_bindingtype &axis_binding_at(      unsigned int joystick, unsigned int axis) __attribute__((__const__));
+  joystick_axis_bindingtype const &axis_binding_at(unsigned int joystick, unsigned int axis) const __attribute__((__const__));
+  std::function<void()> &button_binding_at(        unsigned int joystick, unsigned int button, key::action action = key::action::PRESS) __attribute__((__const__));
 
 public:
   std::vector<unsigned int> get_connected_ids() const;

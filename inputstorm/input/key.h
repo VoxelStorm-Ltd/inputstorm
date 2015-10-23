@@ -69,15 +69,15 @@ public:
 
 private:
   std::string &name_at(keytype key);
-  std::function<void()> &binding_at(keytype key, action action, mod mods);
+  std::function<void()> &binding_at(keytype this_key, action this_action, mod mods);
 
 public:
-  std::string const &get_name(       keytype key)       const;
-  std::string const &get_action_name(action action) const;
-  std::string const &get_mod_name(   mod mods)      const;
+  std::string const &get_name(       keytype this_key)   const;
+  std::string const &get_action_name(action this_action) const __attribute__((__const__));
+  std::string const &get_mod_name(   mod mods)           const __attribute__((__const__));
 
   void bind(        keytype key, action action, mod mods, std::function<void()> func);
-  void bind_any_mod(keytype key, action action,               std::function<void()> func);
+  void bind_any_mod(keytype key, action action,           std::function<void()> func);
   void bind_any(std::function<void()> func);
 
   // TODO: add unbind functions
