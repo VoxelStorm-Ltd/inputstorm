@@ -51,6 +51,11 @@ public:
   void bind_button_any(unsigned int joystick, std::function<void()> func);
   void bind_button_any_all(std::function<void()> func);
 
+  void unbind_axis(      unsigned int joystick, unsigned int axis);
+  void unbind_button(    unsigned int joystick, unsigned int button, key::action action);
+  void unbind_button_any(unsigned int joystick);
+  void unbind_button_any_all();
+
   void execute_axis(  unsigned int joystick, unsigned int axis, float value = 0.0f);
   void execute_button(unsigned int joystick, unsigned int button, key::action action = key::action::PRESS);
 

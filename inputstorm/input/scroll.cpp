@@ -14,6 +14,10 @@ void scroll::bind(std::function<void(Vector2d const&)> func) {
   binding = func;
 }
 
+void scroll::unbind() {
+  binding = [](Vector2d const &change __attribute__((__unused__))){};           // noop
+}
+
 void scroll::execute(Vector2d const &offset) {
   /// Call the function associated with scrolling
   binding(offset);

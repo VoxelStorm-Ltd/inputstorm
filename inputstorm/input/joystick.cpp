@@ -50,7 +50,7 @@ void joystick::init() {
             bind_button(joystick_id, button, action, []{});
           }
         #else
-          bind_button(joystick_id, button, action, []{});                 // default to noop
+          bind_button(joystick_id, button, action, []{});                       // default to noop
         #endif // DEBUG_INPUTSTORM
       }
     }
@@ -152,6 +152,30 @@ void joystick::bind_button_any_all(std::function<void()> func) {
   /// Helper function to bind a callback to all joystick buttons on all joysticks, press event only
   for(unsigned int joystick_id = 0; joystick_id != max; ++joystick_id) {
     bind_button_any(joystick_id, func);
+  }
+}
+
+void joystick::unbind_axis(unsigned int joystick_id, unsigned int axis) {
+  joystick_axis_bindingtype &binding = axis_binding_at(joystick_id, axis);
+  binding.func = [](float value __attribute__((unused))){};                     // noop
+  binding.enabled = false;
+}
+void joystick::unbind_button(unsigned int joystick_id, unsigned int button, key::action action) {
+  /// Unbind a callback on a joystick button with a specific action
+  button_binding_at(joystick_id, button, action) = []{};                        // noop
+}
+void joystick::unbind_button_any(unsigned int joystick_id) {
+  /// Helper function to unbind all buttons on a joystick, all actions
+  for(unsigned int button = 0; button != max_button; ++button) {
+    unbind_button(joystick_id, button, key::action::PRESS);
+    unbind_button(joystick_id, button, key::action::RELEASE);
+    unbind_button(joystick_id, button, key::action::REPEAT);
+  }
+}
+void joystick::unbind_button_any_all() {
+  /// Helper function to unbind all buttons with all actions on all joysticks
+  for(unsigned int joystick_id = 0; joystick_id != max; ++joystick_id) {
+    unbind_button_any(joystick_id);
   }
 }
 

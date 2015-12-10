@@ -119,6 +119,26 @@ void mousebutton::bind_any(std::function<void()> func) {
   }
 }
 
+void mousebutton::unbind(buttontype button, key::action action, key::mod mods) {
+  binding_at(button, action, mods) = []{};                                      // noop
+}
+void mousebutton::unbind_any_mod(buttontype button, key::action action) {
+  /// Helper function to unbind key callbacks with any modifier combination
+  for(key::mod mods = key::mod::NONE;
+      mods != static_cast<key::mod>(key::max_mods);
+      mods = static_cast<key::mod>(static_cast<int>(mods) + 1)) {
+    unbind(button, action, mods);
+  }
+}
+void mousebutton::unbind_any() {
+  /// Helper function to unbindbind all mouse buttons, all events
+  for(buttontype button = 0; button != max; ++button) {
+    unbind_any_mod(button, key::action::PRESS);
+    unbind_any_mod(button, key::action::RELEASE);
+    unbind_any_mod(button, key::action::REPEAT);
+  }
+}
+
 void mousebutton::execute(buttontype button, key::action action, key::mod mods) {
   /// Call the function associated with a given key
   #ifndef NDEBUG

@@ -15,6 +15,8 @@ private:
 public:
   void bind(std::function<void(Vector2d const&)> func);
 
+  void unbind();
+
   void execute(Vector2d const &offset);
 };
 

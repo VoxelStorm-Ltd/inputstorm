@@ -80,7 +80,9 @@ public:
   void bind_any_mod(keytype key, action action,           std::function<void()> func);
   void bind_any(std::function<void()> func);
 
-  // TODO: add unbind functions
+  void unbind(        keytype key, action action, mod mods);
+  void unbind_any_mod(keytype key, action action);
+  void unbind_any();
 
   // TODO: add search by function pointer functions
 

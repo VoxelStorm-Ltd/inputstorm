@@ -3,7 +3,7 @@
 #include "vmath.h"
 #ifndef NDEBUG
   #include <iostream>
-#endif
+#endif // NDEBUG
 
 namespace inputstorm {
 namespace callback {

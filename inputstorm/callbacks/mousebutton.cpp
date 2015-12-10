@@ -2,7 +2,7 @@
 #include "inputstorm/manager.h"
 #ifndef NDEBUG
   #include <iostream>
-#endif
+#endif // NDEBUG
 
 namespace inputstorm {
 namespace callback {

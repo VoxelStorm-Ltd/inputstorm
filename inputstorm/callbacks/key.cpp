@@ -2,14 +2,17 @@
 #include "inputstorm/manager.h"
 #ifndef NDEBUG
   #include <iostream>
-#endif
+#endif // NDEBUG
 
 namespace inputstorm {
 namespace callback {
 
 void key(GLFWwindow *thiswindow,
          int key,
-         int scancode __attribute__((__unused__)),
+         int scancode
+#ifndef NDEBUG
+           __attribute__((__unused__)),
+#endif // NDEBUG
          int action,
          int mods) {
   /// All the switch-type controls, rather than polled realtime controls

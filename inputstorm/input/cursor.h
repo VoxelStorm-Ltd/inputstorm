@@ -19,6 +19,10 @@ public:
   void bind_enter(std::function<void()> func);
   void bind_leave(std::function<void()> func);
 
+  void unbind();
+  void unbind_enter();
+  void unbind_leave();
+
   void execute(Vector2d const &change);
   void execute_enter();
   void execute_leave();

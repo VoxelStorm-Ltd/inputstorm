@@ -35,6 +35,10 @@ public:
   void bind_any_mod(buttontype button, key::action action,                std::function<void()> func);
   void bind_any(                                                          std::function<void()> func);
 
+  void unbind(        buttontype button, key::action action, key::mod mods);
+  void unbind_any_mod(buttontype button, key::action action);
+  void unbind_any();
+
   void execute(buttontype button, key::action action = key::action::PRESS, key::mod mods = key::mod::NONE);
 };
 

@@ -34,6 +34,7 @@ void manager::init(GLFWwindow &thiswindow) {
   glfwSetCursorEnterCallback(current_window, callback::cursor_enter);
   glfwSetMouseButtonCallback(current_window, callback::mousebutton);
   glfwSetScrollCallback(     current_window, callback::scroll);
+  glfwSetCharCallback(       current_window, callback::text);
 
   initialised = true;
 }
@@ -55,6 +56,7 @@ void manager::shutdown() {
   glfwSetCursorEnterCallback(current_window, nullptr);
   glfwSetMouseButtonCallback(current_window, nullptr);
   glfwSetScrollCallback(     current_window, nullptr);
+  glfwSetCharCallback(       current_window, nullptr);
 
   initialised = false;
 }
@@ -71,6 +73,7 @@ void manager::copy_bindings(manager const &other) {
   mousebutton = other.mousebutton;
   scroll      = other.scroll;
   joystick    = other.joystick;
+  text        = other.text;
 }
 
 unsigned int manager::save_bindings() {
@@ -96,6 +99,7 @@ void manager::save_bindings(unsigned int savenumber) {
   save.mousebutton = mousebutton;
   save.scroll      = scroll;
   save.joystick    = joystick;
+  save.text        = text;
 }
 void manager::load_bindings(unsigned int savenumber) {
   /// Load a saved set of bindings referenced by the specified ID
@@ -109,6 +113,7 @@ void manager::load_bindings(unsigned int savenumber) {
   mousebutton = save.mousebutton;
   scroll      = save.scroll;
   joystick    = save.joystick;
+  text        = save.text;
 }
 void manager::free_bindings(unsigned int savenumber) {
   /// Delete a binding save referenced by the specified ID

@@ -268,6 +268,24 @@ void key::bind_any(std::function<void()> func) {
   }
 }
 
+void key::unbind(keytype this_key, action this_action, mod mods) {
+  binding_at(this_key, this_action, mods) = []{};                               // noop
+}
+void key::unbind_any_mod(keytype this_key, action this_action) {
+  /// Helper function to unbind callbacks from a key with any modifier
+  for(mod mods = mod::NONE; mods != static_cast<mod>(max_mods); mods = static_cast<mod>(static_cast<int>(mods) + 1)) {
+    unbind(this_key, this_action, mods);
+  }
+}
+void key::unbind_any() {
+  /// Helper function to unbind callbacks from all keys, all events
+  for(keytype this_key = 0; this_key != max; ++this_key) {
+    unbind_any_mod(this_key, action::PRESS);
+    unbind_any_mod(this_key, action::RELEASE);
+    unbind_any_mod(this_key, action::REPEAT);
+  }
+}
+
 void key::execute(keytype this_key, action this_action, mod mods) {
   /// Call the function associated with a given key
   #ifndef NDEBUG
