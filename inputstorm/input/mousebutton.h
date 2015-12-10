@@ -32,8 +32,8 @@ public:
   std::string const &get_name(buttontype button) const;
 
   void bind(        buttontype button, key::action action, key::mod mods, std::function<void()> func);
-  void bind_any_mod(buttontype button, key::action action,                         std::function<void()> func);
-  void bind_any(std::function<void()> func);
+  void bind_any_mod(buttontype button, key::action action,                std::function<void()> func);
+  void bind_any(                                                          std::function<void()> func);
 
   void execute(buttontype button, key::action action = key::action::PRESS, key::mod mods = key::mod::NONE);
 };
