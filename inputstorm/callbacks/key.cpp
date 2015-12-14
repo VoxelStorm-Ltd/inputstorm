@@ -9,10 +9,11 @@ namespace callback {
 
 void key(GLFWwindow *thiswindow,
          int key,
-         int scancode
-#ifndef NDEBUG
-           __attribute__((__unused__)),
-#endif // NDEBUG
+         #ifdef NDEBUG
+           int scancode __attribute__((__unused__)),
+         #else
+           int scancode,
+         #endif // NDEBUG
          int action,
          int mods) {
   /// All the switch-type controls, rather than polled realtime controls
