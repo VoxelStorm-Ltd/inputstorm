@@ -25,11 +25,20 @@ public:
   void init();
 
 private:
-  std::string &name_at(buttontype button);
-  std::function<void()> &binding_at(buttontype button, key::action action = key::action::PRESS, key::mod mods = key::mod::NONE);
+  #ifdef NDEBUG
+    std::string &name_at(buttontype button) __attribute__((__const__));
+    std::function<void()> &binding_at(buttontype button, key::action action = key::action::PRESS, key::mod mods = key::mod::NONE) __attribute__((__const__));
+  #else
+    std::string &name_at(buttontype button);
+    std::function<void()> &binding_at(buttontype button, key::action action = key::action::PRESS, key::mod mods = key::mod::NONE);
+  #endif // NDEBUG
 
 public:
-  std::string const &get_name(buttontype button) const;
+  #ifdef NDEBUG
+    std::string const &get_name(buttontype button) const __attribute__((__const__));
+  #else
+    std::string const &get_name(buttontype button) const;
+  #endif // NDEBUG
 
   void bind(        buttontype button, key::action action, key::mod mods, std::function<void()> func);
   void bind_any_mod(buttontype button, key::action action,                std::function<void()> func);

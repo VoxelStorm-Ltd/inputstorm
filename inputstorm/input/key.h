@@ -68,11 +68,20 @@ public:
   void init();
 
 private:
-  std::string &name_at(keytype key);
-  std::function<void()> &binding_at(keytype this_key, action this_action, mod mods);
+  #ifdef NDEBUG
+    std::string &name_at(keytype key) __attribute__((__const__));
+    std::function<void()> &binding_at(keytype this_key, action this_action, mod mods) __attribute__((__const__));
+  #else
+    std::string &name_at(keytype key);
+    std::function<void()> &binding_at(keytype this_key, action this_action, mod mods);
+  #endif // NDEBUG
 
 public:
-  std::string const &get_name(       keytype this_key)   const;
+  #ifdef NDEBUG
+    std::string const &get_name(keytype this_key) const __attribute__((__const__));
+  #else
+    std::string const &get_name(keytype this_key) const;
+  #endif // NDEBUG
   std::string const &get_action_name(action this_action) const __attribute__((__const__));
   std::string const &get_mod_name(   mod mods)           const __attribute__((__const__));
 
