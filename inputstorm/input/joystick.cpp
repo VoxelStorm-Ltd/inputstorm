@@ -216,7 +216,7 @@ void joystick::poll() {
     {
       // poll the axes
       int num_axes;
-      float const* const axis_data = glfwGetJoystickAxes(joystick_id, &num_axes);
+      float const *const axis_data = glfwGetJoystickAxes(joystick_id, &num_axes);
       unsigned int const axis_max = std::min(max_axis, static_cast<unsigned int>(num_axes));
       for(unsigned int axis = 0; axis != axis_max; ++axis) {
         execute_axis(joystick_id, axis, axis_data[axis]);
@@ -225,7 +225,7 @@ void joystick::poll() {
     {
       // poll the buttons
       int num_buttons;
-      unsigned char const* const button_data = glfwGetJoystickButtons(joystick_id, &num_buttons);
+      unsigned char const *const button_data = glfwGetJoystickButtons(joystick_id, &num_buttons);
       unsigned int const button_max = std::min(max_button, static_cast<unsigned int>(num_buttons));
       for(unsigned int button = 0; button != button_max; ++button) {
         execute_button(joystick_id, button, static_cast<key::action>(button_data[button]));
