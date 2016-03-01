@@ -4,7 +4,7 @@
 namespace inputstorm {
 namespace input {
 
-void scroll::bind(std::function<void(Vector2d const&)> func) {
+void scroll::bind(std::function<void(vec2d const&)> func) {
   /// Bind a function to scrolling
   #ifndef NDEBUG
     if(!func) {
@@ -15,10 +15,10 @@ void scroll::bind(std::function<void(Vector2d const&)> func) {
 }
 
 void scroll::unbind() {
-  binding = [](Vector2d const &change __attribute__((__unused__))){};           // noop
+  binding = [](vec2d const &change __attribute__((__unused__))){};              // noop
 }
 
-void scroll::execute(Vector2d const &offset) {
+void scroll::execute(vec2d const &offset) {
   /// Call the function associated with scrolling
   binding(offset);
 }

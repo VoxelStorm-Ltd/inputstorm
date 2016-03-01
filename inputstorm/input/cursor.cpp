@@ -4,7 +4,7 @@
 namespace inputstorm {
 namespace input {
 
-void cursor::bind(std::function<void(Vector2d const&)> func) {
+void cursor::bind(std::function<void(vec2d const&)> func) {
   /// Bind a function to cursor movement
   #ifndef NDEBUG
     if(!func) {
@@ -33,7 +33,7 @@ void cursor::bind_leave(std::function<void()> func) {
 }
 
 void cursor::unbind() {
-  binding = [](Vector2d const &change __attribute__((__unused__))){};           // noop
+  binding = [](vec2d const &change __attribute__((__unused__))){};              // noop
 }
 void cursor::unbind_enter() {
   enter_binding = []{};                                                         // noop
@@ -42,7 +42,7 @@ void cursor::unbind_leave() {
   leave_binding = []{};                                                         // noop
 }
 
-void cursor::execute(Vector2d const &change) {
+void cursor::execute(vec2d const &change) {
   /// Call the function associated with cursor movements
   #ifdef DEBUG_INPUTSTORM
     std::cout << "InputStorm: DEBUG: Cursor position " << change << std::endl;
