@@ -1,5 +1,7 @@
 #include "scroll.h"
-#include <iostream>
+#ifndef NDEBUG
+  #include <iostream>
+#endif // NDEBUG
 
 namespace inputstorm {
 namespace input {

@@ -1,5 +1,4 @@
 #include "callbacks.h"
-#include "vectorstorm/vector/vector2.h"
 #include "inputstorm/manager.h"
 
 namespace inputstorm {

@@ -1,6 +1,5 @@
 #include "manager.h"
 #include <iostream>
-#include <sstream>
 #include "callbacks/callbacks.h"
 #include "timestorm/timer.h"
 
