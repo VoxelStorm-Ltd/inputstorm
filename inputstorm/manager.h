@@ -37,7 +37,7 @@ private:
 
 public:
   manager();
-  manager(GLFWwindow &thiswindow);
+  explicit manager(GLFWwindow &thiswindow);
   ~manager();
 
   void init(GLFWwindow &thiswindow);
