@@ -24,15 +24,15 @@ void joystick::init() {
           std::cout << s << std::fixed << value <<  std::endl;
         });
       #else
-        bind_axis(joystick_id, axis, [](float value __attribute__((__unused__))){});  // default to noop
+        bind_axis(joystick_id, axis, [](float value __attribute__((__unused__))){}); // default to noop
         axis_binding_at(joystick_id, axis).enabled = false;
       #endif // DEBUG_INPUTSTORM
     }
   }
   /// assign a safe default function to all joystick buttons
-  for(key::action action = key::action::RELEASE;
-      action != static_cast<key::action>(max_button_action);
-      action = static_cast<key::action>(static_cast<int>(action) + 1)) {
+  for(key::actiontype action = key::actiontype::RELEASE;
+      action != static_cast<key::actiontype>(max_button_action);
+      action = static_cast<key::actiontype>(static_cast<int>(action) + 1)) {
     for(unsigned int joystick_id = 0; joystick_id != max; ++joystick_id) {
       for(unsigned int button = 0; button != max_button; ++button) {
         #ifdef DEBUG_INPUTSTORM
@@ -58,7 +58,7 @@ void joystick::init() {
 
   // all previous states are released
   for(unsigned int joystick_id = 0; joystick_id != max; ++joystick_id) {
-    button_state[joystick_id].fill(key::action::RELEASE);
+    button_state[joystick_id].fill(key::actiontype::RELEASE);
   }
 
   // enable all the joysticks by default
@@ -77,13 +77,13 @@ void joystick::init() {
 
 joystick_axis_bindingtype &joystick::axis_binding_at(unsigned int joystick_id, unsigned int axis) {
   /// Accessor for the joystick axis structure sparse arrays
-  return axis_bindings[axis][joystick_id];
+  return axis_bindings[joystick_id][axis];
 }
 joystick_axis_bindingtype const &joystick::axis_binding_at(unsigned int joystick_id, unsigned int axis) const {
   /// Const accessor
-  return axis_bindings[axis][joystick_id];
+  return axis_bindings[joystick_id][axis];
 }
-std::function<void()> &joystick::button_binding_at(unsigned int joystick_id, unsigned int button, key::action action) {
+std::function<void()> &joystick::button_binding_at(unsigned int joystick_id, unsigned int button, key::actiontype action) {
   /// Accessor for the joystick button function sparse arrays
   return button_bindings[static_cast<unsigned int>(action)][joystick_id][button];
 }
@@ -133,7 +133,7 @@ void joystick::bind_axis_half(unsigned int joystick_id, unsigned int axis, std::
   /// Helper function for binding to output on a half-axis, for instance with a throttle control that ranges -1 to 1
   bind_axis(joystick_id, axis, func, flip, 0.0f, 0.0f, -1.0f, 2.0f, -1.0f);
 }
-void joystick::bind_button(unsigned int joystick_id, unsigned int button, key::action action, std::function<void()> func) {
+void joystick::bind_button(unsigned int joystick_id, unsigned int button, key::actiontype action, std::function<void()> func) {
   /// Bind a function to a joystick button
   #ifndef NDEBUG
     if(!func) {
@@ -145,7 +145,7 @@ void joystick::bind_button(unsigned int joystick_id, unsigned int button, key::a
 void joystick::bind_button_any(unsigned int joystick_id, std::function<void()> func) {
   /// Helper function to bind a callback to all joystick buttons, press event only
   for(unsigned int button = 0; button != max_button; ++button) {
-    bind_button(joystick_id, button, key::action::PRESS, func);
+    bind_button(joystick_id, button, key::actiontype::PRESS, func);
   }
 }
 void joystick::bind_button_any_all(std::function<void()> func) {
@@ -160,16 +160,16 @@ void joystick::unbind_axis(unsigned int joystick_id, unsigned int axis) {
   binding.func = [](float value __attribute__((unused))){};                     // noop
   binding.enabled = false;
 }
-void joystick::unbind_button(unsigned int joystick_id, unsigned int button, key::action action) {
+void joystick::unbind_button(unsigned int joystick_id, unsigned int button, key::actiontype action) {
   /// Unbind a callback on a joystick button with a specific action
   button_binding_at(joystick_id, button, action) = []{};                        // noop
 }
 void joystick::unbind_button_any(unsigned int joystick_id) {
   /// Helper function to unbind all buttons on a joystick, all actions
   for(unsigned int button = 0; button != max_button; ++button) {
-    unbind_button(joystick_id, button, key::action::PRESS);
-    unbind_button(joystick_id, button, key::action::RELEASE);
-    unbind_button(joystick_id, button, key::action::REPEAT);
+    unbind_button(joystick_id, button, key::actiontype::PRESS);
+    unbind_button(joystick_id, button, key::actiontype::RELEASE);
+    unbind_button(joystick_id, button, key::actiontype::REPEAT);
   }
 }
 void joystick::unbind_button_any_all() {
@@ -187,7 +187,7 @@ void joystick::execute_axis(unsigned int joystick_id, unsigned int axis, float v
   }
   binding.execute(value);
 }
-void joystick::execute_button(unsigned int joystick_id, unsigned int button, key::action action) {
+void joystick::execute_button(unsigned int joystick_id, unsigned int button, key::actiontype action) {
   /// Call the function associated with a joystick button
   if(button_state[joystick_id][button] == action) {                             // skip repeat-calling functions when the state hasn't changed
     return;
@@ -228,7 +228,7 @@ void joystick::poll() {
       unsigned char const *const button_data = glfwGetJoystickButtons(joystick_id, &num_buttons);
       unsigned int const button_max = std::min(max_button, static_cast<unsigned int>(num_buttons));
       for(unsigned int button = 0; button != button_max; ++button) {
-        execute_button(joystick_id, button, static_cast<key::action>(button_data[button]));
+        execute_button(joystick_id, button, static_cast<key::actiontype>(button_data[button]));
       }
     }
   }

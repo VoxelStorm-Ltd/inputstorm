@@ -10,7 +10,7 @@ namespace input {
 struct scroll {
   // data
 private:
-  std::function<void(vec2d const&)> binding = [](vec2d const &change __attribute__((__unused__))){};   // callback function for scroll
+  std::function<void(vec2d const&)> binding = [](vec2d const &change __attribute__((__unused__))){}; // callback function for scroll
 
 public:
   void bind(std::function<void(vec2d const&)> func);

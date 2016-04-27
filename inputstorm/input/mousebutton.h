@@ -14,12 +14,12 @@ struct mousebutton {
 
   // limits
   static unsigned int constexpr max = GLFW_MOUSE_BUTTON_LAST + 1;
-  static unsigned int constexpr max_action = static_cast<int>(key::action::REPEAT);   // there's no repeat action for mouse buttons
+  static unsigned int constexpr max_action = static_cast<int>(key::actiontype::REPEAT); // there's no repeat action for mouse buttons
 
   // data
 private:
   std::array<std::string, max> names;                                           // cached human-readable names of buttons
-  std::array<std::array<std::array<std::function<void()>, max>, key::max_mods>, max_action> bindings;  // callback functions for keys
+  std::array<std::array<std::array<std::function<void()>, max>, key::max_mods>, max_action> bindings; // callback functions for keys
 
 public:
   void init();
@@ -27,10 +27,14 @@ public:
 private:
   #ifdef NDEBUG
     std::string &name_at(buttontype button) __attribute__((__const__));
-    std::function<void()> &binding_at(buttontype button, key::action action = key::action::PRESS, key::mod mods = key::mod::NONE) __attribute__((__const__));
+    std::function<void()> &binding_at(buttontype button,
+                                      key::actiontype action = key::actiontype::PRESS,
+                                      key::modtype mods = key::modtype::NONE) __attribute__((__const__));
   #else
     std::string &name_at(buttontype button);
-    std::function<void()> &binding_at(buttontype button, key::action action = key::action::PRESS, key::mod mods = key::mod::NONE);
+    std::function<void()> &binding_at(buttontype button,
+                                      key::actiontype action = key::actiontype::PRESS,
+                                      key::modtype mods = key::modtype::NONE);
   #endif // NDEBUG
 
 public:
@@ -40,15 +44,17 @@ public:
     std::string const &get_name(buttontype button) const;
   #endif // NDEBUG
 
-  void bind(        buttontype button, key::action action, key::mod mods, std::function<void()> func);
-  void bind_any_mod(buttontype button, key::action action,                std::function<void()> func);
-  void bind_any(                                                          std::function<void()> func);
+  void bind(        buttontype button, key::actiontype action, key::modtype mods, std::function<void()> func);
+  void bind_any_mod(buttontype button, key::actiontype action,                    std::function<void()> func);
+  void bind_any(                                                                  std::function<void()> func);
 
-  void unbind(        buttontype button, key::action action, key::mod mods);
-  void unbind_any_mod(buttontype button, key::action action);
+  void unbind(        buttontype button, key::actiontype action, key::modtype mods);
+  void unbind_any_mod(buttontype button, key::actiontype action);
   void unbind_any();
 
-  void execute(buttontype button, key::action action = key::action::PRESS, key::mod mods = key::mod::NONE);
+  void execute(buttontype button,
+               key::actiontype action = key::actiontype::PRESS,
+               key::modtype mods = key::modtype::NONE);
 };
 
 }

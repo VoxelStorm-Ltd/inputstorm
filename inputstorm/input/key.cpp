@@ -140,51 +140,51 @@ void key::init() {
   name_at(GLFW_KEY_RIGHT_SUPER  ) = "RIGHT SUPER";
   name_at(GLFW_KEY_MENU         ) = "MENU";
 
-  mod_names[static_cast<int>(mod::NONE                   )] = "NONE";
-  mod_names[static_cast<int>(mod::SHIFT                  )] = "SHIFT";
-  mod_names[static_cast<int>(mod::CONTROL                )] = "CONTROL";
-  mod_names[static_cast<int>(mod::SHIFT_CONTROL          )] = "SHIFT_CONTROL";
-  mod_names[static_cast<int>(mod::ALT                    )] = "ALT";
-  mod_names[static_cast<int>(mod::SHIFT_ALT              )] = "SHIFT_ALT";
-  mod_names[static_cast<int>(mod::CONTROL_ALT            )] = "CONTROL_ALT";
-  mod_names[static_cast<int>(mod::SHIFT_CONTROL_ALT      )] = "SHIFT_CONTROL_ALT";
-  mod_names[static_cast<int>(mod::SUPER                  )] = "SUPER";
-  mod_names[static_cast<int>(mod::SHIFT_SUPER            )] = "SHIFT_SUPER";
-  mod_names[static_cast<int>(mod::CONTROL_SUPER          )] = "CONTROL_SUPER";
-  mod_names[static_cast<int>(mod::SHIFT_CONTROL_SUPER    )] = "SHIFT_CONTROL_SUPER";
-  mod_names[static_cast<int>(mod::ALT_SUPER              )] = "ALT_SUPER";
-  mod_names[static_cast<int>(mod::SHIFT_ALT_SUPER        )] = "SHIFT_ALT_SUPER";
-  mod_names[static_cast<int>(mod::CONTROL_ALT_SUPER      )] = "CONTROL_ALT_SUPER";
-  mod_names[static_cast<int>(mod::SHIFT_CONTROL_ALT_SUPER)] = "SHIFT_CONTROL_ALT_SUPER";
+  mod_names[static_cast<int>(modtype::NONE                   )] = "NONE";
+  mod_names[static_cast<int>(modtype::SHIFT                  )] = "SHIFT";
+  mod_names[static_cast<int>(modtype::CONTROL                )] = "CONTROL";
+  mod_names[static_cast<int>(modtype::SHIFT_CONTROL          )] = "SHIFT_CONTROL";
+  mod_names[static_cast<int>(modtype::ALT                    )] = "ALT";
+  mod_names[static_cast<int>(modtype::SHIFT_ALT              )] = "SHIFT_ALT";
+  mod_names[static_cast<int>(modtype::CONTROL_ALT            )] = "CONTROL_ALT";
+  mod_names[static_cast<int>(modtype::SHIFT_CONTROL_ALT      )] = "SHIFT_CONTROL_ALT";
+  mod_names[static_cast<int>(modtype::SUPER                  )] = "SUPER";
+  mod_names[static_cast<int>(modtype::SHIFT_SUPER            )] = "SHIFT_SUPER";
+  mod_names[static_cast<int>(modtype::CONTROL_SUPER          )] = "CONTROL_SUPER";
+  mod_names[static_cast<int>(modtype::SHIFT_CONTROL_SUPER    )] = "SHIFT_CONTROL_SUPER";
+  mod_names[static_cast<int>(modtype::ALT_SUPER              )] = "ALT_SUPER";
+  mod_names[static_cast<int>(modtype::SHIFT_ALT_SUPER        )] = "SHIFT_ALT_SUPER";
+  mod_names[static_cast<int>(modtype::CONTROL_ALT_SUPER      )] = "CONTROL_ALT_SUPER";
+  mod_names[static_cast<int>(modtype::SHIFT_CONTROL_ALT_SUPER)] = "SHIFT_CONTROL_ALT_SUPER";
 
-  action_names[static_cast<int>(action::RELEASE)] = "RELEASE";
-  action_names[static_cast<int>(action::PRESS  )] = "PRESS";
-  action_names[static_cast<int>(action::REPEAT )] = "REPEAT";
+  action_names[static_cast<int>(actiontype::RELEASE)] = "RELEASE";
+  action_names[static_cast<int>(actiontype::PRESS  )] = "PRESS";
+  action_names[static_cast<int>(actiontype::REPEAT )] = "REPEAT";
 
   // assign a safe default function to all keys
-  for(mod mods = mod::NONE;
-      mods != static_cast<mod>(max_mods);
-      mods = static_cast<mod>(static_cast<int>(mods) + 1)) {
-    for(action thisaction = action::RELEASE;
-        thisaction != static_cast<action>(max_action);
-        thisaction = static_cast<action>(static_cast<int>(thisaction) + 1)) {
+  for(modtype mods = modtype::NONE;
+      mods != static_cast<modtype>(max_mods);
+      mods = static_cast<modtype>(static_cast<int>(mods) + 1)) {
+    for(actiontype action = actiontype::RELEASE;
+        action != static_cast<actiontype>(max_action);
+        action = static_cast<actiontype>(static_cast<int>(action) + 1)) {
       for(keytype this_key = 0; this_key != max; ++this_key) {
         #ifdef DEBUG_INPUTSTORM
           std::stringstream ss;
           ss << "InputStorm: DEBUG: unbound this_key function called on key " << this_key << " (" << get_name(this_key) << ")";
-          if(mods != mod::NONE) {
+          if(mods != modtype::NONE) {
             ss << " mods " << get_mod_name(mods);
           }
-          ss << " action " << get_action_name(thisaction);
-          if(thisaction == action::PRESS) {
-            bind(this_key, thisaction, mods, [s = ss.str()]{
+          ss << " action " << get_actiontype_name(action);
+          if(action == actiontype::PRESS) {
+            bind(this_key, action, mods, [s = ss.str()]{
               std::cout << s << std::endl;
             });
           } else {
-            bind(this_key, thisaction, mods, []{});
+            bind(this_key, action, mods, []{});
           }
         #else
-          bind(this_key, thisaction, mods, []{});                               // default to noop
+          bind(this_key, action, mods, []{});                                   // default to noop
         #endif // DEBUG_INPUTSTORM
       }
     }
@@ -208,7 +208,7 @@ std::string &key::name_at(keytype this_key) {
   #endif // NDEBUG
   return names[this_key];
 }
-std::function<void()> &key::binding_at(keytype this_key, action this_action, mod mods) {
+std::function<void()> &key::binding_at(keytype this_key, actiontype action, modtype mods) {
   /// Accessor for the this_key function sparse arrays
   #ifndef NDEBUG
     if(this_key < 0) {
@@ -220,14 +220,14 @@ std::function<void()> &key::binding_at(keytype this_key, action this_action, mod
       abort();
     }
   #endif // NDEBUG
-  return bindings[static_cast<unsigned int>(this_action)][static_cast<unsigned int>(mods)][static_cast<unsigned int>(this_key)];
+  return bindings[static_cast<unsigned int>(action)][static_cast<unsigned int>(mods)][static_cast<unsigned int>(this_key)];
 }
 
 std::string const &key::get_name(keytype this_key) const {
   /// Return the this_key name from its GLFW this_key ID number
   // check for negatives first, as GLFW likes to play that game!
   if(this_key < 0) {
-    this_key = 0;          // default this to unknown this_key
+    this_key = 0;                                                               // default this to unknown this_key
   }
   #ifndef NDEBUG
     if(this_key > GLFW_KEY_LAST) {
@@ -237,64 +237,64 @@ std::string const &key::get_name(keytype this_key) const {
   #endif // NDEBUG
   return names[this_key];
 }
-std::string const &key::get_action_name(action this_action) const {
-  /// Return a human-readable name for this key action
-  return action_names[static_cast<int>(this_action)];
+std::string const &key::get_actiontype_name(actiontype action) const {
+  /// Return a human-readable name for this key actiontype
+  return action_names[static_cast<int>(action)];
 }
-std::string const &key::get_mod_name(mod mods) const {
+std::string const &key::get_mod_name(modtype mods) const {
   /// Return a human-readable name for this key modifier
   return mod_names[static_cast<int>(mods)];
 }
 
-void key::bind(keytype this_key, action this_action, mod mods, std::function<void()> func) {
+void key::bind(keytype this_key, actiontype action, modtype mods, std::function<void()> func) {
   /// Bind a function to a key
   #ifndef NDEBUG
     if(!func) {
       std::cout << "InputStorm: WARNING: Binding a null function to key " << get_name(this_key) << ", this will throw an exception if called!" << std::endl;
     }
   #endif // NDEBUG
-  binding_at(this_key, this_action, mods) = func;
+  binding_at(this_key, action, mods) = func;
 }
-void key::bind_any_mod(keytype this_key, action this_action, std::function<void()> func) {
+void key::bind_any_mod(keytype this_key, actiontype action, std::function<void()> func) {
   /// Helper function to bind a callback to a key with any modifier combination
-  for(mod mods = mod::NONE; mods != static_cast<mod>(max_mods); mods = static_cast<mod>(static_cast<int>(mods) + 1)) {
-    bind(this_key, this_action, mods, func);
+  for(modtype mods = modtype::NONE; mods != static_cast<modtype>(max_mods); mods = static_cast<modtype>(static_cast<int>(mods) + 1)) {
+    bind(this_key, action, mods, func);
   }
 }
 void key::bind_any(std::function<void()> func) {
   /// Helper function to bind a callback to all keys, press event only
   for(keytype this_key = 0; this_key != max; ++this_key) {
-    bind_any_mod(this_key, action::PRESS, func);
+    bind_any_mod(this_key, actiontype::PRESS, func);
   }
 }
 
-void key::unbind(keytype this_key, action this_action, mod mods) {
-  binding_at(this_key, this_action, mods) = []{};                               // noop
+void key::unbind(keytype this_key, actiontype action, modtype mods) {
+  binding_at(this_key, action, mods) = []{};                                    // noop
 }
-void key::unbind_any_mod(keytype this_key, action this_action) {
+void key::unbind_any_mod(keytype this_key, actiontype action) {
   /// Helper function to unbind callbacks from a key with any modifier
-  for(mod mods = mod::NONE; mods != static_cast<mod>(max_mods); mods = static_cast<mod>(static_cast<int>(mods) + 1)) {
-    unbind(this_key, this_action, mods);
+  for(modtype mods = modtype::NONE; mods != static_cast<modtype>(max_mods); mods = static_cast<modtype>(static_cast<int>(mods) + 1)) {
+    unbind(this_key, action, mods);
   }
 }
 void key::unbind_any() {
   /// Helper function to unbind callbacks from all keys, all events
   for(keytype this_key = 0; this_key != max; ++this_key) {
-    unbind_any_mod(this_key, action::PRESS);
-    unbind_any_mod(this_key, action::RELEASE);
-    unbind_any_mod(this_key, action::REPEAT);
+    unbind_any_mod(this_key, actiontype::PRESS);
+    unbind_any_mod(this_key, actiontype::RELEASE);
+    unbind_any_mod(this_key, actiontype::REPEAT);
   }
 }
 
-void key::execute(keytype this_key, action this_action, mod mods) {
+void key::execute(keytype this_key, actiontype action, modtype mods) {
   /// Call the function associated with a given key
   #ifndef NDEBUG
-    if(!binding_at(this_key, this_action, mods)) {
+    if(!binding_at(this_key, action, mods)) {
       std::cout << "InputStorm: ERROR: Called key " << get_name(this_key) << " which has a null function, fix this for release!" << std::endl;
       return;
     }
   #endif // NDEBUG
-  binding_at(this_key, this_action, mods)();
+  binding_at(this_key, action, mods)();
 }
 
 }
