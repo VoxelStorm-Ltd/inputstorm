@@ -63,12 +63,12 @@ void key::init() {
   name_at(GLFW_KEY_X            ) = "X";
   name_at(GLFW_KEY_Y            ) = "Y";
   name_at(GLFW_KEY_Z            ) = "Z";
-  name_at(GLFW_KEY_LEFT_BRACKET ) = "LEFT_BRACKET";
+  name_at(GLFW_KEY_LEFT_BRACKET ) = "LEFT BRACKET";
   name_at(GLFW_KEY_BACKSLASH    ) = "BACKSLASH";
-  name_at(GLFW_KEY_RIGHT_BRACKET) = "RIGHT_BRACKET";
-  name_at(GLFW_KEY_GRAVE_ACCENT ) = "GRAVE_ACCENT";
-  name_at(GLFW_KEY_WORLD_1      ) = "WORLD_1";
-  name_at(GLFW_KEY_WORLD_2      ) = "WORLD_2";
+  name_at(GLFW_KEY_RIGHT_BRACKET) = "RIGHT BRACKET";
+  name_at(GLFW_KEY_GRAVE_ACCENT ) = "GRAVE ACCENT";
+  name_at(GLFW_KEY_WORLD_1      ) = "WORLD 1";
+  name_at(GLFW_KEY_WORLD_2      ) = "WORLD 2";
   name_at(GLFW_KEY_ESCAPE       ) = "ESCAPE";
   name_at(GLFW_KEY_ENTER        ) = "ENTER";
   name_at(GLFW_KEY_TAB          ) = "TAB";
@@ -79,13 +79,13 @@ void key::init() {
   name_at(GLFW_KEY_LEFT         ) = "LEFT";
   name_at(GLFW_KEY_DOWN         ) = "DOWN";
   name_at(GLFW_KEY_UP           ) = "UP";
-  name_at(GLFW_KEY_PAGE_UP      ) = "PAGE_UP";
-  name_at(GLFW_KEY_PAGE_DOWN    ) = "PAGE_DOWN";
+  name_at(GLFW_KEY_PAGE_UP      ) = "PAGE UP";
+  name_at(GLFW_KEY_PAGE_DOWN    ) = "PAGE DOWN";
   name_at(GLFW_KEY_HOME         ) = "HOME";
   name_at(GLFW_KEY_END          ) = "END";
-  name_at(GLFW_KEY_CAPS_LOCK    ) = "CAPS_LOCK";
-  name_at(GLFW_KEY_SCROLL_LOCK  ) = "SCROLL_LOCK";
-  name_at(GLFW_KEY_NUM_LOCK     ) = "NUM_LOCK";
+  name_at(GLFW_KEY_CAPS_LOCK    ) = "CAPS LOCK";
+  name_at(GLFW_KEY_SCROLL_LOCK  ) = "SCROLL LOCK";
+  name_at(GLFW_KEY_NUM_LOCK     ) = "NUM LOCK";
   name_at(GLFW_KEY_PRINT_SCREEN ) = "PRINT_SCREEN";
   name_at(GLFW_KEY_PAUSE        ) = "PAUSE";
   name_at(GLFW_KEY_F1           ) = "F1";
@@ -143,19 +143,19 @@ void key::init() {
   mod_names[static_cast<int>(modtype::NONE                   )] = "NONE";
   mod_names[static_cast<int>(modtype::SHIFT                  )] = "SHIFT";
   mod_names[static_cast<int>(modtype::CONTROL                )] = "CONTROL";
-  mod_names[static_cast<int>(modtype::SHIFT_CONTROL          )] = "SHIFT_CONTROL";
+  mod_names[static_cast<int>(modtype::SHIFT_CONTROL          )] = "SHIFT CONTROL";
   mod_names[static_cast<int>(modtype::ALT                    )] = "ALT";
-  mod_names[static_cast<int>(modtype::SHIFT_ALT              )] = "SHIFT_ALT";
-  mod_names[static_cast<int>(modtype::CONTROL_ALT            )] = "CONTROL_ALT";
-  mod_names[static_cast<int>(modtype::SHIFT_CONTROL_ALT      )] = "SHIFT_CONTROL_ALT";
+  mod_names[static_cast<int>(modtype::SHIFT_ALT              )] = "SHIFT ALT";
+  mod_names[static_cast<int>(modtype::CONTROL_ALT            )] = "CONTROL ALT";
+  mod_names[static_cast<int>(modtype::SHIFT_CONTROL_ALT      )] = "SHIFT CONTROL ALT";
   mod_names[static_cast<int>(modtype::SUPER                  )] = "SUPER";
-  mod_names[static_cast<int>(modtype::SHIFT_SUPER            )] = "SHIFT_SUPER";
-  mod_names[static_cast<int>(modtype::CONTROL_SUPER          )] = "CONTROL_SUPER";
-  mod_names[static_cast<int>(modtype::SHIFT_CONTROL_SUPER    )] = "SHIFT_CONTROL_SUPER";
-  mod_names[static_cast<int>(modtype::ALT_SUPER              )] = "ALT_SUPER";
-  mod_names[static_cast<int>(modtype::SHIFT_ALT_SUPER        )] = "SHIFT_ALT_SUPER";
-  mod_names[static_cast<int>(modtype::CONTROL_ALT_SUPER      )] = "CONTROL_ALT_SUPER";
-  mod_names[static_cast<int>(modtype::SHIFT_CONTROL_ALT_SUPER)] = "SHIFT_CONTROL_ALT_SUPER";
+  mod_names[static_cast<int>(modtype::SHIFT_SUPER            )] = "SHIFT SUPER";
+  mod_names[static_cast<int>(modtype::CONTROL_SUPER          )] = "CONTROL SUPER";
+  mod_names[static_cast<int>(modtype::SHIFT_CONTROL_SUPER    )] = "SHIFT CONTROL SUPER";
+  mod_names[static_cast<int>(modtype::ALT_SUPER              )] = "ALT SUPER";
+  mod_names[static_cast<int>(modtype::SHIFT_ALT_SUPER        )] = "SHIFT ALT SUPER";
+  mod_names[static_cast<int>(modtype::CONTROL_ALT_SUPER      )] = "CONTROL ALT SUPER";
+  mod_names[static_cast<int>(modtype::SHIFT_CONTROL_ALT_SUPER)] = "SHIFT CONTROL ALT SUPER";
 
   action_names[static_cast<int>(actiontype::RELEASE)] = "RELEASE";
   action_names[static_cast<int>(actiontype::PRESS  )] = "PRESS";
@@ -267,6 +267,48 @@ void key::bind_any(std::function<void()> func) {
     bind_any_mod(this_key, actiontype::PRESS, func);
   }
 }
+void key::bind(key::binding const &this_binding,
+               std::function<void()> func_press,
+               std::function<void()> func_release,
+               std::function<void()> func_repeat) {
+  /// Helper function to load binding settings from a binding object
+  switch(this_binding.type) {
+  case binding::bindtype::SPECIFIC:
+    if(func_press) {
+      bind(this_binding.key, actiontype::PRESS, this_binding.mods, func_press);
+    }
+    if(func_release) {
+      bind(this_binding.key, actiontype::RELEASE, this_binding.mods, func_release);
+    }
+    if(func_repeat) {
+      bind(this_binding.key, actiontype::REPEAT, this_binding.mods, func_repeat);
+    }
+    break;
+  case binding::bindtype::ANY_MOD:
+    if(func_press) {
+      bind_any_mod(this_binding.key, actiontype::PRESS, func_press);
+    }
+    if(func_release) {
+      bind_any_mod(this_binding.key, actiontype::RELEASE, func_release);
+    }
+    if(func_repeat) {
+      bind_any_mod(this_binding.key, actiontype::REPEAT, func_repeat);
+    }
+    break;
+  case binding::bindtype::ANY:
+    if(func_press) {
+      bind_any(func_press);
+    } else {
+      std::cout << "InputStorm: Key: WARNING - requested to bind to any key with a function other than PRESS, this is not currently supported - create a set of specific bindings instead." << std::endl;
+    }
+    break;
+  case binding::bindtype::END:
+    #ifndef NDEBUG
+      std::cout << "InputStorm: ERROR: bind target has an invalid bindtype END!" << std::endl;
+    #endif // NDEBUG
+    break;
+  }
+}
 
 void key::unbind(keytype this_key, actiontype action, modtype mods) {
   binding_at(this_key, action, mods) = []{};                                    // noop
@@ -285,6 +327,28 @@ void key::unbind_any() {
     unbind_any_mod(this_key, actiontype::REPEAT);
   }
 }
+void key::unbind(binding const &this_binding) {
+  switch(this_binding.type) {
+  case binding::bindtype::SPECIFIC:
+    unbind(this_binding.key, actiontype::PRESS,   this_binding.mods);
+    unbind(this_binding.key, actiontype::RELEASE, this_binding.mods);
+    unbind(this_binding.key, actiontype::REPEAT,  this_binding.mods);
+    break;
+  case binding::bindtype::ANY_MOD:
+    unbind_any_mod(this_binding.key, actiontype::PRESS);
+    unbind_any_mod(this_binding.key, actiontype::RELEASE);
+    unbind_any_mod(this_binding.key, actiontype::REPEAT);
+    break;
+  case binding::bindtype::ANY:
+    unbind_any();
+    break;
+  case binding::bindtype::END:
+    #ifndef NDEBUG
+      std::cout << "InputStorm: ERROR: unbind target has an invalid bindtype END!" << std::endl;
+    #endif // NDEBUG
+    break;
+  }
+}
 
 void key::execute(keytype this_key, actiontype action, modtype mods) {
   /// Call the function associated with a given key
@@ -295,6 +359,22 @@ void key::execute(keytype this_key, actiontype action, modtype mods) {
     }
   #endif // NDEBUG
   binding_at(this_key, action, mods)();
+}
+
+void key::capture(std::function<void(keytype, modtype)> callback) {
+  /// Capture a keystroke and return it to the given callback
+  for(keytype this_key = 0; this_key != max; ++this_key) {                      // create a new callback for each key
+    for(modtype mods = modtype::NONE;
+        mods != static_cast<modtype>(max_mods);
+        mods = static_cast<modtype>(static_cast<int>(mods) + 1)) {
+      bind(this_key, actiontype::PRESS,   mods, []{});                          // unbind press actions
+      bind(this_key, actiontype::REPEAT,  mods, []{});                          // unbind repeat actions
+      bind(this_key, actiontype::RELEASE, mods, [callback, this_key, mods]{
+        // bind on the release action - this allows us to attach to modified keys without shift, alt etc triggering the bind first
+        callback(this_key, mods);
+      });
+    }
+  }
 }
 
 }

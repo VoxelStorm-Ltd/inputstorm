@@ -6,6 +6,22 @@
 namespace inputstorm {
 namespace input {
 
+std::string scroll::get_name(scroll::direction this_direction) const {
+  /// Return the this_key name from its GLFW this_key ID number
+  switch(this_direction) {
+  case direction::RIGHT:
+    return "RIGHT";
+  case direction::LEFT:
+    return "LEFT";
+  case direction::UP:
+    return "UP";
+  case direction::DOWN:
+    return "DOWN";
+  default:
+    return "UNKNOWN";
+  }
+}
+
 void scroll::bind(std::function<void(vec2d const&)> func) {
   /// Bind a function to scrolling
   #ifndef NDEBUG

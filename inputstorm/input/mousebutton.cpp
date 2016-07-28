@@ -118,6 +118,41 @@ void mousebutton::bind_any(std::function<void()> func) {
     bind_any_mod(button, key::actiontype::PRESS, func);
   }
 }
+void mousebutton::bind(mousebutton::binding const &this_binding,
+                       std::function<void()> func_press,
+                       std::function<void()> func_release) {
+  /// Helper function to load binding settings from a binding object
+  switch(this_binding.type) {
+  case binding::bindtype::SPECIFIC:
+    if(func_press) {
+      bind(this_binding.button, key::actiontype::PRESS, this_binding.mods, func_press);
+    }
+    if(func_release) {
+      bind(this_binding.button, key::actiontype::RELEASE, this_binding.mods, func_release);
+    }
+    break;
+  case binding::bindtype::ANY_MOD:
+    if(func_press) {
+      bind_any_mod(this_binding.button, key::actiontype::PRESS, func_press);
+    }
+    if(func_release) {
+      bind_any_mod(this_binding.button, key::actiontype::RELEASE, func_release);
+    }
+    break;
+  case binding::bindtype::ANY:
+    if(func_press) {
+      bind_any(func_press);
+    } else {
+      std::cout << "InputStorm: Key: WARNING - requested to bind to any mouse button with a function other than PRESS, this is not currently supported - create a set of specific bindings instead." << std::endl;
+    }
+    break;
+  case binding::bindtype::END:
+    #ifndef NDEBUG
+      std::cout << "InputStorm: ERROR: bind target has an invalid bindtype END!" << std::endl;
+    #endif // NDEBUG
+    break;
+  }
+}
 
 void mousebutton::unbind(buttontype button, key::actiontype action, key::modtype mods) {
   binding_at(button, action, mods) = []{};                                      // noop
@@ -135,7 +170,26 @@ void mousebutton::unbind_any() {
   for(buttontype button = 0; button != max; ++button) {
     unbind_any_mod(button, key::actiontype::PRESS);
     unbind_any_mod(button, key::actiontype::RELEASE);
-    unbind_any_mod(button, key::actiontype::REPEAT);
+  }
+}
+void mousebutton::unbind(binding const &this_binding) {
+  switch(this_binding.type) {
+  case binding::bindtype::SPECIFIC:
+    unbind(this_binding.button, key::actiontype::PRESS,   this_binding.mods);
+    unbind(this_binding.button, key::actiontype::RELEASE, this_binding.mods);
+    break;
+  case binding::bindtype::ANY_MOD:
+    unbind_any_mod(this_binding.button, key::actiontype::PRESS);
+    unbind_any_mod(this_binding.button, key::actiontype::RELEASE);
+    break;
+  case binding::bindtype::ANY:
+    unbind_any();
+    break;
+  case binding::bindtype::END:
+    #ifndef NDEBUG
+      std::cout << "InputStorm: ERROR: unbind target has an invalid bindtype END!" << std::endl;
+    #endif // NDEBUG
+    break;
   }
 }
 

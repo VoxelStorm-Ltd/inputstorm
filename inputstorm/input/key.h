@@ -53,9 +53,62 @@ struct key {
   };
   struct binding {
     /// Convenience struct for storing and passing all parameters that make up a binding
+    enum class bindtype : char {
+      SPECIFIC,
+      ANY_MOD,
+      ANY,
+      LAST = ANY,
+      END = LAST + 1
+    } type;
     keytype key;
-    actiontype action;
     modtype mods;
+
+    bool operator==(const binding &rhs) const {
+      /// Equality operator
+      // two formulations with the same effect - benchmark to see which performs best in each specific use case
+      #ifdef INPUTSTORM_EQUALITY_COMPARISON_SWITCH
+        switch(type) {
+        case bindtype::SPECIFIC:
+          switch(rhs.type) {
+          case bindtype::SPECIFIC:
+            return (key == rhs.key) && (mods == rhs.mods);
+          case bindtype::ANY_MOD:
+            return key == rhs.key;
+          case bindtype::ANY:
+            return true;
+          }
+          break;
+        case bindtype::ANY_MOD:
+          switch(rhs.type) {
+          case bindtype::SPECIFIC:
+          case bindtype::ANY_MOD:
+            return key == rhs.key;
+          case bindtype::ANY:
+            return true;
+          }
+          break;
+        case bindtype::ANY:
+          return true;
+        }
+      #else
+        if(type == bindtype::ANY || rhs.type == bindtype::ANY) {
+          return true;
+        } else if(type == bindtype::ANY_MOD || rhs.type == bindtype::ANY_MOD) {
+          return key == rhs.key;
+        } else {
+          return (key == rhs.key) && (mods == rhs.mods);
+        }
+      #endif // INPUTSTORM_EQUALITY_COMPARISON_SWITCH
+    }
+
+    size_t hash_value() const {
+      /// Hash function to return a unique hash for each binding
+      constexpr const size_t key_max = GLFW_KEY_LAST + 1;
+      constexpr const size_t type_max = static_cast<size_t>(bindtype::END);
+      return (key_max * type_max * static_cast<size_t>(mods)) +
+             (key_max * static_cast<size_t>(type)) +
+             key;
+    }
   };
 
   // limits
@@ -93,17 +146,21 @@ public:
 
   void bind(        keytype key, actiontype action, modtype mods, std::function<void()> func);
   void bind_any_mod(keytype key, actiontype action,               std::function<void()> func);
-  void bind_any(std::function<void()> func);
+  void bind_any(                                                  std::function<void()> func);
+  void bind(binding const &this_binding, std::function<void()> func_press, std::function<void()> func_release = nullptr, std::function<void()> func_repeat = nullptr);
 
   void unbind(        keytype key, actiontype action, modtype mods);
   void unbind_any_mod(keytype key, actiontype action);
   void unbind_any();
+  void unbind(binding const &this_binding);
 
   // TODO: add search by function pointer functions
 
   void execute(keytype key,
                actiontype action = actiontype::PRESS,
                modtype mods = modtype::NONE);
+
+  void capture(std::function<void(keytype, modtype)> callback);
 };
 
 inline key::modtype operator|(key::modtype lhs, key::modtype rhs) {
@@ -126,6 +183,11 @@ inline key::modtype operator|(key::modtype lhs, int rhs) {
 inline key::modtype &operator|=(key::modtype &lhs, int rhs) {
   lhs = static_cast<key::modtype>(static_cast<int>(lhs) | rhs);
   return lhs;
+}
+
+inline size_t hash_value(key::binding const &this_binding) {
+  /// Forward to the binding's hash function
+  return this_binding.hash_value();
 }
 
 }

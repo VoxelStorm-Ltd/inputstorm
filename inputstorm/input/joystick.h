@@ -19,6 +19,73 @@ struct joystick {
   /// Buttons:
   ///   1st = GLFW action (GLFW_PRESS or GLFW_RELEASE);
 
+  struct binding {
+    unsigned int joystick_id;
+  };
+  struct binding_axis : binding {
+    /// Convenience struct for storing and passing all parameters that make up an axis binding
+    unsigned int axis;
+    bool flip;
+    float deadzone_min;
+    float deadzone_max;
+    float saturation_min;
+    float saturation_max;
+    float centre;
+  };
+  struct binding_button : binding {
+    /// Convenience struct for storing and passing all parameters that make up a button binding
+    enum class bindtype : char {
+      SPECIFIC,                                                                 // button binding with an action (press or release)
+      ANY,                                                                      // button binding with any action (press or release)
+      ANY_ALL                                                                   // button binding on any joystick with any action
+    } type;
+    unsigned int button;                                                        // unused if bindtype is ANY or ANY_ALL
+
+    bool operator==(const binding_button &rhs) const {
+      /// Equality operator
+      // two formulations with the same effect - benchmark to see which performs best in each specific use case
+      #ifdef INPUTSTORM_EQUALITY_COMPARISON_SWITCH
+        switch(type) {
+        case bindtype::SPECIFIC:
+          switch(rhs.type) {
+          case bindtype::SPECIFIC:
+            return (joystick_id == rhs.joystick_id) && (button == rhs.button);
+          case bindtype::ANY:
+            return joystick_id == rhs.joystick_id;
+          case bindtype::ANY_ALL:
+            return true;
+          }
+          break;
+        case bindtype::ANY:
+          switch(rhs.type) {
+          case bindtype::SPECIFIC:
+          case bindtype::ANY:
+            return joystick_id == rhs.joystick_id;
+          case bindtype::ANY_ALL:
+            return true;
+          }
+          break;
+        case bindtype::ANY_ALL:
+          return true;
+        }
+      #else
+        if(type == bindtype::ANY_ALL || rhs.type == bindtype::ANY_ALL) {
+          return true;
+        } else if(type == bindtype::ANY || rhs.type == bindtype::ANY) {
+          return joystick_id == rhs.joystick_id;
+        } else {
+          return (joystick_id == rhs.joystick_id) && (button == rhs.button);
+        }
+      #endif // INPUTSTORM_EQUALITY_COMPARISON_SWITCH
+    }
+
+    size_t hash_value() const {
+      /// Hash function to return a unique hash for each binding
+      return max_button * joystick_id +
+             button;
+    }
+  };
+
   // limits
   static unsigned int constexpr max = GLFW_JOYSTICK_LAST + 1;
   static unsigned int constexpr max_axis = 8;                                   // empirically chosen based on what's available on the market
@@ -47,14 +114,17 @@ public:
 
   void bind_axis(      unsigned int joystick, unsigned int axis, std::function<void(float)> func, bool flip = false, float deadzone_min = 0.0f, float deadzone_max = 0.0f, float saturation_min = -1.0f, float saturation_max = 1.0f, float centre = 0.0f);
   void bind_axis_half( unsigned int joystick, unsigned int axis, std::function<void(float)> func, bool flip = false);
+  void bind_axis(binding_axis const &this_binding,               std::function<void(float)> func);
   void bind_button(    unsigned int joystick, unsigned int button, key::actiontype action, std::function<void()> func);
-  void bind_button_any(unsigned int joystick, std::function<void()> func);
-  void bind_button_any_all(std::function<void()> func);
+  void bind_button_any(unsigned int joystick,                                              std::function<void()> func);
+  void bind_button_any_all(                                                                std::function<void()> func);
+  void bind_button(binding_button const &this_binding, std::function<void()> func_press, std::function<void()> func_release = nullptr, std::function<void()> func_repeat = nullptr);
 
   void unbind_axis(      unsigned int joystick, unsigned int axis);
   void unbind_button(    unsigned int joystick, unsigned int button, key::actiontype action);
   void unbind_button_any(unsigned int joystick);
   void unbind_button_any_all();
+  void unbind_button(binding_button const &this_binding);
 
   void execute_axis(  unsigned int joystick, unsigned int axis, float value = 0.0f);
   void execute_button(unsigned int joystick, unsigned int button, key::actiontype action = key::actiontype::PRESS);
@@ -64,6 +134,11 @@ public:
 
   void draw_binding_graphs() const;
 };
+
+inline size_t hash_value(joystick::binding_button const &this_binding) {
+  /// Forward to the binding's hash function
+  return this_binding.hash_value();
+}
 
 }
 }
