@@ -23,6 +23,7 @@ struct key {
     PRESS   = GLFW_PRESS,
     REPEAT  = GLFW_REPEAT,
     // array bounds
+    BEGIN = RELEASE,
     LAST = REPEAT,
     END = LAST + 1
   };
@@ -48,6 +49,7 @@ struct key {
     CONTROL_ALT_SUPER         = GLFW_MOD_SUPER | GLFW_MOD_ALT | GLFW_MOD_CONTROL                 ,
     SHIFT_CONTROL_ALT_SUPER   = GLFW_MOD_SUPER | GLFW_MOD_ALT | GLFW_MOD_CONTROL | GLFW_MOD_SHIFT,
     // array bounds
+    BEGIN = NONE,
     LAST = SHIFT_CONTROL_ALT_SUPER,
     END = LAST + 1
   };
@@ -103,8 +105,8 @@ struct key {
 
     size_t hash_value() const {
       /// Hash function to return a unique hash for each binding
-      constexpr const size_t key_max = GLFW_KEY_LAST + 1;
-      constexpr const size_t type_max = static_cast<size_t>(bindtype::END);
+      size_t constexpr const key_max = GLFW_KEY_LAST + 1;
+      size_t constexpr const type_max = static_cast<size_t>(bindtype::END);
       return (key_max * type_max * static_cast<size_t>(mods)) +
              (key_max * static_cast<size_t>(type)) +
              key;
@@ -112,9 +114,9 @@ struct key {
   };
 
   // limits
-  static unsigned int constexpr max        = GLFW_KEY_LAST + 1;
-  static unsigned int constexpr max_action = static_cast<int>(actiontype::END);
-  static unsigned int constexpr max_mods   = static_cast<int>(modtype::END);    // modifiers can be combined, we store all options to save processing
+  static unsigned int constexpr const max        = GLFW_KEY_LAST + 1;
+  static unsigned int constexpr const max_action = static_cast<int>(actiontype::END);
+  static unsigned int constexpr const max_mods   = static_cast<int>(modtype::END); // modifiers can be combined, we store all options to save processing
 
   // data
 private:
@@ -128,11 +130,11 @@ public:
 
 private:
   #ifdef NDEBUG
-    std::string &name_at(keytype key) __attribute__((__const__));
-    std::function<void()> &binding_at(keytype this_key, actiontype action, modtype mods) __attribute__((__const__));
+    std::string const &name_at(keytype key) const __attribute__((__const__));
+    std::function<void()> const &binding_at(keytype this_key, actiontype action, modtype mods) const __attribute__((__const__));
   #else
-    std::string &name_at(keytype key);
-    std::function<void()> &binding_at(keytype this_key, actiontype action, modtype mods);
+    std::string const &name_at(keytype key) const;
+    std::function<void()> const &binding_at(keytype this_key, actiontype action, modtype mods) const;
   #endif // NDEBUG
 
 public:
@@ -158,7 +160,7 @@ public:
 
   void execute(keytype key,
                actiontype action = actiontype::PRESS,
-               modtype mods = modtype::NONE);
+               modtype mods = modtype::NONE) const;
 
   void capture(std::function<void(keytype, modtype)> callback);
 };
@@ -183,6 +185,34 @@ inline key::modtype operator|(key::modtype lhs, int rhs) {
 inline key::modtype &operator|=(key::modtype &lhs, int rhs) {
   lhs = static_cast<key::modtype>(static_cast<int>(lhs) | rhs);
   return lhs;
+}
+
+/// Helper functions to allow key::modtype to be iterated
+inline key::modtype operator++(key::modtype &i) {
+  return i = static_cast<key::modtype>(std::underlying_type<key::modtype>::type(i) + 1);
+}
+inline key::modtype operator*(key::modtype c) {
+  return c;
+}
+inline key::modtype begin(key::modtype thistype __attribute__((__unused__))) {
+  return key::modtype::BEGIN;
+}
+inline key::modtype end(key::modtype thistype __attribute__((__unused__))) {
+  return key::modtype::END;
+}
+
+/// Helper functions to allow key::actiontype to be iterated
+inline key::actiontype operator++(key::actiontype &i) {
+  return i = static_cast<key::actiontype>(std::underlying_type<key::actiontype>::type(i) + 1);
+}
+inline key::actiontype operator*(key::actiontype c) {
+  return c;
+}
+inline key::actiontype begin(key::actiontype thistype __attribute__((__unused__))) {
+  return key::actiontype::BEGIN;
+}
+inline key::actiontype end(key::actiontype thistype __attribute__((__unused__))) {
+  return key::actiontype::END;
 }
 
 inline size_t hash_value(key::binding const &this_binding) {

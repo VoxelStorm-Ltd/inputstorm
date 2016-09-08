@@ -19,11 +19,9 @@ struct joystick {
   /// Buttons:
   ///   1st = GLFW action (GLFW_PRESS or GLFW_RELEASE);
 
-  struct binding {
-    unsigned int joystick_id;
-  };
-  struct binding_axis : binding {
+  struct binding_axis {
     /// Convenience struct for storing and passing all parameters that make up an axis binding
+    unsigned int joystick_id;
     unsigned int axis;
     bool flip;
     float deadzone_min;
@@ -32,8 +30,9 @@ struct joystick {
     float saturation_max;
     float centre;
   };
-  struct binding_button : binding {
+  struct binding_button {
     /// Convenience struct for storing and passing all parameters that make up a button binding
+    unsigned int joystick_id;
     enum class bindtype : char {
       SPECIFIC,                                                                 // button binding with an action (press or release)
       ANY,                                                                      // button binding with any action (press or release)
@@ -87,10 +86,10 @@ struct joystick {
   };
 
   // limits
-  static unsigned int constexpr max = GLFW_JOYSTICK_LAST + 1;
-  static unsigned int constexpr max_axis = 8;                                   // empirically chosen based on what's available on the market
-  static unsigned int constexpr max_button = 60;                                // empirically chosen based on what's available on the market
-  static unsigned int constexpr max_button_action = static_cast<int>(key::actiontype::REPEAT); // there's no repeat action for joystick buttons
+  static unsigned int constexpr const max = GLFW_JOYSTICK_LAST + 1;
+  static unsigned int constexpr const max_axis = 8;                             // empirically chosen based on what's available on the market
+  static unsigned int constexpr const max_button = 60;                          // empirically chosen based on what's available on the market
+  static unsigned int constexpr const max_button_action = static_cast<int>(key::actiontype::REPEAT); // there's no repeat action for joystick buttons
 
   // data
 private:
@@ -104,30 +103,61 @@ public:
   void init();
 
 private:
-  joystick_axis_bindingtype &axis_binding_at(      unsigned int joystick, unsigned int axis) __attribute__((__const__));
-  joystick_axis_bindingtype const &axis_binding_at(unsigned int joystick, unsigned int axis) const __attribute__((__const__));
-  std::function<void()> &button_binding_at(        unsigned int joystick, unsigned int button, key::actiontype action = key::actiontype::PRESS) __attribute__((__const__));
+  joystick_axis_bindingtype const &axis_binding_at(unsigned int joystick,
+                                                   unsigned int axis) const __attribute__((__const__));
+  std::function<void()> &button_binding_at(        unsigned int joystick,
+                                                   unsigned int button,
+                                                   key::actiontype action = key::actiontype::PRESS) __attribute__((__const__));
 
 public:
   std::vector<unsigned int> get_connected_ids() const;
   std::string get_name(unsigned int joystick_id) const;
 
-  void bind_axis(      unsigned int joystick, unsigned int axis, std::function<void(float)> func, bool flip = false, float deadzone_min = 0.0f, float deadzone_max = 0.0f, float saturation_min = -1.0f, float saturation_max = 1.0f, float centre = 0.0f);
-  void bind_axis_half( unsigned int joystick, unsigned int axis, std::function<void(float)> func, bool flip = false);
-  void bind_axis(binding_axis const &this_binding,               std::function<void(float)> func);
-  void bind_button(    unsigned int joystick, unsigned int button, key::actiontype action, std::function<void()> func);
-  void bind_button_any(unsigned int joystick,                                              std::function<void()> func);
-  void bind_button_any_all(                                                                std::function<void()> func);
-  void bind_button(binding_button const &this_binding, std::function<void()> func_press, std::function<void()> func_release = nullptr, std::function<void()> func_repeat = nullptr);
+  void bind_axis(          unsigned int joystick,
+                           unsigned int axis, std::function<void(float)> func,
+                           bool flip = false,
+                           float deadzone_min = 0.0f,
+                           float deadzone_max = 0.0f,
+                           float saturation_min = -1.0f,
+                           float saturation_max = 1.0f,
+                           float centre = 0.0f);
+  void bind_axis_half(     unsigned int joystick,
+                           unsigned int axis, std::function<void(float)> func,
+                           bool flip = false);
+  void bind_axis(          binding_axis const &this_binding,
+                           std::function<void(float)> func);
+  void bind_button(        unsigned int joystick,
+                           unsigned int button,
+                           key::actiontype action,
+                           std::function<void()> func);
+  void bind_button_any(    unsigned int joystick,
+                           std::function<void()> func);
+  void bind_button_any_all(std::function<void()> func);
+  void bind_button(        binding_button const &this_binding,
+                           std::function<void()> func_press,
+                           std::function<void()> func_release = nullptr,
+                           std::function<void()> func_repeat = nullptr);
 
-  void unbind_axis(      unsigned int joystick, unsigned int axis);
-  void unbind_button(    unsigned int joystick, unsigned int button, key::actiontype action);
+  void unbind_axis(    unsigned int joystick, unsigned int axis);
+  void unbind_axis_any(unsigned int joystick);
+  void unbind_axis_any_all();
+  void unbind_axis(binding_axis const &this_binding);
+  void unbind_button(    unsigned int joystick,
+                         unsigned int button, key::actiontype action);
   void unbind_button_any(unsigned int joystick);
   void unbind_button_any_all();
   void unbind_button(binding_button const &this_binding);
 
-  void execute_axis(  unsigned int joystick, unsigned int axis, float value = 0.0f);
-  void execute_button(unsigned int joystick, unsigned int button, key::actiontype action = key::actiontype::PRESS);
+  void execute_axis(  unsigned int joystick,
+                      unsigned int axis,
+                      float value = 0.0f) const;
+  void execute_button(unsigned int joystick,
+                      unsigned int button,
+                      key::actiontype action = key::actiontype::PRESS);
+
+  void capture_axis(  std::function<void(unsigned int, unsigned int, bool)> callback,
+                      bool calibrate = false);
+  void capture_button(std::function<void(unsigned int, unsigned int      )> callback);
 
   void update_names();
   void poll();

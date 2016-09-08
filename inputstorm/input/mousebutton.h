@@ -64,8 +64,8 @@ struct mousebutton {
 
     size_t hash_value() const {
       /// Hash function to return a unique hash for each binding
-      constexpr const size_t button_max = GLFW_MOUSE_BUTTON_LAST + 1;
-      constexpr const size_t type_max = static_cast<size_t>(bindtype::END);
+      size_t constexpr const button_max = GLFW_MOUSE_BUTTON_LAST + 1;
+      size_t constexpr const type_max = static_cast<size_t>(bindtype::END);
       return (button_max * type_max * static_cast<size_t>(mods)) +
              (button_max * static_cast<size_t>(type)) +
              button;
@@ -73,8 +73,8 @@ struct mousebutton {
   };
 
   // limits
-  static unsigned int constexpr max = GLFW_MOUSE_BUTTON_LAST + 1;
-  static unsigned int constexpr max_action = static_cast<int>(key::actiontype::REPEAT); // there's no repeat action for mouse buttons
+  static unsigned int constexpr const max = GLFW_MOUSE_BUTTON_LAST + 1;
+  static unsigned int constexpr const max_action = static_cast<int>(key::actiontype::REPEAT); // there's no repeat action for mouse buttons
 
   // data
 private:
@@ -86,15 +86,15 @@ public:
 
 private:
   #ifdef NDEBUG
-    std::string &name_at(buttontype button) __attribute__((__const__));
-    std::function<void()> &binding_at(buttontype button,
-                                      key::actiontype action = key::actiontype::PRESS,
-                                      key::modtype mods = key::modtype::NONE) __attribute__((__const__));
+    std::string const &name_at(buttontype button) __attribute__((__const__)) const;
+    std::function<void()> const &binding_at(buttontype button,
+                                            key::actiontype action = key::actiontype::PRESS,
+                                            key::modtype mods = key::modtype::NONE) const __attribute__((__const__));
   #else
-    std::string &name_at(buttontype button);
-    std::function<void()> &binding_at(buttontype button,
-                                      key::actiontype action = key::actiontype::PRESS,
-                                      key::modtype mods = key::modtype::NONE);
+    std::string const &name_at(buttontype button) const;
+    std::function<void()> const &binding_at(buttontype button,
+                                            key::actiontype action = key::actiontype::PRESS,
+                                            key::modtype mods = key::modtype::NONE) const;
   #endif // NDEBUG
 
 public:
@@ -116,7 +116,9 @@ public:
 
   void execute(buttontype button,
                key::actiontype action = key::actiontype::PRESS,
-               key::modtype mods = key::modtype::NONE);
+               key::modtype mods = key::modtype::NONE) const;
+
+  void capture(std::function<void(buttontype, key::modtype)> callback);
 };
 
 inline size_t hash_value(mousebutton::binding const &this_binding) {

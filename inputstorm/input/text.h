@@ -15,7 +15,7 @@ public:
 
   void unbind();
 
-  void execute(char32_t codepoint);
+  void execute(char32_t codepoint) const;
 };
 
 }

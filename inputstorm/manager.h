@@ -8,6 +8,7 @@
 #include "input/scroll.h"
 #include "input/joystick.h"
 #include "input/text.h"
+#include "input/window.h"
 
 namespace inputstorm {
 
@@ -19,6 +20,7 @@ public:
   input::scroll      scroll;                                                    // scroll wheel
   input::joystick    joystick;                                                  // joystick / gamepad / controller
   input::text        text;                                                      // text input
+  input::window      window;                                                    // window events
 
 private:
   GLFWwindow *current_window = nullptr;                                         // the GLFW window this input manager is handling
@@ -30,6 +32,7 @@ private:
     input::scroll      scroll;                                                  // scroll wheel
     input::joystick    joystick;                                                // joystick / gamepad / controller
     input::text        text;                                                    // text input
+    input::window      window;                                                  // window events
   };
   std::unordered_map<unsigned int, saved_bindingtype> saved_bindings;           // a collection of bindings we can load at any time
 

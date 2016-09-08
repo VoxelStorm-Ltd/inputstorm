@@ -10,15 +10,15 @@ std::string scroll::get_name(scroll::direction this_direction) const {
   /// Return the this_key name from its GLFW this_key ID number
   switch(this_direction) {
   case direction::RIGHT:
-    return "RIGHT";
+    return "SCROLL RIGHT";
   case direction::LEFT:
-    return "LEFT";
+    return "SCROLL LEFT";
   case direction::UP:
-    return "UP";
+    return "SCROLL UP";
   case direction::DOWN:
-    return "DOWN";
+    return "SCROLL DOWN";
   default:
-    return "UNKNOWN";
+    return "SCROLL UNKNOWN";
   }
 }
 
@@ -36,10 +36,43 @@ void scroll::unbind() {
   binding = [](vec2d const &change __attribute__((__unused__))){};              // noop
 }
 
-void scroll::execute(vec2d const &offset) {
+void scroll::execute(vec2d const &offset) const {
   /// Call the function associated with scrolling
   binding(offset);
 }
+
+void scroll::capture(std::function<void(direction)> callback) {
+  /// Capture a scroll action and return it to the given callback
+  bind([callback](vec2d const &amount){
+    // prioritise up/down scroll
+    if(amount.y > 0.0) {
+      #ifdef DEBUG_INPUTSTORM
+        std::cout << "InputStorm: DEBUG: captured scroll up" << std::endl;
+      #endif // DEBUG_INPUTSTORM
+      callback(direction::UP);
+    } else if(amount.y < 0.0) {
+      #ifdef DEBUG_INPUTSTORM
+        std::cout << "InputStorm: DEBUG: captured scroll down" << std::endl;
+      #endif // DEBUG_INPUTSTORM
+      callback(direction::DOWN);
+    } else {
+      // only if up/down is zero do we check for left-right
+      if(amount.x > 0.0) {
+        #ifdef DEBUG_INPUTSTORM
+          std::cout << "InputStorm: DEBUG: captured scroll left" << std::endl;
+        #endif // DEBUG_INPUTSTORM
+        callback(direction::LEFT);
+      } if(amount.x < 0.0) {
+        #ifdef DEBUG_INPUTSTORM
+          std::cout << "InputStorm: DEBUG: captured scroll right" << std::endl;
+        #endif // DEBUG_INPUTSTORM
+        callback(direction::RIGHT);
+      }
+    }
+    // it's theoretically possible to receive a zero distance scroll event - ignore that if it happens
+  });
+}
+
 
 }
 }

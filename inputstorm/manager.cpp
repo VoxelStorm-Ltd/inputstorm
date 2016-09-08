@@ -27,13 +27,20 @@ void manager::init(GLFWwindow &thiswindow) {
 
   // set callbacks
   //std::cout << "InputStorm: Setting callbacks..." << std::endl;
-  glfwSetWindowUserPointer(  current_window, this);                             // have this class passed to future callbacks
-  glfwSetKeyCallback(        current_window, callback::key);
-  glfwSetCursorPosCallback(  current_window, callback::cursor);
-  glfwSetCursorEnterCallback(current_window, callback::cursor_enter);
-  glfwSetMouseButtonCallback(current_window, callback::mousebutton);
-  glfwSetScrollCallback(     current_window, callback::scroll);
-  glfwSetCharCallback(       current_window, callback::text);
+  glfwSetWindowUserPointer(      current_window, this);                         // have this class passed to future callbacks
+  glfwSetKeyCallback(            current_window, callback::key);
+  glfwSetCursorPosCallback(      current_window, callback::cursor);
+  glfwSetCursorEnterCallback(    current_window, callback::cursor_enter);
+  glfwSetMouseButtonCallback(    current_window, callback::mousebutton);
+  glfwSetScrollCallback(         current_window, callback::scroll);
+  glfwSetCharCallback(           current_window, callback::text);
+  glfwSetWindowPosCallback(      current_window, callback::window_position);
+  glfwSetWindowSizeCallback(     current_window, callback::window_size);
+  glfwSetWindowCloseCallback(    current_window, callback::window_close);
+  glfwSetWindowRefreshCallback(  current_window, callback::window_refresh);
+  glfwSetWindowFocusCallback(    current_window, callback::window_focus);
+  glfwSetWindowIconifyCallback(  current_window, callback::window_iconify);
+  glfwSetFramebufferSizeCallback(current_window, callback::framebuffer_size);
 
   initialised = true;
 }
@@ -49,13 +56,20 @@ void manager::shutdown() {
     return;
   }
   std::cout << "InputStorm: Shutting down." << std::endl;
-  glfwSetWindowUserPointer(  current_window, nullptr);                          // clear the user pointer
-  glfwSetKeyCallback(        current_window, nullptr);                          // unset callbacks to avoid unpleasant accidents
-  glfwSetCursorPosCallback(  current_window, nullptr);
-  glfwSetCursorEnterCallback(current_window, nullptr);
-  glfwSetMouseButtonCallback(current_window, nullptr);
-  glfwSetScrollCallback(     current_window, nullptr);
-  glfwSetCharCallback(       current_window, nullptr);
+  glfwSetWindowUserPointer(      current_window, nullptr);                      // clear the user pointer
+  glfwSetKeyCallback(            current_window, nullptr);                      // unset callbacks to avoid unpleasant accidents
+  glfwSetCursorPosCallback(      current_window, nullptr);
+  glfwSetCursorEnterCallback(    current_window, nullptr);
+  glfwSetMouseButtonCallback(    current_window, nullptr);
+  glfwSetScrollCallback(         current_window, nullptr);
+  glfwSetCharCallback(           current_window, nullptr);
+  glfwSetWindowPosCallback(      current_window, nullptr);
+  glfwSetWindowSizeCallback(     current_window, nullptr);
+  glfwSetWindowCloseCallback(    current_window, nullptr);
+  glfwSetWindowRefreshCallback(  current_window, nullptr);
+  glfwSetWindowFocusCallback(    current_window, nullptr);
+  glfwSetWindowIconifyCallback(  current_window, nullptr);
+  glfwSetFramebufferSizeCallback(current_window, nullptr);
 
   initialised = false;
 }
@@ -73,6 +87,7 @@ void manager::copy_bindings(manager const &other) {
   scroll      = other.scroll;
   joystick    = other.joystick;
   text        = other.text;
+  window      = other.window;
 }
 
 unsigned int manager::save_bindings() {
@@ -99,6 +114,7 @@ void manager::save_bindings(unsigned int savenumber) {
   save.scroll      = scroll;
   save.joystick    = joystick;
   save.text        = text;
+  save.window      = window;
 }
 void manager::load_bindings(unsigned int savenumber) {
   /// Load a saved set of bindings referenced by the specified ID
@@ -113,6 +129,7 @@ void manager::load_bindings(unsigned int savenumber) {
   scroll      = save.scroll;
   joystick    = save.joystick;
   text        = save.text;
+  window      = save.window;
 }
 void manager::free_bindings(unsigned int savenumber) {
   /// Delete a binding save referenced by the specified ID

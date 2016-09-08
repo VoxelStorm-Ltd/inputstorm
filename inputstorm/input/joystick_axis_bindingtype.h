@@ -17,6 +17,8 @@ struct joystick_axis_bindingtype {
   float scale_neg = deadzone_min - saturation_min;
   std::function<void(float)> func = [](float value __attribute__((__unused__))){}; // the function to call
 
+  bool enabled = false;                                                         // whether to try this axis' function
+
   void update_scales();
 
   float get_transformed(float value) const __attribute__((__pure__));
@@ -24,8 +26,6 @@ struct joystick_axis_bindingtype {
   void execute(float value) const;
 
   void draw_graph_console() const;
-
-  bool enabled = false;                                                         // whether to try this axis' function
 };
 
 }

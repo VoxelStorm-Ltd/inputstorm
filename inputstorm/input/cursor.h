@@ -10,9 +10,9 @@ namespace input {
 struct cursor {
   // data
 private:
-  std::function<void(vec2d const&)> binding = [](vec2d const &change __attribute__((__unused__))){}; // callback function for cursor movement
-  std::function<void()> enter_binding = []{};                                   // cursor enters the window
-  std::function<void()> leave_binding = []{};                                   // cursor leaves the window
+  std::function<void(vec2d const&)> binding       = [](vec2d const &change __attribute__((__unused__))){}; // callback function for cursor movement
+  std::function<void()>             enter_binding = []{};                       // cursor enters the window
+  std::function<void()>             leave_binding = []{};                       // cursor leaves the window
 
 public:
   void bind(std::function<void(vec2d const&)> func);
@@ -23,9 +23,9 @@ public:
   void unbind_enter();
   void unbind_leave();
 
-  void execute(vec2d const &change);
-  void execute_enter();
-  void execute_leave();
+  void execute(vec2d const &change) const;
+  void execute_enter()              const;
+  void execute_leave()              const;
 };
 
 }

@@ -19,7 +19,7 @@ void text::unbind() {
   binding = [](char32_t codepoint __attribute__((__unused__))){};               // noop
 }
 
-void text::execute(char32_t codepoint) {
+void text::execute(char32_t codepoint) const {
   /// Call the function associated with text input
   #ifdef DEBUG_INPUTSTORM
     std::cout << "InputStorm: DEBUG: text input " << codepoint << std::endl;

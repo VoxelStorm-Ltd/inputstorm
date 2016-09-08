@@ -42,18 +42,18 @@ void cursor::unbind_leave() {
   leave_binding = []{};                                                         // noop
 }
 
-void cursor::execute(vec2d const &change) {
+void cursor::execute(vec2d const &change) const {
   /// Call the function associated with cursor movements
   #ifdef DEBUG_INPUTSTORM
     std::cout << "InputStorm: DEBUG: Cursor position " << change << std::endl;
   #endif // DEBUG_INPUTSTORM
   binding(change);
 }
-void cursor::execute_enter() {
+void cursor::execute_enter() const {
   /// Call the function associated with the cursor entering the window
   enter_binding();
 }
-void cursor::execute_leave() {
+void cursor::execute_leave() const {
   /// Call the function associated with the cursor leaving the window
   leave_binding();
 }

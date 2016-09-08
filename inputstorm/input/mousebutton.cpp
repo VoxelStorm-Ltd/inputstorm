@@ -4,26 +4,21 @@
 namespace inputstorm {
 namespace input {
 
-unsigned int constexpr mousebutton::max;
-unsigned int constexpr mousebutton::max_action;
-
 void mousebutton::init() {
-  name_at(GLFW_MOUSE_BUTTON_1) = "MOUSE LEFT";
-  name_at(GLFW_MOUSE_BUTTON_2) = "MOUSE RIGHT";
-  name_at(GLFW_MOUSE_BUTTON_3) = "MOUSE MIDDLE";
-  name_at(GLFW_MOUSE_BUTTON_4) = "MOUSE 4";
-  name_at(GLFW_MOUSE_BUTTON_5) = "MOUSE 5";
-  name_at(GLFW_MOUSE_BUTTON_6) = "MOUSE 6";
-  name_at(GLFW_MOUSE_BUTTON_7) = "MOUSE 7";
-  name_at(GLFW_MOUSE_BUTTON_8) = "MOUSE 8";
+  names[GLFW_MOUSE_BUTTON_1] = "LEFT MOUSE";
+  names[GLFW_MOUSE_BUTTON_2] = "RIGHT MOUSE";
+  names[GLFW_MOUSE_BUTTON_3] = "MIDDLE MOUSE";
+  names[GLFW_MOUSE_BUTTON_4] = "MOUSE 4";
+  names[GLFW_MOUSE_BUTTON_5] = "MOUSE 5";
+  names[GLFW_MOUSE_BUTTON_6] = "MOUSE 6";
+  names[GLFW_MOUSE_BUTTON_7] = "MOUSE 7";
+  names[GLFW_MOUSE_BUTTON_8] = "MOUSE 8";
 
   // assign a safe default function to all mouse buttons
-  for(key::modtype mods = key::modtype::NONE;
-      mods != static_cast<key::modtype>(key::max_mods);
-      mods = static_cast<key::modtype>(static_cast<int>(mods) + 1)) {
+  for(auto const &mods : key::modtype()) {
     for(key::actiontype action = key::actiontype::RELEASE;
-        action != static_cast<key::actiontype>(max_action);
-        action = static_cast<key::actiontype>(static_cast<int>(action) + 1)) {
+        action != static_cast<key::actiontype>(max_action);                     // max_action here is not necessarily the same as key::actiontype::END
+        ++action) {
       for(buttontype button = 0; button != max; ++button) {
         #ifdef DEBUG_INPUTSTORM
           std::stringstream ss;
@@ -50,7 +45,7 @@ void mousebutton::init() {
   std::cout << "InputStorm: Mouse button bindings:    " << sizeof(bindings) / 1024 << "KB" << std::endl;
 }
 
-std::string &mousebutton::name_at(mousebutton::buttontype button) {
+std::string const &mousebutton::name_at(mousebutton::buttontype button) const {
   /// Accessor for the mousebutton button name arrays
   #ifndef NDEBUG
     if(button < 0) {
@@ -65,7 +60,7 @@ std::string &mousebutton::name_at(mousebutton::buttontype button) {
   return names[button];
 }
 
-std::function<void()> &mousebutton::binding_at(mousebutton::buttontype button, key::actiontype action, key::modtype mods) {
+std::function<void()> const &mousebutton::binding_at(mousebutton::buttontype button, key::actiontype action, key::modtype mods) const {
   /// Accessor for the mousebutton function sparse arrays
   #ifndef NDEBUG
     if(button < 0) {
@@ -102,13 +97,11 @@ void mousebutton::bind(buttontype button, key::actiontype action, key::modtype m
       std::cout << "InputStorm: WARNING: Binding a null function to key " << get_name(button) << ", this will throw an exception if called!" << std::endl;
     }
   #endif // NDEBUG
-  binding_at(button, action, mods) = func;
+  bindings[static_cast<unsigned int>(action)][static_cast<unsigned int>(mods)][static_cast<unsigned int>(button)] = func;
 }
 void mousebutton::bind_any_mod(buttontype button, key::actiontype action, std::function<void()> func) {
   /// Helper function to bind a callback to a key with any modifier combination
-  for(key::modtype mods = key::modtype::NONE;
-      mods != static_cast<key::modtype>(key::max_mods);
-      mods = static_cast<key::modtype>(static_cast<int>(mods) + 1)) {
+  for(auto const &mods : key::modtype()) {
     bind(button, action, mods, func);
   }
 }
@@ -155,13 +148,11 @@ void mousebutton::bind(mousebutton::binding const &this_binding,
 }
 
 void mousebutton::unbind(buttontype button, key::actiontype action, key::modtype mods) {
-  binding_at(button, action, mods) = []{};                                      // noop
+  bindings[static_cast<unsigned int>(action)][static_cast<unsigned int>(mods)][static_cast<unsigned int>(button)] = []{}; // noop
 }
 void mousebutton::unbind_any_mod(buttontype button, key::actiontype action) {
   /// Helper function to unbind key callbacks with any modifier combination
-  for(key::modtype mods = key::modtype::NONE;
-      mods != static_cast<key::modtype>(key::max_mods);
-      mods = static_cast<key::modtype>(static_cast<int>(mods) + 1)) {
+  for(auto const &mods : key::modtype()) {
     unbind(button, action, mods);
   }
 }
@@ -193,7 +184,7 @@ void mousebutton::unbind(binding const &this_binding) {
   }
 }
 
-void mousebutton::execute(buttontype button, key::actiontype action, key::modtype mods) {
+void mousebutton::execute(buttontype button, key::actiontype action, key::modtype mods) const {
   /// Call the function associated with a given key
   #ifndef NDEBUG
     if(!binding_at(button, action, mods)) {
@@ -202,6 +193,20 @@ void mousebutton::execute(buttontype button, key::actiontype action, key::modtyp
     }
   #endif // NDEBUG
   binding_at(button, action, mods)();
+}
+
+void mousebutton::capture(std::function<void(buttontype, key::modtype)> callback) {
+  /// Capture a button press and return it to the given callback
+  for(buttontype this_button = 0; this_button != max; ++this_button) {          // create a new callback for each key
+    for(auto const &mods : key::modtype()) {
+      bind(this_button, key::actiontype::PRESS,   mods, []{});                  // unbind press actions
+      bind(this_button, key::actiontype::REPEAT,  mods, []{});                  // unbind repeat actions
+      bind(this_button, key::actiontype::RELEASE, mods, [callback, this_button, mods]{
+        // bind on the release action - this allows us to attach to modified keys without shift, alt etc triggering the bind first
+        callback(this_button, mods);
+      });
+    }
+  }
 }
 
 }
