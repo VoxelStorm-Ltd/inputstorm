@@ -8,13 +8,85 @@ namespace inputstorm {
 namespace input {
 
 void window::bind_position(std::function<void(vec2i const&)> func) {
-  /// Bind a function to window entering the window
+  /// Bind a function to window being moved
   #ifndef NDEBUG
     if(!func) {
-      std::cout << "InputStorm: WARNING: Binding a null function to window entering the window, this will throw an exception if called!" << std::endl;
+      std::cout << "InputStorm: WARNING: Binding a null function to window position, this will throw an exception if called!" << std::endl;
     }
   #endif
   position_binding = func;
+}
+void window::bind_resize(std::function<void(vec2i const&)> func) {
+  /// Bind a function to window being resized
+  #ifndef NDEBUG
+    if(!func) {
+      std::cout << "InputStorm: WARNING: Binding a null function to window resize, this will throw an exception if called!" << std::endl;
+    }
+  #endif
+  resize_binding = func;
+}
+void window::bind_framebuffer_size(std::function<void(vec2i const&)> func) {
+  /// Bind a function to framebuffer being resized
+  #ifndef NDEBUG
+    if(!func) {
+      std::cout << "InputStorm: WARNING: Binding a null function to framebuffer resize, this will throw an exception if called!" << std::endl;
+    }
+  #endif
+  framebuffer_size_binding = func;
+}
+void window::bind_close(std::function<void()> func) {
+  /// Bind a function to window being closed
+  #ifndef NDEBUG
+    if(!func) {
+      std::cout << "InputStorm: WARNING: Binding a null function to window close, this will throw an exception if called!" << std::endl;
+    }
+  #endif
+  close_binding = func;
+}
+void window::bind_refresh(std::function<void()> func) {
+  /// Bind a function to window being refreshed
+  #ifndef NDEBUG
+    if(!func) {
+      std::cout << "InputStorm: WARNING: Binding a null function to window refresh, this will throw an exception if called!" << std::endl;
+    }
+  #endif
+  refresh_binding = func;
+}
+void window::bind_focus_gain(std::function<void()> func) {
+  /// Bind a function to window gaining focus
+  #ifndef NDEBUG
+    if(!func) {
+      std::cout << "InputStorm: WARNING: Binding a null function to window gaining focus, this will throw an exception if called!" << std::endl;
+    }
+  #endif
+  focus_gain_binding = func;
+}
+void window::bind_focus_lose(std::function<void()> func) {
+  /// Bind a function to window losing focus
+  #ifndef NDEBUG
+    if(!func) {
+      std::cout << "InputStorm: WARNING: Binding a null function to window losing focus, this will throw an exception if called!" << std::endl;
+    }
+  #endif
+  focus_lose_binding = func;
+}
+void window::bind_minimise(std::function<void()> func) {
+  /// Bind a function to window minimise
+  #ifndef NDEBUG
+    if(!func) {
+      std::cout << "InputStorm: WARNING: Binding a null function to window minimise, this will throw an exception if called!" << std::endl;
+    }
+  #endif
+  minimise_binding = func;
+}
+void window::bind_restore(std::function<void()> func) {
+  /// Bind a function to window restore
+  #ifndef NDEBUG
+    if(!func) {
+      std::cout << "InputStorm: WARNING: Binding a null function to window restore, this will throw an exception if called!" << std::endl;
+    }
+  #endif
+  restore_binding = func;
 }
 
 void window::unbind_position() {
