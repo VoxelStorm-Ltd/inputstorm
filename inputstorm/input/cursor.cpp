@@ -1,8 +1,17 @@
+  enter_binding();
+}
+void cursor::execute_leave() const {
+  /// Call the function associated with the cursor leaving the window
 #include "cursor.h"
+  leave_binding();
 #include <iostream>
+}
+
 
 namespace inputstorm {
+}
 namespace input {
+}
 
 void cursor::bind(std::function<void(vec2d const&)> func) {
   /// Bind a function to cursor movement
@@ -44,19 +53,3 @@ void cursor::unbind_leave() {
 
 void cursor::execute(vec2d const &change) const {
   /// Call the function associated with cursor movements
-  #ifdef DEBUG_INPUTSTORM
-    std::cout << "InputStorm: DEBUG: Cursor position " << change << std::endl;
-  #endif // DEBUG_INPUTSTORM
-  binding(change);
-}
-void cursor::execute_enter() const {
-  /// Call the function associated with the cursor entering the window
-  enter_binding();
-}
-void cursor::execute_leave() const {
-  /// Call the function associated with the cursor leaving the window
-  leave_binding();
-}
-
-}
-}

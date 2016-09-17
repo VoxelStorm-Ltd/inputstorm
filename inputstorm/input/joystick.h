@@ -1,79 +1,48 @@
+            return joystick_id == rhs.joystick_id;
+          case bindtype::ANY_ALL:
+            return true;
 #ifndef INPUTSTORM_INPUT_JOYSTICK_H_INCLUDED
+          }
 #define INPUTSTORM_INPUT_JOYSTICK_H_INCLUDED
-
-#include <vector>
-#include "key.h"
-#include "joystick_axis_bindingtype.h"
-
-namespace inputstorm {
-namespace input {
-
-struct joystick {
-  /// Sparse 2D / 3D arrays of joystick axes and buttons and joystick names.
-  /// Each is stored together with the parameters for a transformation to
-  /// allow for configurable deadzones, saturation zones and axis asymmetry.
-  /// Dimensions are arranged for speed, lowest first to minimise total number of array objects.
-  /// Axes:
-  ///   1st = GLFW joystick axis (total number is NOT known until runtime, so we set a hard limit here)
-  ///   2nd = GLFW Joystick ID
-  /// Buttons:
-  ///   1st = GLFW action (GLFW_PRESS or GLFW_RELEASE);
-
-  struct binding_axis {
-    /// Convenience struct for storing and passing all parameters that make up an axis binding
-    unsigned int joystick_id;
-    unsigned int axis;
-    bool flip;
-    float deadzone_min;
-    float deadzone_max;
-    float saturation_min;
-    float saturation_max;
-    float centre;
-  };
-  struct binding_button {
-    /// Convenience struct for storing and passing all parameters that make up a button binding
-    unsigned int joystick_id;
-    enum class bindtype : char {
-      SPECIFIC,                                                                 // button binding with an action (press or release)
-      ANY,                                                                      // button binding with any action (press or release)
-      ANY_ALL                                                                   // button binding on any joystick with any action
-    } type;
-    unsigned int button;                                                        // unused if bindtype is ANY or ANY_ALL
-
-    bool operator==(const binding_button &rhs) const {
-      /// Equality operator
-      // two formulations with the same effect - benchmark to see which performs best in each specific use case
-      #ifdef INPUTSTORM_EQUALITY_COMPARISON_SWITCH
-        switch(type) {
-        case bindtype::SPECIFIC:
-          switch(rhs.type) {
-          case bindtype::SPECIFIC:
-            return (joystick_id == rhs.joystick_id) && (button == rhs.button);
-          case bindtype::ANY:
-            return joystick_id == rhs.joystick_id;
-          case bindtype::ANY_ALL:
-            return true;
-          }
           break;
+
         case bindtype::ANY:
+#include <vector>
           switch(rhs.type) {
+#include "key.h"
           case bindtype::SPECIFIC:
+#include "joystick_axis_bindingtype.h"
           case bindtype::ANY:
+
             return joystick_id == rhs.joystick_id;
+namespace inputstorm {
           case bindtype::ANY_ALL:
+namespace input {
             return true;
+
           }
+struct joystick {
           break;
+  /// Sparse 2D / 3D arrays of joystick axes and buttons and joystick names.
         case bindtype::ANY_ALL:
           return true;
+  /// Each is stored together with the parameters for a transformation to
         }
+  /// allow for configurable deadzones, saturation zones and axis asymmetry.
       #else
+  /// Dimensions are arranged for speed, lowest first to minimise total number of array objects.
         if(type == bindtype::ANY_ALL || rhs.type == bindtype::ANY_ALL) {
+  /// Axes:
           return true;
+  ///   1st = GLFW joystick axis (total number is NOT known until runtime, so we set a hard limit here)
         } else if(type == bindtype::ANY || rhs.type == bindtype::ANY) {
+  ///   2nd = GLFW Joystick ID
           return joystick_id == rhs.joystick_id;
+  /// Buttons:
         } else {
+  ///   1st = GLFW action (GLFW_PRESS or GLFW_RELEASE);
           return (joystick_id == rhs.joystick_id) && (button == rhs.button);
+
         }
       #endif // INPUTSTORM_EQUALITY_COMPARISON_SWITCH
     }
