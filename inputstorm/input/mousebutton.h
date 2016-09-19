@@ -86,7 +86,7 @@ public:
 
 private:
   #ifdef NDEBUG
-    std::string const &name_at(buttontype button) __attribute__((__const__)) const;
+    std::string const &name_at(buttontype button) const __attribute__((__const__));
     std::function<void()> const &binding_at(buttontype button,
                                             key::actiontype action = key::actiontype::PRESS,
                                             key::modtype mods = key::modtype::NONE) const __attribute__((__const__));
