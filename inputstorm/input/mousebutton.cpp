@@ -96,6 +96,7 @@ void mousebutton::bind(buttontype button, key::actiontype action, key::modtype m
     if(!func) {
       std::cout << "InputStorm: WARNING: Binding a null function to key " << get_name(button) << ", this will throw an exception if called!" << std::endl;
     }
+  #endif // NDEBUG
   bindings[static_cast<unsigned int>(action)][static_cast<unsigned int>(mods)][static_cast<unsigned int>(button)] = func;
 }
 void mousebutton::bind_any_mod(buttontype button, key::actiontype action, std::function<void()> func) {
@@ -172,6 +173,7 @@ void mousebutton::unbind(binding const &this_binding) {
     unbind_any_mod(this_binding.button, key::actiontype::PRESS);
     unbind_any_mod(this_binding.button, key::actiontype::RELEASE);
     break;
+  case binding::bindtype::ANY:
     unbind_any();
     break;
   case binding::bindtype::END:
