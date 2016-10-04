@@ -270,7 +270,7 @@ void key::bind(key::binding const &this_binding,
       bind(this_binding.key, actiontype::PRESS, this_binding.mods, func_press);
     }
     if(func_release) {
-      bind(this_binding.key, actiontype::RELEASE, this_binding.mods, func_release);
+      bind_any_mod(this_binding.key, actiontype::RELEASE, func_release);        // for release actions, always accept any modifier
     }
     if(func_repeat) {
       bind(this_binding.key, actiontype::REPEAT, this_binding.mods, func_repeat);
