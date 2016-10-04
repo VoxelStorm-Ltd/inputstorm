@@ -303,7 +303,13 @@ void key::bind(key::binding const &this_binding,
 }
 
 void key::unbind(keytype this_key, actiontype action, modtype mods) {
-  bindings[static_cast<unsigned int>(action)][static_cast<unsigned int>(mods)][static_cast<unsigned int>(this_key)] = []{}; // noop
+  if(action == actiontype::RELEASE) {
+    for(auto const &this_mod : modtype()) {                                     // release actions are bound to any modifier, so must be unbound for all
+      bindings[static_cast<unsigned int>(action)][static_cast<unsigned int>(this_mod)][static_cast<unsigned int>(this_key)] = []{}; // noop
+    }
+  } else {
+    bindings[static_cast<unsigned int>(action)][static_cast<unsigned int>(mods)][static_cast<unsigned int>(this_key)] = []{}; // noop
+  }
 }
 void key::unbind_any_mod(keytype this_key, actiontype action) {
   /// Helper function to unbind callbacks from a key with any modifier
