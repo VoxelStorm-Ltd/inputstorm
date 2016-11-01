@@ -373,5 +373,19 @@ void key::capture(std::function<void(keytype, modtype)> callback) {
   }
 }
 
+void key::capture(std::function<void(binding const&)> callback) {
+  /// Capture a keystroke and return it to the given callback as a binding object
+  for(keytype this_key = 0; this_key != max; ++this_key) {                      // create a new callback for each key
+    for(auto const &mods : modtype()) {
+      bind(this_key, actiontype::PRESS,   mods, []{});                          // unbind press actions
+      bind(this_key, actiontype::REPEAT,  mods, []{});                          // unbind repeat actions
+      bind(this_key, actiontype::RELEASE, mods, [callback, this_key, mods]{
+        // bind on the release action - this allows us to attach to modified keys without shift, alt etc triggering the bind first
+        callback(binding{binding::bindtype::SPECIFIC, this_key, mods});
+      });
+    }
+  }
+}
+
 }
 }

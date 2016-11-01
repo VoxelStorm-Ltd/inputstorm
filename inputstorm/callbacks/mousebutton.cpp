@@ -21,7 +21,7 @@ void mousebutton(GLFWwindow *thiswindow,
     return;
   }
   parent->mousebutton.execute(button,
-                              static_cast<input::key::actiontype>(action),
+                              static_cast<input::mousebutton::actiontype>(action),
                               static_cast<input::key::modtype>(mods));
 }
 

@@ -7,7 +7,8 @@
 namespace inputstorm {
 namespace input {
 
-struct scroll {
+class scroll {
+public:
   // types
   enum class direction : char {
     RIGHT,

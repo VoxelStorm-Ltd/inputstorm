@@ -2,7 +2,6 @@
 #define INPUTSTORM_MANAGER_H_INCLUDED
 
 #include <unordered_map>
-#include "input/key.h"
 #include "input/cursor.h"
 #include "input/mousebutton.h"
 #include "input/scroll.h"
@@ -36,9 +35,9 @@ private:
   };
   std::unordered_map<unsigned int, saved_bindingtype> saved_bindings;           // a collection of bindings we can load at any time
 
+public:
   bool initialised = false;                                                     // whether this has been initialised
 
-public:
   manager();
   explicit manager(GLFWwindow &thiswindow);
   ~manager();
@@ -48,9 +47,8 @@ public:
 
   bool is_initialised() __attribute__((__pure__));
 
-public:
+  // manage saved raw binding sets
   void copy_bindings(manager const &other);
-
   unsigned int save_bindings();
   void save_bindings(unsigned int savenumber);
   void load_bindings(unsigned int savenumber);

@@ -8,10 +8,19 @@
 namespace inputstorm {
 namespace input {
 
-struct mousebutton {
+class mousebutton {
+public:
   // types
   using buttontype = int;
 
+  enum class actiontype : int {
+    RELEASE = GLFW_RELEASE,
+    PRESS   = GLFW_PRESS,
+    // array bounds
+    BEGIN = RELEASE,
+    LAST = PRESS,
+    END = LAST + 1
+  };
   struct binding {
     /// Convenience struct for storing and passing all parameters that make up a binding
     enum class bindtype : char {
@@ -74,12 +83,11 @@ struct mousebutton {
 
   // limits
   static unsigned int constexpr const max = GLFW_MOUSE_BUTTON_LAST + 1;
-  static unsigned int constexpr const max_action = static_cast<int>(key::actiontype::REPEAT); // there's no repeat action for mouse buttons
 
   // data
 private:
   std::array<std::string, max> names;                                           // cached human-readable names of buttons
-  std::array<std::array<std::array<std::function<void()>, max>, key::max_mods>, max_action> bindings; // callback functions for keys
+  std::array<std::array<std::array<std::function<void()>, max>, key::max_mods>, static_cast<unsigned int>(actiontype::END)> bindings; // callback functions for keys
 
 public:
   void init();
@@ -88,12 +96,12 @@ private:
   #ifdef NDEBUG
     std::string const &name_at(buttontype button) const __attribute__((__const__));
     std::function<void()> const &binding_at(buttontype button,
-                                            key::actiontype action = key::actiontype::PRESS,
+                                            actiontype action = actiontype::PRESS,
                                             key::modtype mods = key::modtype::NONE) const __attribute__((__const__));
   #else
     std::string const &name_at(buttontype button) const;
     std::function<void()> const &binding_at(buttontype button,
-                                            key::actiontype action = key::actiontype::PRESS,
+                                            actiontype action = actiontype::PRESS,
                                             key::modtype mods = key::modtype::NONE) const;
   #endif // NDEBUG
 
@@ -104,22 +112,37 @@ public:
     std::string const &get_name(buttontype button) const;
   #endif // NDEBUG
 
-  void bind(        buttontype button, key::actiontype action, key::modtype mods, std::function<void()> func);
-  void bind_any_mod(buttontype button, key::actiontype action,                    std::function<void()> func);
-  void bind_any(                                                                  std::function<void()> func);
+  void bind(        buttontype button, actiontype action, key::modtype mods, std::function<void()> func);
+  void bind_any_mod(buttontype button, actiontype action,                    std::function<void()> func);
+  void bind_any(                                                             std::function<void()> func);
   void bind(binding const &this_binding, std::function<void()> func_press, std::function<void()> func_release = nullptr);
 
-  void unbind(        buttontype button, key::actiontype action, key::modtype mods);
-  void unbind_any_mod(buttontype button, key::actiontype action);
+  void unbind(        buttontype button, actiontype action, key::modtype mods);
+  void unbind_any_mod(buttontype button, actiontype action);
   void unbind_any();
   void unbind(binding const &this_binding);
 
   void execute(buttontype button,
-               key::actiontype action = key::actiontype::PRESS,
+               actiontype action = actiontype::PRESS,
                key::modtype mods = key::modtype::NONE) const;
 
   void capture(std::function<void(buttontype, key::modtype)> callback);
+  void capture(std::function<void(binding const&)> callback);
 };
+
+/// Helper functions to allow mousebutton::actiontype to be iterated
+inline mousebutton::actiontype operator++(mousebutton::actiontype &i) {
+  return i = static_cast<mousebutton::actiontype>(std::underlying_type<mousebutton::actiontype>::type(i) + 1);
+}
+inline mousebutton::actiontype operator*(mousebutton::actiontype c) {
+  return c;
+}
+inline mousebutton::actiontype begin(mousebutton::actiontype thistype __attribute__((__unused__))) {
+  return mousebutton::actiontype::BEGIN;
+}
+inline mousebutton::actiontype end(mousebutton::actiontype thistype __attribute__((__unused__))) {
+  return mousebutton::actiontype::END;
+}
 
 inline size_t hash_value(mousebutton::binding const &this_binding) {
   /// Forward to the binding's hash function

@@ -7,7 +7,7 @@
 namespace inputstorm {
 namespace input {
 
-struct window {
+class window {
 private:
   std::function<void(vec2i const&)> position_binding         = [](vec2i const &change __attribute__((__unused__))){}; // window position change
   std::function<void(vec2i const&)> resize_binding           = [](vec2i const &change __attribute__((__unused__))){}; // window size change

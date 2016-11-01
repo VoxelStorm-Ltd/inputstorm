@@ -4,14 +4,15 @@
 namespace inputstorm {
 
 class manager;
+template<typename T> class binding_manager;
 
 namespace input {
-struct key;
-struct cursor;
-struct mousebutton;
-struct scroll;
-struct joystick;
-struct text;
+class key;
+class cursor;
+class mousebutton;
+class scroll;
+class joystick;
+class text;
 }
 
 }

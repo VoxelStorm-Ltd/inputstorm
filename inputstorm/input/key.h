@@ -8,7 +8,8 @@
 namespace inputstorm {
 namespace input {
 
-struct key {
+class key {
+public:
   /// Sparse 3D array of key names for each GLFW key code and functions.
   /// Functions are kept separate for cache performance during key lookup.
   /// Dimensions are arranged for speed, lowest first to minimise total number of array objects.
@@ -163,6 +164,7 @@ public:
                modtype mods = modtype::NONE) const;
 
   void capture(std::function<void(keytype, modtype)> callback);
+  void capture(std::function<void(binding const&)> callback);
 };
 
 inline key::modtype operator|(key::modtype lhs, key::modtype rhs) {
