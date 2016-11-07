@@ -98,7 +98,7 @@ std::function<void()> const &joystick::button_binding_at(unsigned int joystick_i
       return button_bindings[0][0][0];
     }
     if(button >= max_button) {
-      std::cout << "InputStorm: ERROR: attempting to address button number " << joystick_id << " when max is " << max_button - 1 << std::endl;
+      std::cout << "InputStorm: ERROR: attempting to address button number " << button << " when max is " << max_button - 1 << std::endl;
       return button_bindings[0][0][0];
     }
     if(static_cast<unsigned int>(action) > static_cast<unsigned int>(actiontype::LAST)) {
@@ -195,7 +195,7 @@ void joystick::bind_button_any_all(std::function<void()> func) {
     bind_button_any(joystick_id, func);
   }
 }
-void joystick::bind_button(joystick::binding_button const &this_binding,
+void joystick::bind_button(binding_button const &this_binding,
                            std::function<void()> func_press,
                            std::function<void()> func_release) {
   /// Helper function to load binding settings from a binding object
@@ -243,7 +243,7 @@ void joystick::unbind_axis(unsigned int joystick_id, unsigned int axis) {
 }
 void joystick::unbind_axis_any(unsigned int joystick_id) {
   /// Helper function to unbind all axes on a joystick
-  for(unsigned int axis = 0; axis != inputstorm::input::joystick::max_axis; ++axis) {
+  for(unsigned int axis = 0; axis != max_axis; ++axis) {
     unbind_axis(joystick_id, axis);
   }
 }
