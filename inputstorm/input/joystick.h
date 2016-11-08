@@ -120,7 +120,8 @@ private:
 
 public:
   std::vector<unsigned int> get_connected_ids() const;
-  std::string get_name(unsigned int joystick_id) const;
+  std::string const &get_name(unsigned int joystick_id) const __attribute__((__const__));
+  static std::string get_actiontype_name(actiontype action);
 
   void bind_axis(          unsigned int joystick,
                            unsigned int axis,

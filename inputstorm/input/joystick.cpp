@@ -17,8 +17,8 @@ void joystick::init() {
       #ifdef DEBUG_INPUTSTORM
         std::stringstream ss;
         ss << "InputStorm: DEBUG: unbound joystick function called on axis " << axis;
-        if(joystick != 0) {
-          ss << " on joystick " << joystick_id;
+        if(joystick_id != 0) {
+          ss << " on joystick id " << joystick_id;
         }
         ss << " value ";
         bind_axis(joystick_id, axis, [s = ss.str()](float value){
@@ -38,10 +38,10 @@ void joystick::init() {
           std::stringstream ss;
           ss << "InputStorm: DEBUG: unbound joystick function called on button " << button;
           if(joystick_id != 0) {
-            ss << " on joystick " << joystick_id;
+            ss << " on joystick id " << joystick_id;
           }
-          ss << " action " << get_keyaction_name(action);
-          if(action == action::PRESS) {
+          ss << " action " << get_actiontype_name(action);
+          if(action == actiontype::PRESS) {
             bind_button(joystick_id, button, action, [s = ss.str()]{
               std::cout << s << std::endl;
             });
@@ -118,9 +118,20 @@ std::vector<unsigned int> joystick::get_connected_ids() const {
   }
   return out;
 }
-std::string joystick::get_name(unsigned int joystick_id) const {
+std::string const &joystick::get_name(unsigned int joystick_id) const {
   /// Return the name of a specific joystick ID
   return names[joystick_id];
+}
+std::string joystick::get_actiontype_name(actiontype action) {
+  /// Return a human-readable name for this joystick button actiontype
+  switch(action) {
+  case actiontype::RELEASE:
+    return "RELEASE";
+  case actiontype::PRESS:
+    return "PRESS";
+  default:
+    return "";
+  }
 }
 
 void joystick::bind_axis(unsigned int joystick_id,

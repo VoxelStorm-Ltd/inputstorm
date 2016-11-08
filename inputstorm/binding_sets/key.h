@@ -2,6 +2,9 @@
 #define INPUTSTORM_BINDING_SETS_KEY_H_INCLUDED
 
 #include "base.h"
+#ifdef DEBUG_INPUTSTORM
+  #include <iostream>
+#endif // DEBUG_INPUTSTORM
 
 namespace inputstorm {
 template<typename T> class binding_manager;
@@ -81,7 +84,7 @@ void key<T>::bind(std::string const &binding_name,
   auto &binding_set(this->binding_sets[binding_name]);
   #ifdef DEBUG_INPUTSTORM
     std::stringstream ss;
-    ss << "InputStorm: DEBUG: Binding control " << get_name(control) <<  " in set " << binding_name << ", key " << this_key << " (" << input.key.get_name(this_key) << ")";
+    ss << "InputStorm: DEBUG: Binding control " << static_cast<unsigned int>(control) <<  " in set " << binding_name << ", key " << this_key << " (" << this->input.key.get_name(this_key) << ")";
   #endif // DEBUG_INPUTSTORM
   //if(mods == input::key::modtype::NONE) {
   //  binding_set.insert(typename base<T, BINDING_SET_TYPE>::binding_set_value_type(control, input::key::binding{input::key::binding::bindtype::ANY_MOD, this_key, input::key::modtype::NONE}));
@@ -92,7 +95,7 @@ void key<T>::bind(std::string const &binding_name,
       mods
     }));
     #ifdef DEBUG_INPUTSTORM
-      ss << " mods " << input.key.get_mod_name(mods);
+      ss << " mods " << input::key::get_mod_name(mods);
     #endif // DEBUG_INPUTSTORM
   //}
   #ifdef DEBUG_INPUTSTORM

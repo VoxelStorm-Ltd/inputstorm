@@ -25,7 +25,7 @@ private:
   std::function<void(vec2d const&)> binding = [](vec2d const &change __attribute__((__unused__))){}; // callback function for scroll
 
 public:
-  std::string get_name(direction this_direction) const;
+  static std::string get_name(direction this_direction);
 
   void bind(std::function<void(vec2d const&)> func);
 

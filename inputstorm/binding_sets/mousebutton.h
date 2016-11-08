@@ -76,7 +76,7 @@ void mousebutton<T>::bind(std::string const &binding_name,
   auto &binding_set(this->binding_sets[binding_name]);
   #ifdef DEBUG_INPUTSTORM
     std::stringstream ss;
-    ss << "InputStorm: DEBUG: Binding control " << get_name(control) <<  " in set " << binding_name << ", mousebutton " << this_button << " (" << input.mousebutton.get_name(this_button) << ")";
+    ss << "InputStorm: DEBUG: Binding control " << static_cast<unsigned int>(control) <<  " in set " << binding_name << ", mousebutton " << this_button << " (" << this->input.mousebutton.get_name(this_button) << ")";
   #endif // DEBUG_INPUTSTORM
   if(mods == input::key::modtype::NONE) {
     input::mousebutton::binding const binding{
@@ -94,7 +94,7 @@ void mousebutton<T>::bind(std::string const &binding_name,
     binding_set.insert(typename BASE_TYPE::binding_set_value_type(control, binding));
     update(binding);
     #ifdef DEBUG_INPUTSTORM
-      ss << " mods " << input.key.get_mod_name(mods);
+      ss << " mods " << input::key::get_mod_name(mods);
     #endif // DEBUG_INPUTSTORM
   }
   #ifdef DEBUG_INPUTSTORM

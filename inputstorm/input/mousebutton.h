@@ -86,7 +86,6 @@ public:
 
   // data
 private:
-  std::array<std::string, max> names;                                           // cached human-readable names of buttons
   std::array<std::array<std::array<std::function<void()>, max>, key::max_mods>, static_cast<unsigned int>(actiontype::END)> bindings; // callback functions for keys
 
 public:
@@ -94,7 +93,6 @@ public:
 
 private:
   #ifdef NDEBUG
-    std::string const &name_at(buttontype button) const __attribute__((__const__));
     std::function<void()> const &binding_at(buttontype button,
                                             actiontype action = actiontype::PRESS,
                                             key::modtype mods = key::modtype::NONE) const __attribute__((__const__));
@@ -106,11 +104,8 @@ private:
   #endif // NDEBUG
 
 public:
-  #ifdef NDEBUG
-    std::string const &get_name(buttontype button) const __attribute__((__const__));
-  #else
-    std::string const &get_name(buttontype button) const;
-  #endif // NDEBUG
+  static std::string get_name(buttontype button);
+  static std::string get_actiontype_name(actiontype action);
 
   void bind(        buttontype button, actiontype action, key::modtype mods, std::function<void()> func);
   void bind_any_mod(buttontype button, actiontype action,                    std::function<void()> func);

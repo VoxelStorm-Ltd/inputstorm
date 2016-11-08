@@ -119,11 +119,8 @@ public:
   static unsigned int constexpr const max_action = static_cast<int>(actiontype::END);
   static unsigned int constexpr const max_mods   = static_cast<int>(modtype::END); // modifiers can be combined, we store all options to save processing
 
-  // data
 private:
-  std::array<std::string, max>        names;                                    // cached human-readable names of keys
-  std::array<std::string, max_mods>   mod_names;                                // cached human-readable names of key modifiers
-  std::array<std::string, max_action> action_names;                             // cached human-readable names of key actions
+  // data
   std::array<std::array<std::array<std::function<void()>, max>, max_mods>, max_action> bindings; // callback functions for keys
 
 public:
@@ -139,13 +136,9 @@ private:
   #endif // NDEBUG
 
 public:
-  #ifdef NDEBUG
-    std::string const &get_name(keytype this_key) const __attribute__((__const__));
-  #else
-    std::string const &get_name(keytype this_key) const;
-  #endif // NDEBUG
-  std::string const &get_actiontype_name(actiontype action) const __attribute__((__const__));
-  std::string const &get_mod_name(       modtype mods)      const __attribute__((__const__));
+  static std::string get_name(keytype this_key);
+  static std::string get_actiontype_name(actiontype action);
+  static std::string get_mod_name(modtype mods);
 
   void bind(        keytype key, actiontype action, modtype mods, std::function<void()> func);
   void bind_any_mod(keytype key, actiontype action,               std::function<void()> func);

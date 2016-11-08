@@ -1,5 +1,8 @@
 #include "cursor.h"
 #include <iostream>
+#ifdef DEBUG_INPUTSTORM
+  #include "vectorstorm/vector/vector2.h"
+#endif // DEBUG_INPUTSTORM
 
 namespace inputstorm {
 namespace input {

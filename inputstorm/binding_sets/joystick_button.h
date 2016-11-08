@@ -75,7 +75,7 @@ void joystick_button<T>::bind(std::string const &binding_name,
                               unsigned int button) {
   /// Apply a new control binding to an input key relationship
   #ifdef DEBUG_INPUTSTORM
-    std::cout << "InputStorm: DEBUG: Binding control " << get_name(control) <<  " in set " << this->binding_selected_name << ", joystick " << joystick_id << " button " << button << std::endl;
+    std::cout << "InputStorm: DEBUG: Binding control " << static_cast<int>(control) <<  " in set " << this->binding_selected_name << ", joystick " << joystick_id << " button " << button << std::endl;
   #endif // DEBUG_INPUTSTORM
   auto &binding_set(this->binding_sets[binding_name]);
   binding_set.insert(typename BASE_TYPE::binding_set_value_type(control, input::joystick::binding_button{

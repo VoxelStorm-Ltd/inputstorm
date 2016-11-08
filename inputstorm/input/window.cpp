@@ -2,7 +2,9 @@
 #ifndef NDEBUG
   #include <iostream>
 #endif // NDEBUG
-
+#ifdef DEBUG_INPUTSTORM
+  #include "vectorstorm/vector/vector2.h"
+#endif // DEBUG_INPUTSTORM
 
 namespace inputstorm {
 namespace input {

@@ -104,7 +104,7 @@ void joystick_axis<T>::bind(controltype control,
                             float centre) {
   /// Wrapper to work on the selected control set
   #ifdef DEBUG_INPUTSTORM
-    std::cout << "InputStorm: DEBUG: Binding control " << get_name(control) <<  " in set " << binding_selected_name << ", joystick " << joystick_id << " axis " << axis;
+    std::cout << "InputStorm: DEBUG: Binding control " << static_cast<unsigned int>(control) <<  " in set " << this->binding_selected_name << ", joystick " << joystick_id << " axis " << axis;
     if(flip) {
       std::cout << " (inverted)";
     }

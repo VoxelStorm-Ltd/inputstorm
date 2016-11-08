@@ -1,19 +1,13 @@
 #include "mousebutton.h"
 #include <iostream>
+#ifdef DEBUG_INPUTSTORM
+  #include <sstream>
+#endif // DEBUG_INPUTSTORM
 
 namespace inputstorm {
 namespace input {
 
 void mousebutton::init() {
-  names[GLFW_MOUSE_BUTTON_1] = "LEFT MOUSE";
-  names[GLFW_MOUSE_BUTTON_2] = "RIGHT MOUSE";
-  names[GLFW_MOUSE_BUTTON_3] = "MIDDLE MOUSE";
-  names[GLFW_MOUSE_BUTTON_4] = "MOUSE 4";
-  names[GLFW_MOUSE_BUTTON_5] = "MOUSE 5";
-  names[GLFW_MOUSE_BUTTON_6] = "MOUSE 6";
-  names[GLFW_MOUSE_BUTTON_7] = "MOUSE 7";
-  names[GLFW_MOUSE_BUTTON_8] = "MOUSE 8";
-
   // assign a safe default function to all mouse buttons
   for(auto const &mods : key::modtype()) {
     for(actiontype action : actiontype()) {
@@ -22,9 +16,9 @@ void mousebutton::init() {
           std::stringstream ss;
           ss << "InputStorm: DEBUG: unbound mouse function called on button " << button << " (" << get_name(button) << ")";
           if(mods != key::modtype::NONE) {
-            ss << " mods " << get_keymod_name(mods);
+            ss << " mods " << key::get_mod_name(mods);
           }
-          ss << " action " << get_keyaction_name(action);
+          ss << " action " << get_actiontype_name(action);
           if(action == actiontype::PRESS) {
             bind(button, action, mods, [s = ss.str()]{
               std::cout << s << std::endl;
@@ -43,21 +37,6 @@ void mousebutton::init() {
   std::cout << "InputStorm: Mouse button bindings:    " << sizeof(bindings) / 1024 << "KB" << std::endl;
 }
 
-std::string const &mousebutton::name_at(mousebutton::buttontype button) const {
-  /// Accessor for the mousebutton button name arrays
-  #ifndef NDEBUG
-    if(button < 0) {
-      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a button number " << button << " which is below zero - aborting!" << std::endl;
-      abort();
-    }
-    if(button > GLFW_MOUSE_BUTTON_LAST) {
-      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a button number " << button << " which is past the last button " << GLFW_MOUSE_BUTTON_LAST << ", aborting!" << std::endl;
-      abort();
-    }
-  #endif // NDEBUG
-  return names[button];
-}
-
 std::function<void()> const &mousebutton::binding_at(mousebutton::buttontype button, actiontype action, key::modtype mods) const {
   /// Accessor for the mousebutton function sparse arrays
   #ifndef NDEBUG
@@ -73,19 +52,39 @@ std::function<void()> const &mousebutton::binding_at(mousebutton::buttontype but
   return bindings[static_cast<unsigned int>(action)][static_cast<unsigned int>(mods)][static_cast<unsigned int>(button)];
 }
 
-std::string const &mousebutton::get_name(buttontype button) const {
+std::string mousebutton::get_name(buttontype button) {
   /// Return the button name from its GLFW button ID number
-  // check for negatives first, as GLFW likes to play that game!
-  if(button < 0) {
-    button = 0;                                                                 // default this to unknown button
+  switch(button) {
+  case GLFW_MOUSE_BUTTON_1:
+    return "LEFT MOUSE";
+  case GLFW_MOUSE_BUTTON_2:
+    return "RIGHT MOUSE";
+  case GLFW_MOUSE_BUTTON_3:
+    return "MIDDLE MOUSE";
+  case GLFW_MOUSE_BUTTON_4:
+    return "MOUSE 4";
+  case GLFW_MOUSE_BUTTON_5:
+    return "MOUSE 5";
+  case GLFW_MOUSE_BUTTON_6:
+    return "MOUSE 6";
+  case GLFW_MOUSE_BUTTON_7:
+    return "MOUSE 7";
+  case GLFW_MOUSE_BUTTON_8:
+    return "MOUSE 8";
+  default:
+    return "UNKNOWN";
   }
-  #ifndef NDEBUG
-    if(button > GLFW_MOUSE_BUTTON_LAST) {
-      std::cout << "InputStorm: ERROR! " << __PRETTY_FUNCTION__ << " called with a mouse button number " << button << " which is past the last button " << GLFW_MOUSE_BUTTON_LAST << ", aborting!" << std::endl;
-      abort();
-    }
-  #endif // NDEBUG
-  return names[button];
+}
+std::string mousebutton::get_actiontype_name(actiontype action) {
+  /// Return a human-readable name for this mousebutton actiontype
+  switch(action) {
+  case actiontype::RELEASE:
+    return "RELEASE";
+  case actiontype::PRESS:
+    return "PRESS";
+  default:
+    return "";
+  }
 }
 
 void mousebutton::bind(buttontype button, actiontype action, key::modtype mods, std::function<void()> func) {

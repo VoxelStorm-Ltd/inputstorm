@@ -6,7 +6,7 @@
 namespace inputstorm {
 namespace input {
 
-std::string scroll::get_name(scroll::direction this_direction) const {
+std::string scroll::get_name(scroll::direction this_direction) {
   /// Return the this_key name from its GLFW this_key ID number
   switch(this_direction) {
   case direction::RIGHT:
