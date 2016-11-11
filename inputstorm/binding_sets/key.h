@@ -7,8 +7,6 @@
 #endif // DEBUG_INPUTSTORM
 
 namespace inputstorm {
-template<typename T> class binding_manager;
-
 namespace binding_sets {
 
 #define BINDING_SET_TYPE boost::bimap<boost::bimaps::unordered_multiset_of<T>, boost::bimaps::unordered_multiset_of<input::key::binding>>
@@ -19,7 +17,7 @@ class key : public BASE_TYPE {
   using controltype = T;
 
 public:
-  key(manager &input_manager, binding_manager<T> &parent_binding_manager);
+  key(manager &input_manager, binding_manager<controltype> &parent_binding_manager);
   ~key();
 
   // bind and unbind controls to inputs
@@ -33,6 +31,11 @@ public:
   void bind(controltype control,
             input::key::keytype this_key,
             input::key::modtype mods = input::key::modtype::NONE);
+  void bind(std::string const &binding_name,
+            controltype control,
+            input::key::binding const &binding);
+  void bind(controltype control,
+            input::key::binding const &binding);
 
   // update control-based bindings
   void update(std::string const &binding_name,
@@ -60,6 +63,9 @@ template<typename T>
 void key<T>::unbind(std::string const &binding_name,
                     controltype control) {
   /// Erase a control binding from an input key relationship
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: Unbinding key for control " << static_cast<unsigned int>(control) << " on set " << binding_name << std::endl;
+  #endif // DEBUG_INPUTSTORM
   auto &binding_set(this->binding_sets[binding_name]);
   auto const &binding_range(binding_set.left.equal_range(control));             // find all keys with this control applied
   std::vector<input::key::binding> bindings_to_unbind;                          // copy the controls affected by the binding range to update after
@@ -84,7 +90,10 @@ void key<T>::bind(std::string const &binding_name,
   auto &binding_set(this->binding_sets[binding_name]);
   #ifdef DEBUG_INPUTSTORM
     std::stringstream ss;
-    ss << "InputStorm: DEBUG: Binding control " << static_cast<unsigned int>(control) <<  " in set " << binding_name << ", key " << this_key << " (" << this->input.key.get_name(this_key) << ")";
+    ss << "InputStorm: DEBUG: Binding control " << static_cast<unsigned int>(control)
+                                                << " in set " << binding_name
+                                                << ", key " << this_key
+                                                << " (" << this->input.key.get_name(this_key) << ")";
   #endif // DEBUG_INPUTSTORM
   //if(mods == input::key::modtype::NONE) {
   //  binding_set.insert(typename base<T, BINDING_SET_TYPE>::binding_set_value_type(control, input::key::binding{input::key::binding::bindtype::ANY_MOD, this_key, input::key::modtype::NONE}));
@@ -101,6 +110,11 @@ void key<T>::bind(std::string const &binding_name,
   #ifdef DEBUG_INPUTSTORM
     std::cout << ss.str() << std::endl;
   #endif // DEBUG_INPUTSTORM
+  update(binding_name, input::key::binding{
+    input::key::binding::bindtype::SPECIFIC,
+    this_key,
+    mods
+  });
 }
 template<typename T>
 void key<T>::bind(controltype control,
@@ -109,6 +123,19 @@ void key<T>::bind(controltype control,
   /// Wrapper to work on the selected control set
   bind(this->binding_selected_name, control, this_key, mods);
 }
+template<typename T>
+void key<T>::bind(std::string const &binding_name,
+                  controltype control,
+                  input::key::binding const &binding) {
+  /// Wrapper to work on a binding
+  bind(binding_name, control, binding.key, binding.mods);
+}
+template<typename T>
+void key<T>::bind(controltype control,
+                  input::key::binding const &binding) {
+  /// Wrapper to work on a binding in the selected control set
+  bind(control, binding.key, binding.mods);
+}
 
 ///////////////////// update control-based bindings ////////////////////////////
 
@@ -116,6 +143,11 @@ template<typename T>
 void key<T>::update(std::string const &binding_name,
                     input::key::binding const &binding) {
   /// Update all digital bindings for a specific key
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: Updating binding in set " << binding_name
+                                                               << " for key " << binding.key
+                                                               << " (" << this->input.key.get_name(binding.key) << ")" << std::endl;
+  #endif // DEBUG_INPUTSTORM
   auto const &binding_set(this->binding_sets.at(binding_name));
   auto const &control_range(binding_set.right.equal_range(binding));            // find all controls (and hence functions) that apply to this key
   std::vector<controltype> conts;                                               // generate a vector of controls
@@ -143,6 +175,9 @@ void key<T>::update(std::string const &binding_name,
     if(funcs_press.size() == 1) {                                               // there's only one function, so bind it directly
       func_press_combined = funcs_press[0];
     } else {
+      #ifdef DEBUG_INPUTSTORM
+        std::cout << "InputStorm: DEBUG: Combining " << funcs_press.size() << " functions for key press" << std::endl;
+      #endif // DEBUG_INPUTSTORM
       func_press_combined = [funcs_press]{                                      // there are multiple functions, so create a function to iterate and call them all
         for(auto const &this_func : funcs_press) {
           this_func();
@@ -157,6 +192,9 @@ void key<T>::update(std::string const &binding_name,
     if(funcs_release.size() == 1) {                                             // there's only one function, so bind it directly
       func_release_combined = funcs_release[0];
     } else {
+      #ifdef DEBUG_INPUTSTORM
+        std::cout << "InputStorm: DEBUG: Combining " << funcs_press.size() << " functions for key release" << std::endl;
+      #endif // DEBUG_INPUTSTORM
       func_release_combined = [funcs_release]{                                  // there are multiple functions, so create a function to iterate and call them all
         for(auto const &this_func : funcs_release) {
           this_func();
@@ -179,6 +217,9 @@ void key<T>::update(input::key::binding const &binding) {
 template<typename T>
 void key<T>::update_all(controltype control) {
   /// Update key bindings for this control
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: Updating all key bindings for control " << static_cast<unsigned int>(control) << std::endl;
+  #endif // DEBUG_INPUTSTORM
   auto const &binding_set(this->get_selected_binding_set());
   auto const &binding_range(binding_set.left.equal_range(control));             // find all keys with this control applied
   for(auto const &it : boost::make_iterator_range(binding_range.first, binding_range.second)) { // for each key:

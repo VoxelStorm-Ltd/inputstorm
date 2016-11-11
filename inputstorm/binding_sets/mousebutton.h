@@ -4,8 +4,6 @@
 #include "base.h"
 
 namespace inputstorm {
-template<typename T> class binding_manager;
-
 namespace binding_sets {
 
 #define BINDING_SET_TYPE boost::bimap<boost::bimaps::unordered_multiset_of<T>, boost::bimaps::unordered_multiset_of<input::mousebutton::binding>>
@@ -16,7 +14,7 @@ class mousebutton : public BASE_TYPE {
   using controltype = T;
 
 public:
-  mousebutton(manager &input_manager, binding_manager<T> &parent_binding_manager);
+  mousebutton(manager &input_manager, binding_manager<controltype> &parent_binding_manager);
   ~mousebutton();
 
   // bind and unbind controls to inputs
@@ -30,6 +28,11 @@ public:
   void bind(controltype control,
             input::mousebutton::buttontype this_button,
             input::key::modtype mods = input::key::modtype::NONE);
+  void bind(std::string const &binding_name,
+            controltype control,
+            input::mousebutton::binding const &binding);
+  void bind(controltype control,
+            input::mousebutton::binding const &binding);
 
   // update control-based bindings
   void update(std::string const &binding_name,
@@ -56,6 +59,9 @@ mousebutton<T>::~mousebutton() {
 template<typename T>
 void mousebutton<T>::unbind(std::string const &binding_name, controltype control) {
   /// Erase a control binding from an input mousebutton relationship
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: Unbinding mousebutton for control " << static_cast<unsigned int>(control) << " on set " << binding_name << std::endl;
+  #endif // DEBUG_INPUTSTORM
   auto &binding_set(this->binding_sets[binding_name]);
   auto const &binding_range(binding_set.left.equal_range(control));
   auto const binding_range_copy(binding_range);                                 // copy the binding range to update after
@@ -76,12 +82,16 @@ void mousebutton<T>::bind(std::string const &binding_name,
   auto &binding_set(this->binding_sets[binding_name]);
   #ifdef DEBUG_INPUTSTORM
     std::stringstream ss;
-    ss << "InputStorm: DEBUG: Binding control " << static_cast<unsigned int>(control) <<  " in set " << binding_name << ", mousebutton " << this_button << " (" << this->input.mousebutton.get_name(this_button) << ")";
+    ss << "InputStorm: DEBUG: Binding control " << static_cast<unsigned int>(control)
+                                                << " in set " << binding_name
+                                                << ", mousebutton " << this_button
+                                                << " (" << this->input.mousebutton.get_name(this_button) << ")";
   #endif // DEBUG_INPUTSTORM
   if(mods == input::key::modtype::NONE) {
     input::mousebutton::binding const binding{
       input::mousebutton::binding::bindtype::ANY_MOD,
-      this_button, input::key::modtype::NONE
+      this_button,
+      input::key::modtype::NONE
     };
     binding_set.insert(typename BASE_TYPE::binding_set_value_type(control, binding));
     update(binding);
@@ -115,6 +125,11 @@ template<typename T>
 void mousebutton<T>::update(std::string const &binding_name,
                             input::mousebutton::binding const &binding) {
   /// Update all digital bindings for a specific mouse button
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: Updating binding in set " << binding_name
+                                                               << " for mousebutton " << binding.button
+                                                               << " (" << this->input.mousebutton.get_name(binding.button) << ")" << std::endl;
+  #endif // DEBUG_INPUTSTORM
   auto const &binding_set(this->binding_sets.at(binding_name));
   auto const &control_range(binding_set.right.equal_range(binding));            // find all controls (and hence functions) that apply to this key
   std::vector<controltype> conts;                                               // generate a vector of controls
@@ -142,6 +157,9 @@ void mousebutton<T>::update(std::string const &binding_name,
     if(funcs_press.size() == 1) {                                               // there's only one function, so bind it directly
       func_press_combined = funcs_press[0];
     } else {
+      #ifdef DEBUG_INPUTSTORM
+        std::cout << "InputStorm: DEBUG: Combining " << funcs_press.size() << " functions for mousebutton press" << std::endl;
+      #endif // DEBUG_INPUTSTORM
       func_press_combined = [funcs_press]{                                      // there are multiple functions, so create a function to iterate and call them all
         for(auto const &this_func : funcs_press) {
           this_func();
@@ -156,6 +174,9 @@ void mousebutton<T>::update(std::string const &binding_name,
     if(funcs_release.size() == 1) {                                             // there's only one function, so bind it directly
       func_release_combined = funcs_release[0];
     } else {
+      #ifdef DEBUG_INPUTSTORM
+        std::cout << "InputStorm: DEBUG: Combining " << funcs_press.size() << " functions for mousebutton release" << std::endl;
+      #endif // DEBUG_INPUTSTORM
       func_release_combined = [funcs_release]{                                  // there are multiple functions, so create a function to iterate and call them all
         for(auto const &this_func : funcs_release) {
           this_func();
@@ -178,6 +199,9 @@ void mousebutton<T>::update(input::mousebutton::binding const &binding) {
 template<typename T>
 void mousebutton<T>::update_all(controltype control) {
   /// Update mouse button bindings for this control
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: Updating all mousebutton bindings for control " << static_cast<unsigned int>(control) << std::endl;
+  #endif // DEBUG_INPUTSTORM
   auto const &binding_set(this->get_selected_binding_set());
   auto const &binding_range(binding_set.left.equal_range(control));
   for(auto const &it : boost::make_iterator_range(binding_range.first, binding_range.second)) {

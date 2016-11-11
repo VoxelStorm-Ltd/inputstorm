@@ -7,8 +7,6 @@
 #endif // NDEBUG
 
 namespace inputstorm {
-template<typename T> class binding_manager;
-
 namespace binding_sets {
 
 #define BINDING_SET_TYPE boost::bimap<boost::bimaps::unordered_multiset_of<T>, boost::bimaps::unordered_multiset_of<input::scroll::direction>>
@@ -19,7 +17,7 @@ class scroll : public BASE_TYPE {
   using controltype = T;
 
 public:
-  scroll(manager &input_manager, binding_manager<T> &parent_binding_manager);
+  scroll(manager &input_manager, binding_manager<controltype> &parent_binding_manager);
   ~scroll();
 
   // bind and unbind controls to inputs
@@ -54,6 +52,9 @@ template<typename T>
 void scroll<T>::unbind(std::string const &binding_name,
                        controltype control) {
   /// Erase a control binding from an input scroll relationship
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: Unbinding scroll for control " << static_cast<unsigned int>(control) << " on set " << binding_name << std::endl;
+  #endif // DEBUG_INPUTSTORM
   auto &binding_set(this->binding_sets[binding_name]);
   binding_set.left.erase(control);                                              // clear the current associations with that control
   update_all(control);                                                          // update all scroll functions, because they're not separable into components
@@ -64,6 +65,13 @@ void scroll<T>::bind(std::string const &binding_name,
                      controltype control,
                      input::scroll::direction direction) {
   /// Apply a new control binding to an input scroll relationship
+  #ifdef DEBUG_INPUTSTORM
+    std::stringstream ss;
+    ss << "InputStorm: DEBUG: Binding control " << static_cast<unsigned int>(control)
+                                                << " in set " << binding_name
+                                                << ", scroll direction " << static_cast<unsigned int>(direction)
+                                                << " (" << this->input.scroll.get_name(direction) << ")";
+  #endif // DEBUG_INPUTSTORM
   auto &binding_set(this->binding_sets[binding_name]);
   binding_set.insert(typename BASE_TYPE::binding_set_value_type(control, direction));
   update_all(control);                                                          // update all scroll functions, because they're not separable into components
@@ -80,6 +88,9 @@ void scroll<T>::bind(controltype control,
 template<typename T>
 void scroll<T>::update_all(controltype control) {
   /// Update scroll bindings for this control
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: Updating all scroll bindings for control " << static_cast<unsigned int>(control) << std::endl;
+  #endif // DEBUG_INPUTSTORM
   auto const &binding_set(this->get_selected_binding_set());                    // scroll bindings are shared with keyboard bindings
   auto const &binding_range(binding_set.left.equal_range(control));
   if(binding_range.first != binding_range.second) {                             // skip empty ranges so we only perform this when called on the specified control
@@ -154,6 +165,13 @@ void scroll<T>::update_all(controltype control) {
         funcs_right.emplace_back(this_func.press);
       }
     }
+    #ifdef DEBUG_INPUTSTORM
+      std::cout << "InputStorm: DEBUG: Combining " << funcs_up.size() << "U + "
+                                                   << funcs_down.size() << "D + "
+                                                   << funcs_left.size() << "L + "
+                                                   << funcs_right.size() << "R + "
+                                                   << " functions for scroll" << std::endl;
+    #endif // DEBUG_INPUTSTORM
     this->input.scroll.bind([funcs_up, funcs_down, funcs_left, funcs_right](vec2d const &offset_in){ // copy, don't reference, or these will go out of scope
       // create a special adapter function to activate the up, down, left and right scroll functions a specified number of times
       vec2d offset(offset_in);

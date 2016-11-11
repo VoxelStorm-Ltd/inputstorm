@@ -1,6 +1,8 @@
 #include "key.h"
-#include <sstream>
 #include <iostream>
+#ifdef DEBUG_INPUTSTORM
+  #include <sstream>
+#endif // DEBUG_INPUTSTORM
 
 namespace inputstorm {
 namespace input {
@@ -475,6 +477,9 @@ void key::execute(keytype this_key, actiontype action, modtype mods) const {
 
 void key::capture(std::function<void(keytype, modtype)> callback) {
   /// Capture a keystroke and return it to the given callback
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: capturing keystroke" << std::endl;
+  #endif // DEBUG_INPUTSTORM
   for(keytype this_key = 0; this_key != max; ++this_key) {                      // create a new callback for each key
     for(auto const &mods : modtype()) {
       bind(this_key, actiontype::PRESS,   mods, []{});                          // unbind press actions
@@ -489,6 +494,9 @@ void key::capture(std::function<void(keytype, modtype)> callback) {
 
 void key::capture(std::function<void(binding const&)> callback) {
   /// Capture a keystroke and return it to the given callback as a binding object
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: capturing keystroke to binding" << std::endl;
+  #endif // DEBUG_INPUTSTORM
   for(keytype this_key = 0; this_key != max; ++this_key) {                      // create a new callback for each key
     for(auto const &mods : modtype()) {
       bind(this_key, actiontype::PRESS,   mods, []{});                          // unbind press actions

@@ -43,6 +43,9 @@ void scroll::execute(vec2d const &offset) const {
 
 void scroll::capture(std::function<void(direction)> callback) {
   /// Capture a scroll action and return it to the given callback
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: capturing scroll" << std::endl;
+  #endif // DEBUG_INPUTSTORM
   bind([callback](vec2d const &amount){
     // prioritise up/down scroll
     if(amount.y > 0.0) {

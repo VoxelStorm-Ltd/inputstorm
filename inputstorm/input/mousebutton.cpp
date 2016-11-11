@@ -194,6 +194,9 @@ void mousebutton::execute(buttontype button, actiontype action, key::modtype mod
 
 void mousebutton::capture(std::function<void(buttontype, key::modtype)> callback) {
   /// Capture a button press and return it to the given callback
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: capturing mousebutton" << std::endl;
+  #endif // DEBUG_INPUTSTORM
   for(buttontype this_button = 0; this_button != max; ++this_button) {          // create a new callback for each key
     for(auto const &mods : key::modtype()) {
       bind(this_button, actiontype::PRESS,   mods, []{});                       // unbind press actions
@@ -206,6 +209,9 @@ void mousebutton::capture(std::function<void(buttontype, key::modtype)> callback
 }
 void mousebutton::capture(std::function<void(binding const&)> callback) {
   /// Capture a button press and return it to the given callback as a binding object
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: capturing mousebutton to binding" << std::endl;
+  #endif // DEBUG_INPUTSTORM
   for(buttontype this_button = 0; this_button != max; ++this_button) {          // create a new callback for each key
     for(auto const &mods : key::modtype()) {
       bind(this_button, actiontype::PRESS,   mods, []{});                       // unbind press actions

@@ -377,6 +377,9 @@ void joystick::capture_axis(std::function<void(unsigned int, unsigned int, bool)
 void joystick::capture_axis(std::function<void(binding_axis const&)> callback,
                             bool calibrate) {
   /// Capture an axis movement and return it to the given callback as a binding object
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: capturing joystick axis" << std::endl;
+  #endif // DEBUG_INPUTSTORM
   static bool calibrated = false;
   static std::array<std::array<float, max_axis>, max> initial_values;
   if(calibrate || !calibrated) {
@@ -430,6 +433,9 @@ void joystick::capture_axis(std::function<void(binding_axis const&)> callback,
 }
 void joystick::capture_button(std::function<void(unsigned int, unsigned int)> callback) {
   /// Capture a button press and return it to the given callback
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: capturing joystick button" << std::endl;
+  #endif // DEBUG_INPUTSTORM
   for(unsigned int joystick_id = 0; joystick_id != max; ++joystick_id) {
     for(unsigned int button = 0; button != max_button; ++button) {
       bind_button(joystick_id, button, actiontype::RELEASE, []{});              // unbind release actions
@@ -443,6 +449,9 @@ void joystick::capture_button(std::function<void(unsigned int, unsigned int)> ca
 }
 void joystick::capture_button(std::function<void(binding_button const&)> callback) {
   /// Capture a button press and return it to the given callback as a binding object
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: capturing joystick button to binding" << std::endl;
+  #endif // DEBUG_INPUTSTORM
   for(unsigned int joystick_id = 0; joystick_id != max; ++joystick_id) {
     for(unsigned int button = 0; button != max_button; ++button) {
       bind_button(joystick_id, button, actiontype::RELEASE, []{});              // unbind release actions
