@@ -1,7 +1,11 @@
 #ifndef INPUTSTORM_BINDING_SETS_KEY_H_INCLUDED
 #define INPUTSTORM_BINDING_SETS_KEY_H_INCLUDED
 
+#include <boost/bimap.hpp>
+#include <boost/bimap/unordered_multiset_of.hpp>
+#include <boost/range/iterator_range.hpp>
 #include "base.h"
+#include "inputstorm/input/key.h"
 #ifdef DEBUG_INPUTSTORM
   #include <iostream>
 #endif // DEBUG_INPUTSTORM
@@ -16,8 +20,11 @@ template<typename T>
 class key : public BASE_TYPE {
   using controltype = T;
 
+  input::key &parent_key;
+
 public:
-  key(manager &input_manager, binding_manager<controltype> &parent_binding_manager);
+  key(binding_manager<controltype> &parent_binding_manager,
+      input::key &this_parent_key);
   ~key();
 
   // bind and unbind controls to inputs
@@ -46,9 +53,10 @@ public:
 };
 
 template<typename T>
-key<T>::key(manager &input_manager,
-            binding_manager<controltype> &parent_binding_manager)
-  : BASE_TYPE(input_manager, parent_binding_manager) {
+key<T>::key(binding_manager<controltype> &parent_binding_manager,
+            input::key &this_parent_key)
+  : BASE_TYPE(parent_binding_manager),
+    parent_key(this_parent_key) {
   /// Default constructor
 }
 
@@ -93,7 +101,7 @@ void key<T>::bind(std::string const &binding_name,
     ss << "InputStorm: DEBUG: Binding control " << static_cast<unsigned int>(control)
                                                 << " in set " << binding_name
                                                 << ", key " << this_key
-                                                << " (" << this->input.key.get_name(this_key) << ")";
+                                                << " (" << parent_key.get_name(this_key) << ")";
   #endif // DEBUG_INPUTSTORM
   //if(mods == input::key::modtype::NONE) {
   //  binding_set.insert(typename base<T, BINDING_SET_TYPE>::binding_set_value_type(control, input::key::binding{input::key::binding::bindtype::ANY_MOD, this_key, input::key::modtype::NONE}));
@@ -146,7 +154,7 @@ void key<T>::update(std::string const &binding_name,
   #ifdef DEBUG_INPUTSTORM
     std::cout << "InputStorm: DEBUG: Updating binding in set " << binding_name
                                                                << " for key " << binding.key
-                                                               << " (" << this->input.key.get_name(binding.key) << ")" << std::endl;
+                                                               << " (" << parent_key.get_name(binding.key) << ")" << std::endl;
   #endif // DEBUG_INPUTSTORM
   auto const &binding_set(this->binding_sets.at(binding_name));
   auto const &control_range(binding_set.right.equal_range(binding));            // find all controls (and hence functions) that apply to this key
@@ -203,9 +211,9 @@ void key<T>::update(std::string const &binding_name,
     }
   }
   if(func_press_combined || func_release_combined) {
-    this->input.key.bind(binding, func_press_combined, func_release_combined);
+    parent_key.bind(binding, func_press_combined, func_release_combined);
   } else {
-    this->input.key.unbind(binding);
+    parent_key.unbind(binding);
   }
 }
 template<typename T>

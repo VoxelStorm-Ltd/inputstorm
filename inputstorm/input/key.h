@@ -92,6 +92,8 @@ public:
           break;
         case bindtype::ANY:
           return true;
+        default:
+          return false;
         }
       #else
         if(type == bindtype::ANY || rhs.type == bindtype::ANY) {

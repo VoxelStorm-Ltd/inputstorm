@@ -76,6 +76,8 @@ public:
           break;
         case bindtype::ANY_ALL:
           return true;
+        default:
+          return false;
         }
       #else
         if(type == bindtype::ANY_ALL || rhs.type == bindtype::ANY_ALL) {

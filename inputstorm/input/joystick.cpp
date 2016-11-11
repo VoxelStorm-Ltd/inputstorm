@@ -22,7 +22,7 @@ void joystick::init() {
         }
         ss << " value ";
         bind_axis(joystick_id, axis, [s = ss.str()](float value){
-          std::cout << s << std::fixed << value <<  std::endl;
+          std::cout << s << std::fixed << value << std::endl;
         });
       #else
         bind_axis(joystick_id, axis, [](float value __attribute__((__unused__))){}); // default to noop
@@ -335,7 +335,9 @@ void joystick::capture_axis(std::function<void(unsigned int, unsigned int, bool)
       for(unsigned int axis = 0; axis != axis_max; ++axis) {
         initial_values[joystick_id][axis] = axis_data[axis];
         #ifdef DEBUG_INPUTSTORM
-          std::cout << "InputStorm: DEBUG: Calibrated id " << joystick_id << " axis " << axis << ": " << initial_values[joystick_id][axis] << std::endl;
+          std::cout << "InputStorm: DEBUG: Calibrated id " << joystick_id
+                    << " axis " << axis
+                    << ": " << initial_values[joystick_id][axis] << std::endl;
         #endif // DEBUG_INPUTSTORM
       }
     }
@@ -392,7 +394,9 @@ void joystick::capture_axis(std::function<void(binding_axis const&)> callback,
       for(unsigned int axis = 0; axis != axis_max; ++axis) {
         initial_values[joystick_id][axis] = axis_data[axis];
         #ifdef DEBUG_INPUTSTORM
-          std::cout << "InputStorm: DEBUG: Calibrated id " << joystick_id << " axis " << axis << ": " << initial_values[joystick_id][axis] << std::endl;
+          std::cout << "InputStorm: DEBUG: Calibrated id " << joystick_id
+                    << " axis " << axis
+                    << ": " << initial_values[joystick_id][axis] << std::endl;
         #endif // DEBUG_INPUTSTORM
       }
     }
@@ -509,7 +513,8 @@ void joystick::draw_binding_graphs() const {
       if(!this_binding.enabled) {
         continue;
       }
-      std::cout << "InputStorm: Transform function on joystick " << joystick_id << " axis " << axis << ":" << std::endl;
+      std::cout << "InputStorm: Transform function on joystick " << joystick_id
+                << " axis " << axis << ":" << std::endl;
       this_binding.draw_graph_console();
     }
   }

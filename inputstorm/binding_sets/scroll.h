@@ -2,6 +2,7 @@
 #define INPUTSTORM_BINDING_SETS_SCROLL_H_INCLUDED
 
 #include "base.h"
+#include "inputstorm/input/scroll.h"
 #ifndef NDEBUG
   #include <iostream>
 #endif // NDEBUG
@@ -16,8 +17,11 @@ template<typename T>
 class scroll : public BASE_TYPE {
   using controltype = T;
 
+  input::scroll &parent_scroll;
+
 public:
-  scroll(manager &input_manager, binding_manager<controltype> &parent_binding_manager);
+  scroll(binding_manager<controltype> &parent_binding_manager,
+         input::scroll &this_parent_scroll);
   ~scroll();
 
   // bind and unbind controls to inputs
@@ -35,9 +39,10 @@ public:
 };
 
 template<typename T>
-scroll<T>::scroll(manager &input_manager,
-                  binding_manager<controltype> &parent_binding_manager)
-  : BASE_TYPE(input_manager, parent_binding_manager) {
+scroll<T>::scroll(binding_manager<controltype> &parent_binding_manager,
+                  input::scroll &this_parent_scroll)
+  : BASE_TYPE(parent_binding_manager),
+    parent_scroll(this_parent_scroll) {
   /// Default constructor
 }
 
@@ -70,7 +75,7 @@ void scroll<T>::bind(std::string const &binding_name,
     ss << "InputStorm: DEBUG: Binding control " << static_cast<unsigned int>(control)
                                                 << " in set " << binding_name
                                                 << ", scroll direction " << static_cast<unsigned int>(direction)
-                                                << " (" << this->input.scroll.get_name(direction) << ")";
+                                                << " (" << parent_scroll.get_name(direction) << ")";
   #endif // DEBUG_INPUTSTORM
   auto &binding_set(this->binding_sets[binding_name]);
   binding_set.insert(typename BASE_TYPE::binding_set_value_type(control, direction));
@@ -172,7 +177,7 @@ void scroll<T>::update_all(controltype control) {
                                                    << funcs_right.size() << "R + "
                                                    << " functions for scroll" << std::endl;
     #endif // DEBUG_INPUTSTORM
-    this->input.scroll.bind([funcs_up, funcs_down, funcs_left, funcs_right](vec2d const &offset_in){ // copy, don't reference, or these will go out of scope
+    parent_scroll.bind([funcs_up, funcs_down, funcs_left, funcs_right](vec2d const &offset_in){ // copy, don't reference, or these will go out of scope
       // create a special adapter function to activate the up, down, left and right scroll functions a specified number of times
       vec2d offset(offset_in);
       while(offset.y < -0.5) {

@@ -1,7 +1,10 @@
 #ifndef INPUTSTORM_BINDING_SETS_BASE_H_INCLUDED
 #define INPUTSTORM_BINDING_SETS_BASE_H_INCLUDED
 
+#include <map>
+
 namespace inputstorm {
+class manager;
 template<typename T> class binding_manager;
 
 namespace binding_sets {
@@ -12,7 +15,7 @@ class base {
 protected:
   base();
 public:
-  virtual ~base();
+  virtual ~base() __attribute__((__const__));
 
   // bind and unbind controls to inputs
   virtual void unbind(std::string const &binding_name, controltype control) = 0;
@@ -42,7 +45,6 @@ class base_crtp_adapter : public base<T_controltype> {
   using controltype = T_controltype;
 
 protected:
-  manager &input;
   binding_manager<controltype> &bindings;
 
 public:
@@ -54,7 +56,7 @@ public:
   std::map<std::string, binding_set_type> binding_sets;                         // in derived classes, access this with this->binding_sets[whatever]
 
 protected:
-  base_crtp_adapter(manager &input_manager, binding_manager<T_controltype> &parent_binding_manager);
+  base_crtp_adapter(binding_manager<T_controltype> &parent_binding_manager);
 public:
   virtual ~base_crtp_adapter();
 
@@ -73,9 +75,8 @@ public:
 };
 
 CRTP_ADAPTER_TEMPLATE_TYPE
-CRTP_ADAPTER_TYPE::base_crtp_adapter(manager &input_manager, binding_manager<controltype> &parent_binding_manager)
-  : input(input_manager),
-    bindings(parent_binding_manager) {
+CRTP_ADAPTER_TYPE::base_crtp_adapter(binding_manager<controltype> &parent_binding_manager)
+  : bindings(parent_binding_manager) {
   /// Default constructor
 }
 

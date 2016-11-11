@@ -2,6 +2,7 @@
 #define INPUTSTORM_BINDING_SETS_JOYSTICK_BUTTON_H_INCLUDED
 
 #include "base.h"
+#include "inputstorm/input/joystick.h"
 
 namespace inputstorm {
 namespace binding_sets {
@@ -13,8 +14,11 @@ template<typename T>
 class joystick_button : public BASE_TYPE {
   using controltype = T;
 
+  input::joystick &parent_joystick;
+
 public:
-  joystick_button(manager &input_manager, binding_manager<controltype> &parent_binding_manager);
+  joystick_button(binding_manager<controltype> &parent_binding_manager,
+                  input::joystick &this_parent_joystick);
   ~joystick_button();
 
   // bind and unbind controls to inputs
@@ -43,9 +47,10 @@ public:
 };
 
 template<typename T>
-joystick_button<T>::joystick_button(inputstorm::manager &input_manager,
-                                    binding_manager<controltype> &parent_binding_manager)
-  : BASE_TYPE(input_manager, parent_binding_manager) {
+joystick_button<T>::joystick_button(binding_manager<controltype> &parent_binding_manager,
+                                    input::joystick &this_parent_joystick)
+  : BASE_TYPE(parent_binding_manager),
+    parent_joystick(this_parent_joystick) {
   /// Default constructor
 }
 
@@ -181,6 +186,11 @@ void joystick_button<T>::update(std::string const &binding_name,
         }
       };
     }
+  }
+  if(func_press_combined || func_release_combined) {
+    parent_joystick.bind_button(binding, func_press_combined, func_release_combined);
+  } else {
+    parent_joystick.unbind_button(binding);
   }
 }
 template<typename T>

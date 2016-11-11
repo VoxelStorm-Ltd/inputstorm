@@ -1,15 +1,11 @@
 #ifndef INPUTSTORM_BINDING_MANAGER_H_INCLUDED
 #define INPUTSTORM_BINDING_MANAGER_H_INCLUDED
 
-#include <unordered_map>
-#include <boost/bimap.hpp>
-#include <boost/bimap/unordered_multiset_of.hpp>
-#include "manager.h"
-#include "binding_sets/key.h"
-#include "binding_sets/mousebutton.h"
-#include "binding_sets/scroll.h"
-#include "binding_sets/joystick_button.h"
-#include "binding_sets/joystick_axis.h"
+#include <functional>
+#include <vector>
+#include <memory>
+#include "binding_sets/base.h"
+
 #ifndef DEBUG_INPUTSTORM
   #include <iostream>
 #endif // DEBUG_INPUTSTORM

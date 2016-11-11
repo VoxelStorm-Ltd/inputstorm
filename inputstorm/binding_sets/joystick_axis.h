@@ -1,6 +1,7 @@
 #ifndef INPUTSTORM_BINDING_SETS_JOYSTICK_AXIS_H_INCLUDED
 #define INPUTSTORM_BINDING_SETS_JOYSTICK_AXIS_H_INCLUDED
 
+#include <unordered_map>
 #include "base.h"
 
 namespace inputstorm {
@@ -13,8 +14,11 @@ template<typename T>
 class joystick_axis : public BASE_TYPE {
   using controltype = T;
 
+  input::joystick &parent_joystick;
+
 public:
-  joystick_axis(manager &input_manager, binding_manager<controltype> &parent_binding_manager);
+  joystick_axis(binding_manager<controltype> &parent_binding_manager,
+                input::joystick &this_parent_joystick);
   virtual ~joystick_axis();
 
   // bind and unbind controls to inputs
@@ -51,9 +55,10 @@ public:
 };
 
 template<typename T>
-joystick_axis<T>::joystick_axis(manager &input_manager,
-                                binding_manager<controltype> &parent_binding_manager)
-  : BASE_TYPE(input_manager, parent_binding_manager) {
+joystick_axis<T>::joystick_axis(binding_manager<controltype> &parent_binding_manager,
+                                input::joystick &this_parent_joystick)
+  : BASE_TYPE(parent_binding_manager),
+    parent_joystick(this_parent_joystick) {
   /// Default constructor
 }
 
@@ -183,9 +188,9 @@ void joystick_axis<T>::update_all(controltype control) {
                                                                    << " for joystick " << this_binding.joystick_id
                                                                    << " axis " << this_binding.axis << std::endl;
       #endif // DEBUG_INPUTSTORM
-      this->input.joystick.bind_axis(this_binding, func);
+      parent_joystick.bind_axis(this_binding, func);
     } else {
-      this->input.joystick.unbind_axis(this_binding.joystick_id, this_binding.axis);
+      parent_joystick.unbind_axis(this_binding.joystick_id, this_binding.axis);
     }
   }
 }

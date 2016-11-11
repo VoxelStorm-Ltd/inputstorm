@@ -2,6 +2,7 @@
 #define INPUTSTORM_BINDING_SETS_MOUSEBUTTON_H_INCLUDED
 
 #include "base.h"
+#include "inputstorm/input/mousebutton.h"
 
 namespace inputstorm {
 namespace binding_sets {
@@ -13,8 +14,11 @@ template<typename T>
 class mousebutton : public BASE_TYPE {
   using controltype = T;
 
+  input::mousebutton &parent_mousebutton;
+
 public:
-  mousebutton(manager &input_manager, binding_manager<controltype> &parent_binding_manager);
+  mousebutton(binding_manager<controltype> &parent_binding_manager,
+              input::mousebutton &this_parent_mousebutton);
   ~mousebutton();
 
   // bind and unbind controls to inputs
@@ -43,9 +47,10 @@ public:
 };
 
 template<typename T>
-mousebutton<T>::mousebutton(manager &input_manager,
-                            binding_manager<controltype> &parent_binding_manager)
-  : BASE_TYPE(input_manager, parent_binding_manager) {
+mousebutton<T>::mousebutton(binding_manager<controltype> &parent_binding_manager,
+                            input::mousebutton &this_parent_mousebutton)
+  : BASE_TYPE(parent_binding_manager),
+    parent_mousebutton(this_parent_mousebutton) {
   /// Default constructor
 }
 
@@ -85,7 +90,7 @@ void mousebutton<T>::bind(std::string const &binding_name,
     ss << "InputStorm: DEBUG: Binding control " << static_cast<unsigned int>(control)
                                                 << " in set " << binding_name
                                                 << ", mousebutton " << this_button
-                                                << " (" << this->input.mousebutton.get_name(this_button) << ")";
+                                                << " (" << parent_mousebutton.get_name(this_button) << ")";
   #endif // DEBUG_INPUTSTORM
   if(mods == input::key::modtype::NONE) {
     input::mousebutton::binding const binding{
@@ -128,7 +133,7 @@ void mousebutton<T>::update(std::string const &binding_name,
   #ifdef DEBUG_INPUTSTORM
     std::cout << "InputStorm: DEBUG: Updating binding in set " << binding_name
                                                                << " for mousebutton " << binding.button
-                                                               << " (" << this->input.mousebutton.get_name(binding.button) << ")" << std::endl;
+                                                               << " (" << parent_mousebutton.get_name(binding.button) << ")" << std::endl;
   #endif // DEBUG_INPUTSTORM
   auto const &binding_set(this->binding_sets.at(binding_name));
   auto const &control_range(binding_set.right.equal_range(binding));            // find all controls (and hence functions) that apply to this key
@@ -185,9 +190,9 @@ void mousebutton<T>::update(std::string const &binding_name,
     }
   }
   if(func_press_combined || func_release_combined) {
-    this->input.mousebutton.bind(binding, func_press_combined, func_release_combined);
+    parent_mousebutton.bind(binding, func_press_combined, func_release_combined);
   } else {
-    this->input.mousebutton.unbind(binding);
+    parent_mousebutton.unbind(binding);
   }
 }
 template<typename T>
