@@ -26,7 +26,9 @@ void manager::init(GLFWwindow &thiswindow) {
   joystick.init();
 
   // set callbacks
-  //std::cout << "InputStorm: Setting callbacks..." << std::endl;
+  #ifdef DEBUG_INPUTSTORM
+    std::cout << "InputStorm: DEBUG: Setting callbacks on GLFW window " << current_window << std::endl;
+  #endif // DEBUG_INPUTSTORM
   glfwSetWindowUserPointer(      current_window, this);                         // have this class passed to future callbacks
   glfwSetKeyCallback(            current_window, callback::key);
   glfwSetCursorPosCallback(      current_window, callback::cursor);
