@@ -10,31 +10,7 @@ namespace input {
 void key::init() {
   /// create default key bindings and initialise key names
   //std::cout << "InputStorm: Initialising keymap..." << std::endl;
-  // assign a safe default function to all keys
-  for(auto const &mods : modtype()) {
-    for(auto const &action : actiontype()) {
-      for(keytype this_key = 0; this_key != max; ++this_key) {
-        #ifdef DEBUG_INPUTSTORM
-          std::stringstream ss;
-          ss << "InputStorm: DEBUG: unbound this_key function called on key " << this_key << " (" << get_name(this_key) << ")";
-          if(mods != modtype::NONE) {
-            ss << " mods " << get_mod_name(mods);
-          }
-          ss << " action " << get_actiontype_name(action);
-          if(action == actiontype::PRESS) {
-            bind(this_key, action, mods, [s = ss.str()]{
-              std::cout << s << std::endl;
-            });
-          } else {
-            bind(this_key, action, mods, []{});
-          }
-        #else
-          bind(this_key, action, mods, []{});                                   // default to noop
-        #endif // DEBUG_INPUTSTORM
-      }
-    }
-  }
-
+  reset();
   // report status
   std::cout << "InputStorm: Key bindings:             " << sizeof(bindings) / 1024 << "KB" << std::endl;
 }
@@ -351,6 +327,33 @@ std::string key::get_mod_name(modtype mods) {
     return "SHIFT CONTROL ALT SUPER";
   default:
     return "";
+  }
+}
+
+void key::reset() {
+  /// Assign a safe default non-functional function to all keys
+  for(auto const &mods : modtype()) {
+    for(auto const &action : actiontype()) {
+      for(keytype this_key = 0; this_key != max; ++this_key) {
+        #ifdef DEBUG_INPUTSTORM
+          std::stringstream ss;
+          ss << "InputStorm: DEBUG: unbound this_key function called on key " << this_key << " (" << get_name(this_key) << ")";
+          if(mods != modtype::NONE) {
+            ss << " mods " << get_mod_name(mods);
+          }
+          ss << " action " << get_actiontype_name(action);
+          if(action == actiontype::PRESS) {
+            bind(this_key, action, mods, [s = ss.str()]{
+              std::cout << s << std::endl;
+            });
+          } else {
+            bind(this_key, action, mods, []{});
+          }
+        #else
+          bind(this_key, action, mods, []{});                                   // default to noop
+        #endif // DEBUG_INPUTSTORM
+      }
+    }
   }
 }
 

@@ -142,6 +142,8 @@ public:
   static std::string get_actiontype_name(actiontype action);
   static std::string get_mod_name(modtype mods);
 
+  void reset();
+
   void bind(        keytype key, actiontype action, modtype mods, std::function<void()> func);
   void bind_any_mod(keytype key, actiontype action,               std::function<void()> func);
   void bind_any(                                                  std::function<void()> func);
