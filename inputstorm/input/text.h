@@ -1,14 +1,7 @@
-  void execute(char32_t codepoint) const;
-};
-
 #ifndef INPUTSTORM_INPUT_TEXT_H_INCLUDED
-}
 #define INPUTSTORM_INPUT_TEXT_H_INCLUDED
-}
-
 
 #include <functional>
-#endif // INPUTSTORM_INPUT_TEXT_H_INCLUDED
 
 namespace inputstorm {
 namespace input {

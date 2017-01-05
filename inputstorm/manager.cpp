@@ -1,45 +1,20 @@
-  key         = save.key;
-  cursor      = save.cursor;
-  mousebutton = save.mousebutton;
-  scroll      = save.scroll;
-  joystick    = save.joystick;
-  text        = save.text;
-  window      = save.window;
-}
-void manager::free_bindings(unsigned int savenumber) {
 #include "manager.h"
-  /// Delete a binding save referenced by the specified ID
 #include <iostream>
-  std::stringstream ss;
 #include "callbacks/callbacks.h"
-  ss << "InputStorm: Erased the saved binding at slot " << savenumber << " in ";
 #include "timestorm/timer.h"
 
-  timestorm::timer<unsigned int> timer(ss.str());
 namespace inputstorm {
-  saved_bindings.erase(savenumber);
 
-}
 manager::manager() {
-std::vector<unsigned int> manager::list_saved_bindings() {
   /// Default constructor - requires separate init() call
-  /// Return all saved bindings we know about
 }
-  std::vector<unsigned int> out;
 manager::manager(GLFWwindow &thiswindow)
-  for(auto const &it : saved_bindings) {
   : current_window(&thiswindow) {
-    out.emplace_back(it.first);
   /// Specific initialising constructor
-  }
   init(thiswindow);
-  return out;
 }
-}
-
 
 void manager::init(GLFWwindow &thiswindow) {
-}
   /// Initialise
   if(initialised) {
     return;

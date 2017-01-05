@@ -27,6 +27,7 @@ void key(GLFWwindow *thiswindow,
   }
   parent->key.execute(key,
                       static_cast<input::key::actiontype>(action),
+                      static_cast<input::key::modtype>(mods));
 }
 
 }

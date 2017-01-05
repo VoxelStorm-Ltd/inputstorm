@@ -1,96 +1,44 @@
-    }
-    for(auto const &this_control : conts_right) {
-      auto const &this_func(this->bindings.action_bindings_digital[static_cast<unsigned int>(this_control)]);
-      if(this_func.press) {
-        funcs_right.emplace_back(this_func.press);
-      }
-    }
-    #ifdef DEBUG_INPUTSTORM
-      std::cout << "InputStorm: DEBUG: Combining " << funcs_up.size() << "U + "
-                                                   << funcs_down.size() << "D + "
-                                                   << funcs_left.size() << "L + "
-                                                   << funcs_right.size() << "R + "
 #ifndef INPUTSTORM_BINDING_SETS_SCROLL_H_INCLUDED
-                                                   << " functions for scroll" << std::endl;
 #define INPUTSTORM_BINDING_SETS_SCROLL_H_INCLUDED
-    #endif // DEBUG_INPUTSTORM
 
-    parent_scroll.bind([funcs_up, funcs_down, funcs_left, funcs_right](vec2d const &offset_in){ // copy, don't reference, or these will go out of scope
 #include "base.h"
-      // create a special adapter function to activate the up, down, left and right scroll functions a specified number of times
 #include "inputstorm/input/scroll.h"
-      vec2d offset(offset_in);
 #ifndef NDEBUG
-      while(offset.y < -0.5) {
   #include <iostream>
-        for(auto const &it : funcs_down) {
 #endif // NDEBUG
-          it();
 
-        }
 namespace inputstorm {
-        ++offset.y;
 namespace binding_sets {
-      }
 
-      while(offset.y > 0.5) {
 #define BINDING_SET_TYPE boost::bimap<boost::bimaps::unordered_multiset_of<T>, boost::bimaps::unordered_multiset_of<input::scroll::direction>>
-        for(auto const &it : funcs_up) {
 #define BASE_TYPE base_crtp_adapter<T, BINDING_SET_TYPE, scroll>
-          it();
 
-        }
 template<typename T>
-        --offset.y;
 class scroll : public BASE_TYPE {
-      }
   using controltype = T;
 
-      while(offset.x < -0.5) {
   input::scroll &parent_scroll;
-        for(auto const &it : funcs_right) {
 
-          it();
 public:
-        }
   scroll(binding_manager<controltype> &parent_binding_manager,
-        ++offset.x;
          input::scroll &this_parent_scroll);
-      }
   ~scroll();
-      while(offset.x > 0.5) {
 
-        for(auto const &it : funcs_left) {
   // bind and unbind controls to inputs
-          it();
   virtual void unbind(std::string const &binding_name, controltype control) override final;
-        }
   using BASE_TYPE::unbind;                                                      // required to allow visibility of hidden overridden base type
-        --offset.x;
 
-      }
   void bind(std::string const &binding_name,
-    });
             controltype control,
-  }
             input::scroll::direction direction);
-}
   void bind(controltype control,
-
             input::scroll::direction direction);
-#undef BINDING_SET_TYPE
 
-#undef BASE_TYPE
   // update control-based bindings
-
   virtual void update_all(controltype control) override final;
-}
 };
-}
-
 
 template<typename T>
-#endif // INPUTSTORM_BINDING_SETS_SCROLL_H_INCLUDED
 scroll<T>::scroll(binding_manager<controltype> &parent_binding_manager,
                   input::scroll &this_parent_scroll)
   : BASE_TYPE(parent_binding_manager),

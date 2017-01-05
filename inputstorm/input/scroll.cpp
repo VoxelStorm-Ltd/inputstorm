@@ -1,5 +1,4 @@
 #include "scroll.h"
-#include "scroll.h"
 #ifndef NDEBUG
   #include <iostream>
 #endif // NDEBUG
