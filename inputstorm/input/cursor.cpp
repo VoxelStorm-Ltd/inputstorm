@@ -6,7 +6,6 @@
 
 namespace inputstorm {
 namespace input {
-
 void cursor::bind(std::function<void(vec2d const&)> func) {
   /// Bind a function to cursor movement
   #ifndef NDEBUG
@@ -53,13 +52,3 @@ void cursor::execute(vec2d const &change) const {
   binding(change);
 }
 void cursor::execute_enter() const {
-  /// Call the function associated with the cursor entering the window
-  enter_binding();
-}
-void cursor::execute_leave() const {
-  /// Call the function associated with the cursor leaving the window
-  leave_binding();
-}
-
-}
-}

@@ -1,8 +1,20 @@
+
+template<typename T>
+void binding_manager<T>::update_all_analogue(controltype control) {
+  /// Set up the analogue bindings for a control with a given function
+  for(auto &it : binding_sets_analogue) {
+    it->update_all(control);
+  }
 #ifndef INPUTSTORM_BINDING_MANAGER_H_INCLUDED
+}
 #define INPUTSTORM_BINDING_MANAGER_H_INCLUDED
 
+
+}
 #include <functional>
+
 #include <vector>
+#endif // INPUTSTORM_BINDING_MANAGER_H_INCLUDED
 #include <memory>
 #include "binding_sets/base.h"
 

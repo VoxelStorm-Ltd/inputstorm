@@ -1,5 +1,4 @@
 #ifndef CALLBACKS_H_INCLUDED
-#define CALLBACKS_H_INCLUDED
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
