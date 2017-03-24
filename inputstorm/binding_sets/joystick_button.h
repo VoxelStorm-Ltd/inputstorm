@@ -85,21 +85,33 @@ void joystick_button<T>::bind(std::string const &binding_name,
                               unsigned int joystick_id,
                               unsigned int button) {
   /// Apply a new control binding to an input key relationship
+  auto &binding_set(this->binding_sets[binding_name]);
   #ifdef DEBUG_INPUTSTORM
     std::cout << "InputStorm: DEBUG: Binding control " << static_cast<int>(control)
               << " in set " << binding_name
               << ", joystick " << joystick_id
               << " button " << button << std::endl;
   #endif // DEBUG_INPUTSTORM
-  auto &binding_set(this->binding_sets[binding_name]);
-  binding_set.insert(typename BASE_TYPE::binding_set_value_type(control, input::joystick::binding_button{
+  input::joystick::binding_button const binding{
     joystick_id,
     input::joystick::binding_button::bindtype::SPECIFIC,
     button
-  }));
-  update(binding_name, input::joystick::binding_button{joystick_id,
-                                                       input::joystick::binding_button::bindtype::SPECIFIC,
-                                                       button});
+  };
+
+  // check for duplicate insertion
+  auto const &binding_range(binding_set.left.equal_range(control));             // find all buttons with this control applied
+  for(auto const &it : boost::make_iterator_range(binding_range.first, binding_range.second)) { // for each button:
+    if(it.second == binding) {
+      #ifdef DEBUG_INPUTSTORM
+        ss << " mods " << input::key::get_mod_name(mods);
+        std::cout << "InputStorm: DEBUG: This control is already bound to this mousebutton, doing nothing." << std::endl;
+      #endif // DEBUG_INPUTSTORM
+      return;
+    }
+  }
+
+  binding_set.insert(typename BASE_TYPE::binding_set_value_type(control, binding));
+  update(binding_name, binding);
 }
 template<typename T>
 void joystick_button<T>::bind(controltype control,

@@ -103,14 +103,19 @@ void key<T>::bind(std::string const &binding_name,
                                                 << ", key " << this_key
                                                 << " (" << parent_key.get_name(this_key) << ")";
   #endif // DEBUG_INPUTSTORM
+  input::key::binding binding;
   //if(mods == input::key::modtype::NONE) {
-  //  binding_set.insert(typename base<T, BINDING_SET_TYPE>::binding_set_value_type(control, input::key::binding{input::key::binding::bindtype::ANY_MOD, this_key, input::key::modtype::NONE}));
+  //  binding = input::key::binding{
+  //    input::key::binding::bindtype::ANY_MOD,
+  //    this_key,
+  //    input::key::modtype::NONE
+  //  });
   //} else {
-    binding_set.insert(typename BASE_TYPE::binding_set_value_type(control, input::key::binding{
+    binding = input::key::binding{
       input::key::binding::bindtype::SPECIFIC,
       this_key,
       mods
-    }));
+    };
     #ifdef DEBUG_INPUTSTORM
       ss << " mods " << input::key::get_mod_name(mods);
     #endif // DEBUG_INPUTSTORM
@@ -118,11 +123,21 @@ void key<T>::bind(std::string const &binding_name,
   #ifdef DEBUG_INPUTSTORM
     std::cout << ss.str() << std::endl;
   #endif // DEBUG_INPUTSTORM
-  update(binding_name, input::key::binding{
-    input::key::binding::bindtype::SPECIFIC,
-    this_key,
-    mods
-  });
+
+  // check for duplicate insertion
+  auto const &binding_range(binding_set.left.equal_range(control));             // find all keys with this control applied
+  for(auto const &it : boost::make_iterator_range(binding_range.first, binding_range.second)) { // for each key:
+    if(it.second == binding) {
+      #ifdef DEBUG_INPUTSTORM
+        ss << " mods " << input::key::get_mod_name(mods);
+        std::cout << "InputStorm: DEBUG: This control is already bound to this key, doing nothing." << std::endl;
+      #endif // DEBUG_INPUTSTORM
+      return;
+    }
+  }
+
+  binding_set.insert(typename BASE_TYPE::binding_set_value_type(control, binding));
+  update(binding_name, binding);
 }
 template<typename T>
 void key<T>::bind(controltype control,

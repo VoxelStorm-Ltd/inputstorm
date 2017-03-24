@@ -92,22 +92,20 @@ void mousebutton<T>::bind(std::string const &binding_name,
                                                 << ", mousebutton " << this_button
                                                 << " (" << parent_mousebutton.get_name(this_button) << ")";
   #endif // DEBUG_INPUTSTORM
+  input::mousebutton::binding binding;
+
   if(mods == input::key::modtype::NONE) {
-    input::mousebutton::binding const binding{
+    binding = input::mousebutton::binding{
       input::mousebutton::binding::bindtype::ANY_MOD,
       this_button,
       input::key::modtype::NONE
     };
-    binding_set.insert(typename BASE_TYPE::binding_set_value_type(control, binding));
-    update(binding);
   } else {
-    input::mousebutton::binding const binding{
+    binding = input::mousebutton::binding{
       input::mousebutton::binding::bindtype::SPECIFIC,
       this_button,
       mods
     };
-    binding_set.insert(typename BASE_TYPE::binding_set_value_type(control, binding));
-    update(binding);
     #ifdef DEBUG_INPUTSTORM
       ss << " mods " << input::key::get_mod_name(mods);
     #endif // DEBUG_INPUTSTORM
@@ -115,6 +113,21 @@ void mousebutton<T>::bind(std::string const &binding_name,
   #ifdef DEBUG_INPUTSTORM
     std::cout << ss.str() << std::endl;
   #endif // DEBUG_INPUTSTORM
+
+  // check for duplicate insertion
+  auto const &binding_range(binding_set.left.equal_range(control));             // find all buttons with this control applied
+  for(auto const &it : boost::make_iterator_range(binding_range.first, binding_range.second)) { // for each button:
+    if(it.second == binding) {
+      #ifdef DEBUG_INPUTSTORM
+        ss << " mods " << input::key::get_mod_name(mods);
+        std::cout << "InputStorm: DEBUG: This control is already bound to this mousebutton, doing nothing." << std::endl;
+      #endif // DEBUG_INPUTSTORM
+      return;
+    }
+  }
+
+  binding_set.insert(typename BASE_TYPE::binding_set_value_type(control, binding));
+  update(binding_name, binding);
 }
 template<typename T>
 void mousebutton<T>::bind(controltype control,
