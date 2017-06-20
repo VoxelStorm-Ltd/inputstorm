@@ -4,8 +4,7 @@
 #include <functional>
 #include "vectorstorm/vector/vector2_forward.h"
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 class cursor {
   // data
@@ -27,7 +26,6 @@ public:
   void execute_leave()              const;
 };
 
-}
 }
 
 #endif // INPUTSTORM_INPUT_CURSOR_H_INCLUDED

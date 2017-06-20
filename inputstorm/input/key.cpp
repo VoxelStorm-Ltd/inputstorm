@@ -4,8 +4,7 @@
   #include <sstream>
 #endif // DEBUG_INPUTSTORM
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 void key::init() {
   /// create default key bindings and initialise key names
@@ -512,5 +511,4 @@ void key::capture(std::function<void(binding const&)> callback) {
   }
 }
 
-}
 }

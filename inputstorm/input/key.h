@@ -5,8 +5,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 class key {
 public:
@@ -219,7 +218,6 @@ inline size_t hash_value(key::binding const &this_binding) {
   return this_binding.hash_value();
 }
 
-}
 }
 
 #endif // INPUTSTORM_INPUT_KEY_H_INCLUDED

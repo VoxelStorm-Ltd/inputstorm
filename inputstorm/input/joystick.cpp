@@ -4,8 +4,7 @@
   #include <sstream>
 #endif // DEBUG_INPUTSTORM
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 unsigned int constexpr const joystick::max_axis;
 unsigned int constexpr const joystick::max_button;
@@ -520,5 +519,4 @@ void joystick::draw_binding_graphs() const {
   }
 }
 
-}
 }

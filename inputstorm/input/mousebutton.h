@@ -5,8 +5,7 @@
 #include <GLFW/glfw3.h>
 #include "key.h"
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 class mousebutton {
 public:
@@ -147,6 +146,17 @@ inline size_t hash_value(mousebutton::binding const &this_binding) {
 }
 
 }
+
+namespace std {
+
+template<>
+struct hash<inputstorm::input::mousebutton::binding> {
+  /// Forward the binding's hash function for std::hash specialisation
+  size_t operator()(inputstorm::input::mousebutton::binding const &this_binding) const {
+    return this_binding.hash_value();
+  }
+};
+
 }
 
 #endif // INPUTSTORM_INPUT_MOUSEBUTTON_H_INCLUDED

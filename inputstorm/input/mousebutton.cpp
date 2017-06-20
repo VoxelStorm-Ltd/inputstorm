@@ -4,8 +4,7 @@
   #include <sstream>
 #endif // DEBUG_INPUTSTORM
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 void mousebutton::init() {
   // assign a safe default function to all mouse buttons
@@ -223,5 +222,4 @@ void mousebutton::capture(std::function<void(binding const&)> callback) {
   }
 }
 
-}
 }

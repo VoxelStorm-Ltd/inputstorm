@@ -7,8 +7,7 @@
   #include <iostream>
 #endif // NDEBUG
 
-namespace inputstorm {
-namespace binding_sets {
+namespace inputstorm::binding_sets {
 
 #define BINDING_SET_TYPE boost::bimap<boost::bimaps::unordered_multiset_of<T>, boost::bimaps::unordered_multiset_of<input::scroll::direction>>
 #define BASE_TYPE base_crtp_adapter<T, BINDING_SET_TYPE, scroll>
@@ -211,7 +210,6 @@ void scroll<T>::update_all(controltype control) {
 #undef BINDING_SET_TYPE
 #undef BASE_TYPE
 
-}
 }
 
 #endif // INPUTSTORM_BINDING_SETS_SCROLL_H_INCLUDED

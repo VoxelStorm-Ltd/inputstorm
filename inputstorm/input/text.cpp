@@ -1,8 +1,7 @@
 #include "text.h"
 #include <iostream>
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 void text::bind(std::function<void(char32_t)> func) {
   /// Bind a function to text input
@@ -27,5 +26,4 @@ void text::execute(char32_t codepoint) const {
   binding(codepoint);
 }
 
-}
 }

@@ -4,8 +4,7 @@
 #include <functional>
 #include "vectorstorm/vector/vector2_forward.h"
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 class window {
 private:
@@ -51,7 +50,6 @@ public:
   void execute_restore()                                   const;
 };
 
-}
 }
 
 #endif // INPUTSTORM_INPUT_WINDOW_H_INCLUDED

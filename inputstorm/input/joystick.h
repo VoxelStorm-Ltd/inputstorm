@@ -6,8 +6,7 @@
 #include <GLFW/glfw3.h>
 #include "joystick_axis_bindingtype.h"
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 class joystick {
 public:
@@ -203,6 +202,17 @@ inline size_t hash_value(joystick::binding_button const &this_binding) {
 }
 
 }
+
+namespace std {
+
+template<>
+struct hash<inputstorm::input::joystick::binding_button> {
+  /// Forward the binding's hash function for std::hash specialisation
+  size_t operator()(inputstorm::input::joystick::binding_button const &this_binding) const {
+    return this_binding.hash_value();
+  }
+};
+
 }
 
 #endif // INPUTSTORM_INPUT_JOYSTICK_H_INCLUDED

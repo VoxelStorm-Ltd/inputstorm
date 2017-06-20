@@ -1,8 +1,7 @@
 #include "joystick_axis_bindingtype.h"
 #include <iostream>
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 void joystick_axis_bindingtype::update_scales() {
   /// Re-cache scale values after changing deadzones or saturation values
@@ -103,5 +102,4 @@ void joystick_axis_bindingtype::draw_graph_console() const {
   //std::cout << std::endl;
 }
 
-}
 }

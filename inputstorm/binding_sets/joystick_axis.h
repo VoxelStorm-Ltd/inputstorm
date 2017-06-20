@@ -4,8 +4,7 @@
 #include <unordered_map>
 #include "base.h"
 
-namespace inputstorm {
-namespace binding_sets {
+namespace inputstorm::binding_sets {
 
 #define BINDING_SET_TYPE std::unordered_multimap<T, input::joystick::binding_axis>
 #define BASE_TYPE base_crtp_adapter<T, BINDING_SET_TYPE, joystick_axis>
@@ -198,7 +197,6 @@ void joystick_axis<T>::update_all(controltype control) {
 #undef BINDING_SET_TYPE
 #undef BASE_TYPE
 
-}
 }
 
 #endif // INPUTSTORM_BINDING_SETS_JOYSTICK_AXIS_H_INCLUDED

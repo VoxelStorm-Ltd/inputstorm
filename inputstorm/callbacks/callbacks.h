@@ -4,8 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-namespace inputstorm {
-namespace callback {
+namespace inputstorm::callback {
 
 void key(             GLFWwindow *thiswindow, int key, int scancode, int action, int mods);
 void cursor(          GLFWwindow *thiswindow, double x, double y);
@@ -21,7 +20,6 @@ void window_focus(    GLFWwindow *thiswindow, int focused);
 void window_iconify(  GLFWwindow *thiswindow, int iconified);
 void framebuffer_size(GLFWwindow *thiswindow, int width, int height);
 
-}
 }
 
 #endif // CALLBACKS_H_INCLUDED

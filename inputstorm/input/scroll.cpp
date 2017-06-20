@@ -3,8 +3,7 @@
   #include <iostream>
 #endif // NDEBUG
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 std::string scroll::get_name(scroll::direction this_direction) {
   /// Return the this_key name from its GLFW this_key ID number
@@ -76,6 +75,4 @@ void scroll::capture(std::function<void(direction)> callback) {
   });
 }
 
-
-}
 }

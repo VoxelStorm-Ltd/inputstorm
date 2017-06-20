@@ -4,8 +4,7 @@
 #include <functional>
 #include "vectorstorm/vector/vector2.h"
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 class scroll {
 public:
@@ -50,7 +49,6 @@ inline scroll::direction end(scroll::direction thistype __attribute__((__unused_
   return scroll::direction::END;
 }
 
-}
 }
 
 #endif // INPUTSTORM_INPUT_SCROLL_H_INCLUDED

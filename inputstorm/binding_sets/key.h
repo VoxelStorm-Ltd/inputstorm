@@ -10,8 +10,7 @@
   #include <iostream>
 #endif // DEBUG_INPUTSTORM
 
-namespace inputstorm {
-namespace binding_sets {
+namespace inputstorm::binding_sets {
 
 #define BINDING_SET_TYPE boost::bimap<boost::bimaps::unordered_multiset_of<T>, boost::bimaps::unordered_multiset_of<input::key::binding>>
 #define BASE_TYPE base_crtp_adapter<T, BINDING_SET_TYPE, key>
@@ -253,7 +252,6 @@ void key<T>::update_all(controltype control) {
 #undef BINDING_SET_TYPE
 #undef BASE_TYPE
 
-}
 }
 
 #endif // INPUTSTORM_BINDING_SETS_KEY_H_INCLUDED

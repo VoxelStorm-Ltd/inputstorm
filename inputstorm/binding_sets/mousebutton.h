@@ -2,10 +2,10 @@
 #define INPUTSTORM_BINDING_SETS_MOUSEBUTTON_H_INCLUDED
 
 #include "base.h"
+#include <unordered_set>
 #include "inputstorm/input/mousebutton.h"
 
-namespace inputstorm {
-namespace binding_sets {
+namespace inputstorm::binding_sets {
 
 #define BINDING_SET_TYPE boost::bimap<boost::bimaps::unordered_multiset_of<T>, boost::bimaps::unordered_multiset_of<input::mousebutton::binding>>
 #define BASE_TYPE base_crtp_adapter<T, BINDING_SET_TYPE, mousebutton>
@@ -69,12 +69,15 @@ void mousebutton<T>::unbind(std::string const &binding_name, controltype control
   #endif // DEBUG_INPUTSTORM
   auto &binding_set(this->binding_sets[binding_name]);
   auto const &binding_range(binding_set.left.equal_range(control));
-  auto const binding_range_copy(binding_range);                                 // copy the binding range to update after
+  std::unordered_set<input::mousebutton::binding> bindings_to_update;
+  for(auto const &it : boost::make_iterator_range(binding_range.first, binding_range.second)) {
+    bindings_to_update.emplace(it.second);                                      // queue each button that was affected by the change to update after
+  }
 
   binding_set.left.erase(control);                                              // clear the current associations with that control
 
-  for(auto const &it : boost::make_iterator_range(binding_range_copy.first, binding_range_copy.second)) {
-    update(it.second);                                                          // update each button that was affected by the change
+  for(auto const &it : bindings_to_update) {
+    update(it);                                                                 // update each button that was affected by the change
   }
 }
 
@@ -230,7 +233,6 @@ void mousebutton<T>::update_all(controltype control) {
 #undef BINDING_SET_TYPE
 #undef BASE_TYPE
 
-}
 }
 
 #endif // INPUTSTORM_BINDING_SETS_MOUSEBUTTON_H_INCLUDED

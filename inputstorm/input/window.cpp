@@ -6,8 +6,7 @@
   #include "vectorstorm/vector/vector2.h"
 #endif // DEBUG_INPUTSTORM
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 void window::bind_position(std::function<void(vec2i const&)> func) {
   /// Bind a function to window being moved
@@ -183,5 +182,4 @@ void window::execute_restore() const {
   restore_binding();
 }
 
-}
 }

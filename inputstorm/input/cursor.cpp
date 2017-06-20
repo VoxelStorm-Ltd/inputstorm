@@ -4,8 +4,7 @@
   #include "vectorstorm/vector/vector2.h"
 #endif // DEBUG_INPUTSTORM
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 void cursor::bind(std::function<void(vec2d const&)> func) {
   /// Bind a function to cursor movement
@@ -61,5 +60,4 @@ void cursor::execute_leave() const {
   leave_binding();
 }
 
-}
 }

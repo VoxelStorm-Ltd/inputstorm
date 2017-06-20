@@ -3,8 +3,7 @@
 
 #include <functional>
 
-namespace inputstorm {
-namespace input {
+namespace inputstorm::input {
 
 struct joystick_axis_bindingtype {
   float deadzone_min   =  0.0f;                                                 // values within this range are clamped to zero
@@ -28,7 +27,6 @@ struct joystick_axis_bindingtype {
   void draw_graph_console() const;
 };
 
-}
 }
 
 #endif // INPUTSTORM_INPUT_JOYSTICK_AXIS_BINDINGTYPE_H_INCLUDED

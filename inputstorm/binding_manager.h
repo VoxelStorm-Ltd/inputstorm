@@ -5,8 +5,7 @@
 #include <vector>
 #include <memory>
 #include "binding_sets/base.h"
-
-#ifndef DEBUG_INPUTSTORM
+#ifdef DEBUG_INPUTSTORM
   #include <iostream>
 #endif // DEBUG_INPUTSTORM
 
