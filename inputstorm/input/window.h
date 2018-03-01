@@ -8,9 +8,9 @@ namespace inputstorm::input {
 
 class window {
 private:
-  std::function<void(vec2i const&)> position_binding         = [](vec2i const &change __attribute__((__unused__))){}; // window position change
-  std::function<void(vec2i const&)> resize_binding           = [](vec2i const &change __attribute__((__unused__))){}; // window size change
-  std::function<void(vec2i const&)> framebuffer_size_binding = [](vec2i const &change __attribute__((__unused__))){}; // framebuffer size change
+  std::function<void(vec2i const&)> position_binding         = [](vec2i const &change [[maybe_unused]]){}; // window position change
+  std::function<void(vec2i const&)> resize_binding           = [](vec2i const &change [[maybe_unused]]){}; // window size change
+  std::function<void(vec2i const&)> framebuffer_size_binding = [](vec2i const &change [[maybe_unused]]){}; // framebuffer size change
   std::function<void()>             close_binding            = []{};            // window close attempt
   std::function<void()>             refresh_binding          = []{};            // window refresh request
   std::function<void()>             focus_gain_binding       = []{};            // window gains focus

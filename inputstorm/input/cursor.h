@@ -8,7 +8,7 @@ namespace inputstorm::input {
 
 class cursor {
   // data
-  std::function<void(vec2d const&)> binding       = [](vec2d const &change __attribute__((__unused__))){}; // callback function for cursor movement
+  std::function<void(vec2d const&)> binding       = [](vec2d const &change [[maybe_unused]]){}; // callback function for cursor movement
   std::function<void()>             enter_binding = []{};                       // cursor enters the window
   std::function<void()>             leave_binding = []{};                       // cursor leaves the window
 

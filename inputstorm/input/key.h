@@ -192,10 +192,10 @@ inline key::modtype operator++(key::modtype &i) {
 inline key::modtype operator*(key::modtype c) {
   return c;
 }
-inline key::modtype begin(key::modtype thistype __attribute__((__unused__))) {
+inline key::modtype begin(key::modtype thistype [[maybe_unused]]) {
   return key::modtype::BEGIN;
 }
-inline key::modtype end(key::modtype thistype __attribute__((__unused__))) {
+inline key::modtype end(key::modtype thistype [[maybe_unused]]) {
   return key::modtype::END;
 }
 
@@ -206,10 +206,10 @@ inline key::actiontype operator++(key::actiontype &i) {
 inline key::actiontype operator*(key::actiontype c) {
   return c;
 }
-inline key::actiontype begin(key::actiontype thistype __attribute__((__unused__))) {
+inline key::actiontype begin(key::actiontype thistype [[maybe_unused]]) {
   return key::actiontype::BEGIN;
 }
-inline key::actiontype end(key::actiontype thistype __attribute__((__unused__))) {
+inline key::actiontype end(key::actiontype thistype [[maybe_unused]]) {
   return key::actiontype::END;
 }
 

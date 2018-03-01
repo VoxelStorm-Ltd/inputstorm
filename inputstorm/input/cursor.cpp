@@ -35,7 +35,7 @@ void cursor::bind_leave(std::function<void()> func) {
 }
 
 void cursor::unbind() {
-  binding = [](vec2d const &change __attribute__((__unused__))){};              // noop
+  binding = [](vec2d const &change [[maybe_unused]]){};                         // noop
 }
 void cursor::unbind_enter() {
   enter_binding = []{};                                                         // noop

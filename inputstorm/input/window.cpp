@@ -91,10 +91,10 @@ void window::bind_restore(std::function<void()> func) {
 }
 
 void window::unbind_position() {
-  position_binding = [](vec2i const &change __attribute__((__unused__))){};     // noop
+  position_binding = [](vec2i const &change [[maybe_unused]]){};                // noop
 }
 void window::unbind_resize() {
-  resize_binding = [](vec2i const &change __attribute__((__unused__))){};       // noop
+  resize_binding = [](vec2i const &change [[maybe_unused]]){};                  // noop
 }
 void window::unbind_close() {
   close_binding = []{};                                                         // noop
@@ -115,7 +115,7 @@ void window::unbind_restore() {
   restore_binding = []{};                                                       // noop
 }
 void window::unbind_framebuffer_size() {
-  framebuffer_size_binding = [](vec2i const &change __attribute__((__unused__))){}; // noop
+  framebuffer_size_binding = [](vec2i const &change [[maybe_unused]]){};        // noop
 }
 
 void window::execute_position(vec2i const &new_position) const {

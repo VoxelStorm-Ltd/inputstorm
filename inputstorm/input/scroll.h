@@ -21,7 +21,7 @@ public:
 
   // data
 private:
-  std::function<void(vec2d const&)> binding = [](vec2d const &change __attribute__((__unused__))){}; // callback function for scroll
+  std::function<void(vec2d const&)> binding = [](vec2d const &change [[maybe_unused]]){}; // callback function for scroll
 
 public:
   static std::string get_name(direction this_direction);
@@ -42,10 +42,10 @@ inline scroll::direction operator++(scroll::direction &i) {
 inline scroll::direction operator*(scroll::direction c) {
   return c;
 }
-inline scroll::direction begin(scroll::direction thistype __attribute__((__unused__))) {
+inline scroll::direction begin(scroll::direction thistype [[maybe_unused]]) {
   return scroll::direction::BEGIN;
 }
-inline scroll::direction end(scroll::direction thistype __attribute__((__unused__))) {
+inline scroll::direction end(scroll::direction thistype [[maybe_unused]]) {
   return scroll::direction::END;
 }
 

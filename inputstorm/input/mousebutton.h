@@ -133,10 +133,10 @@ inline mousebutton::actiontype operator++(mousebutton::actiontype &i) {
 inline mousebutton::actiontype operator*(mousebutton::actiontype c) {
   return c;
 }
-inline mousebutton::actiontype begin(mousebutton::actiontype thistype __attribute__((__unused__))) {
+inline mousebutton::actiontype begin(mousebutton::actiontype thistype [[maybe_unused]]) {
   return mousebutton::actiontype::BEGIN;
 }
-inline mousebutton::actiontype end(mousebutton::actiontype thistype __attribute__((__unused__))) {
+inline mousebutton::actiontype end(mousebutton::actiontype thistype [[maybe_unused]]) {
   return mousebutton::actiontype::END;
 }
 

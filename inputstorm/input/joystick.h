@@ -189,10 +189,10 @@ inline joystick::actiontype operator++(joystick::actiontype &i) {
 inline joystick::actiontype operator*(joystick::actiontype c) {
   return c;
 }
-inline joystick::actiontype begin(joystick::actiontype thistype __attribute__((__unused__))) {
+inline joystick::actiontype begin(joystick::actiontype thistype [[maybe_unused]]) {
   return joystick::actiontype::BEGIN;
 }
-inline joystick::actiontype end(joystick::actiontype thistype __attribute__((__unused__))) {
+inline joystick::actiontype end(joystick::actiontype thistype [[maybe_unused]]) {
   return joystick::actiontype::END;
 }
 

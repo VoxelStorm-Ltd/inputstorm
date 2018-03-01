@@ -24,7 +24,7 @@ void joystick::init() {
           std::cout << s << std::fixed << value << std::endl;
         });
       #else
-        bind_axis(joystick_id, axis, [](float value __attribute__((__unused__))){}); // default to noop
+        bind_axis(joystick_id, axis, [](float value [[maybe_unused]]){});       // default to noop
         axis_bindings[joystick_id][axis].enabled = false;
       #endif // DEBUG_INPUTSTORM
     }

@@ -15,7 +15,7 @@ void text::bind(std::function<void(char32_t)> func) {
 
 void text::unbind() {
   /// Unbind the text input function
-  binding = [](char32_t codepoint __attribute__((__unused__))){};               // noop
+  binding = [](char32_t codepoint [[maybe_unused]]){};                          // noop
 }
 
 void text::execute(char32_t codepoint) const {

@@ -10,7 +10,7 @@ namespace callback {
 void key(GLFWwindow *thiswindow,
          int key,
          #ifdef NDEBUG
-           int scancode __attribute__((__unused__)),
+           int scancode [[maybe_unused]],
          #else
            int scancode,
          #endif // NDEBUG

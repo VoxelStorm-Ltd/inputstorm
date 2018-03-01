@@ -14,7 +14,7 @@ struct joystick_axis_bindingtype {
   float premultiply    =  1.0f;                                                 // premultiply, including an axis flip if appropriate
   float scale_pos = saturation_max - deadzone_max;                              // cached scale values - output values are scaled to fill the above range
   float scale_neg = deadzone_min - saturation_min;
-  std::function<void(float)> func = [](float value __attribute__((__unused__))){}; // the function to call
+  std::function<void(float)> func = [](float value [[maybe_unused]]){};         // the function to call
 
   bool enabled = false;                                                         // whether to try this axis' function
 
