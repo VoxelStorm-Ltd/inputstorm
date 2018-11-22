@@ -15,7 +15,7 @@ class base {
 protected:
   base();
 public:
-  virtual ~base() __attribute__((__const__));
+  virtual ~base();
 
   // bind and unbind controls to inputs
   virtual void unbind(std::string const &binding_name, controltype control) = 0;
