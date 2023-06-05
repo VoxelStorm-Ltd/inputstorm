@@ -10,9 +10,9 @@ Used in the game [sphereFACE](https://sphereface.com).  Provided without support
 - GLFW
 - GLEW (probably a false dependency that can be removed)
 - Boost:
-  - `<boost/bimap.hpp>`
-  - `<boost/bimap/unordered_multiset_of.hpp>`
-  - `<boost/range/iterator_range.hpp>`
+  - `boost/bimap.hpp`
+  - `boost/bimap/unordered_multiset_of.hpp`
+  - `boost/range/iterator_range.hpp`
 
 ### Input classes:
 ```cpp
