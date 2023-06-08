@@ -1,6 +1,7 @@
 #ifndef INPUTSTORM_INPUT_JOYSTICK_H_INCLUDED
 #define INPUTSTORM_INPUT_JOYSTICK_H_INCLUDED
 
+#include <string>
 #include <vector>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
