@@ -49,19 +49,19 @@ void joystick_axis_bindingtype::execute(float value) const {
 
 void joystick_axis_bindingtype::draw_graph_console() const {
   /// produce a text representation of this binding's function's graph
-  float constexpr const range_min = -1.0f;
-  float constexpr const range_max =  1.0f;
-  float constexpr const range = range_max - range_min;
-  unsigned int constexpr const columns = 80;
-  unsigned int constexpr const rows    = 20;
-  float constexpr const range_scale_h  = range / static_cast<float>(columns - 1);
-  float constexpr const range_offset_h = -static_cast<float>(columns / 2) * range_scale_h;
-  float constexpr const range_scale_v  = range / static_cast<float>(rows - 1);
-  float constexpr const range_offset_v = -static_cast<float>(rows    / 2) * range_scale_v;
-  char constexpr const char_empty  = ' ';
-  char constexpr const char_fill   = '#';
-  char constexpr const char_axis_h = '-';
-  char constexpr const char_axis_v = '|';
+  float constexpr range_min = -1.0f;
+  float constexpr range_max =  1.0f;
+  float constexpr range = range_max - range_min;
+  unsigned int constexpr columns = 80;
+  unsigned int constexpr rows    = 20;
+  float constexpr range_scale_h  = range / static_cast<float>(columns - 1);
+  float constexpr range_offset_h = -static_cast<float>(columns / 2) * range_scale_h;
+  float constexpr range_scale_v  = range / static_cast<float>(rows - 1);
+  float constexpr range_offset_v = -static_cast<float>(rows    / 2) * range_scale_v;
+  char constexpr char_empty  = ' ';
+  char constexpr char_fill   = '#';
+  char constexpr char_axis_h = '-';
+  char constexpr char_axis_v = '|';
 
   // fill the bitmap background
   std::array<std::array<char, columns>, rows> bitmap;

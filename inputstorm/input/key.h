@@ -108,8 +108,8 @@ public:
 
     size_t hash_value() const {
       /// Hash function to return a unique hash for each binding
-      size_t constexpr const key_max = GLFW_KEY_LAST + 1;
-      size_t constexpr const type_max = static_cast<size_t>(bindtype::END);
+      size_t constexpr key_max = GLFW_KEY_LAST + 1;
+      size_t constexpr type_max = static_cast<size_t>(bindtype::END);
       return (key_max * type_max * static_cast<size_t>(mods)) +
              (key_max * static_cast<size_t>(type)) +
              key;
@@ -117,9 +117,9 @@ public:
   };
 
   // limits
-  static unsigned int constexpr const max        = GLFW_KEY_LAST + 1;
-  static unsigned int constexpr const max_action = static_cast<int>(actiontype::END);
-  static unsigned int constexpr const max_mods   = static_cast<int>(modtype::END); // modifiers can be combined, we store all options to save processing
+  static unsigned int constexpr max        = GLFW_KEY_LAST + 1;
+  static unsigned int constexpr max_action = static_cast<int>(actiontype::END);
+  static unsigned int constexpr max_mods   = static_cast<int>(modtype::END);    // modifiers can be combined, we store all options to save processing
 
 private:
   // data

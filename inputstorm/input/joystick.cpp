@@ -6,8 +6,8 @@
 
 namespace inputstorm::input {
 
-unsigned int constexpr const joystick::max_axis;
-unsigned int constexpr const joystick::max_button;
+unsigned int constexpr joystick::max_axis;
+unsigned int constexpr joystick::max_button;
 
 void joystick::init() {
   /// assign a safe default function to all joystick axes
@@ -346,7 +346,7 @@ void joystick::capture_axis(std::function<void(unsigned int, unsigned int, bool)
     }
   }
 
-  float constexpr const deadzone = 0.5f;
+  float constexpr deadzone = 0.5f;
   for(unsigned int joystick_id = 0; joystick_id != max; ++joystick_id) {
     for(unsigned int axis = 0; axis != max_axis; ++axis) {
       #ifdef DEBUG_INPUTSTORM
@@ -405,7 +405,7 @@ void joystick::capture_axis(std::function<void(binding_axis const&)> callback,
     }
   }
 
-  float constexpr const deadzone = 0.5f;
+  float constexpr deadzone = 0.5f;
   for(unsigned int joystick_id = 0; joystick_id != max; ++joystick_id) {
     for(unsigned int axis = 0; axis != max_axis; ++axis) {
       #ifdef DEBUG_INPUTSTORM

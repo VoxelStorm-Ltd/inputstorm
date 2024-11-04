@@ -98,9 +98,9 @@ public:
   };
 
   // limits
-  static unsigned int constexpr const max = GLFW_JOYSTICK_LAST + 1;
-  static unsigned int constexpr const max_axis = 8;                             // empirically chosen based on what's available on the market
-  static unsigned int constexpr const max_button = 60;                          // empirically chosen based on what's available on the market
+  static unsigned int constexpr max = GLFW_JOYSTICK_LAST + 1;
+  static unsigned int constexpr max_axis = 8;                                   // empirically chosen based on what's available on the market
+  static unsigned int constexpr max_button = 60;                                // empirically chosen based on what's available on the market
 
   // data
 private:

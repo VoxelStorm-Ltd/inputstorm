@@ -74,8 +74,8 @@ public:
 
     size_t hash_value() const {
       /// Hash function to return a unique hash for each binding
-      size_t constexpr const button_max = GLFW_MOUSE_BUTTON_LAST + 1;
-      size_t constexpr const type_max = static_cast<size_t>(bindtype::END);
+      size_t constexpr button_max = GLFW_MOUSE_BUTTON_LAST + 1;
+      size_t constexpr type_max = static_cast<size_t>(bindtype::END);
       return (button_max * type_max * static_cast<size_t>(mods)) +
              (button_max * static_cast<size_t>(type)) +
              button;
@@ -83,7 +83,7 @@ public:
   };
 
   // limits
-  static unsigned int constexpr const max = GLFW_MOUSE_BUTTON_LAST + 1;
+  static unsigned int constexpr max = GLFW_MOUSE_BUTTON_LAST + 1;
 
   // data
 private:
