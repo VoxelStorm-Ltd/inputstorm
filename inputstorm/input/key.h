@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_INPUT_KEY_H_INCLUDED
-#define INPUTSTORM_INPUT_KEY_H_INCLUDED
+#pragma once
 
 #include <functional>
 #include <string>
@@ -220,5 +219,3 @@ inline size_t hash_value(key::binding const &this_binding) {
 }
 
 }
-
-#endif // INPUTSTORM_INPUT_KEY_H_INCLUDED

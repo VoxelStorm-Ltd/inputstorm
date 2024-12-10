@@ -1,5 +1,4 @@
-#ifndef CALLBACKS_H_INCLUDED
-#define CALLBACKS_H_INCLUDED
+#pragma once
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -21,5 +20,3 @@ void window_iconify(  GLFWwindow *thiswindow, int iconified);
 void framebuffer_size(GLFWwindow *thiswindow, int width, int height);
 
 }
-
-#endif // CALLBACKS_H_INCLUDED

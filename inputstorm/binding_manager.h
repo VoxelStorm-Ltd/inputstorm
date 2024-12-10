@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_BINDING_MANAGER_H_INCLUDED
-#define INPUTSTORM_BINDING_MANAGER_H_INCLUDED
+#pragma once
 
 #include <functional>
 #include <vector>
@@ -120,5 +119,3 @@ void binding_manager<T>::update_all_analogue(controltype control) {
 }
 
 }
-
-#endif // INPUTSTORM_BINDING_MANAGER_H_INCLUDED

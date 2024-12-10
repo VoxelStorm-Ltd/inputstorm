@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_MANAGER_H_INCLUDED
-#define INPUTSTORM_MANAGER_H_INCLUDED
+#pragma once
 
 #include <unordered_map>
 #include "input/cursor.h"
@@ -57,5 +56,3 @@ public:
 };
 
 }
-
-#endif // INPUTSTORM_MANAGER_H_INCLUDED

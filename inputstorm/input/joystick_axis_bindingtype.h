@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_INPUT_JOYSTICK_AXIS_BINDINGTYPE_H_INCLUDED
-#define INPUTSTORM_INPUT_JOYSTICK_AXIS_BINDINGTYPE_H_INCLUDED
+#pragma once
 
 #include <functional>
 
@@ -28,5 +27,3 @@ struct joystick_axis_bindingtype {
 };
 
 }
-
-#endif // INPUTSTORM_INPUT_JOYSTICK_AXIS_BINDINGTYPE_H_INCLUDED

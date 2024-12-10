@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_INPUT_JOYSTICK_H_INCLUDED
-#define INPUTSTORM_INPUT_JOYSTICK_H_INCLUDED
+#pragma once
 
 #include <string>
 #include <vector>
@@ -215,5 +214,3 @@ struct hash<inputstorm::input::joystick::binding_button> {
 };
 
 }
-
-#endif // INPUTSTORM_INPUT_JOYSTICK_H_INCLUDED

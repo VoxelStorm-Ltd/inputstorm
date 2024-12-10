@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_INPUT_MOUSEBUTTON_H_INCLUDED
-#define INPUTSTORM_INPUT_MOUSEBUTTON_H_INCLUDED
+#pragma once
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -158,5 +157,3 @@ struct hash<inputstorm::input::mousebutton::binding> {
 };
 
 }
-
-#endif // INPUTSTORM_INPUT_MOUSEBUTTON_H_INCLUDED

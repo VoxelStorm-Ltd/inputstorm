@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_FORWARD_H_INCLUDED
-#define INPUTSTORM_FORWARD_H_INCLUDED
+#pragma once
 
 namespace inputstorm {
 
@@ -16,5 +15,3 @@ class text;
 }
 
 }
-
-#endif // INPUTSTORM_FORWARD_H_INCLUDED

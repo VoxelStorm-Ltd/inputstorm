@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_INPUT_CURSOR_H_INCLUDED
-#define INPUTSTORM_INPUT_CURSOR_H_INCLUDED
+#pragma once
 
 #include <functional>
 #include "vectorstorm/vector/vector2_forward.h"
@@ -27,5 +26,3 @@ public:
 };
 
 }
-
-#endif // INPUTSTORM_INPUT_CURSOR_H_INCLUDED

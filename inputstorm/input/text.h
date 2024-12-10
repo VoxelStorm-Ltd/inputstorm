@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_INPUT_TEXT_H_INCLUDED
-#define INPUTSTORM_INPUT_TEXT_H_INCLUDED
+#pragma once
 
 #include <functional>
 
@@ -17,5 +16,3 @@ public:
 };
 
 }
-
-#endif // INPUTSTORM_INPUT_TEXT_H_INCLUDED

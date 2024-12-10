@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_INPUT_SCROLL_H_INCLUDED
-#define INPUTSTORM_INPUT_SCROLL_H_INCLUDED
+#pragma once
 
 #include <functional>
 #include "vectorstorm/vector/vector2.h"
@@ -50,5 +49,3 @@ inline scroll::direction end(scroll::direction thistype [[maybe_unused]]) {
 }
 
 }
-
-#endif // INPUTSTORM_INPUT_SCROLL_H_INCLUDED

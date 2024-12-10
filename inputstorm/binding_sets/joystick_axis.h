@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_BINDING_SETS_JOYSTICK_AXIS_H_INCLUDED
-#define INPUTSTORM_BINDING_SETS_JOYSTICK_AXIS_H_INCLUDED
+#pragma once
 
 #include <unordered_map>
 #include "base.h"
@@ -198,5 +197,3 @@ void joystick_axis<T>::update_all(controltype control) {
 #undef BASE_TYPE
 
 }
-
-#endif // INPUTSTORM_BINDING_SETS_JOYSTICK_AXIS_H_INCLUDED

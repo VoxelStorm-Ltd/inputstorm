@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_BINDING_SETS_JOYSTICK_BUTTON_H_INCLUDED
-#define INPUTSTORM_BINDING_SETS_JOYSTICK_BUTTON_H_INCLUDED
+#pragma once
 
 #include "base.h"
 #include "inputstorm/input/joystick.h"
@@ -229,5 +228,3 @@ void joystick_button<T>::update_all(controltype control) {
 #undef BASE_TYPE
 
 }
-
-#endif // INPUTSTORM_BINDING_SETS_JOYSTICK_BUTTON_H_INCLUDED

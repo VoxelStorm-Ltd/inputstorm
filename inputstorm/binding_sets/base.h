@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_BINDING_SETS_BASE_H_INCLUDED
-#define INPUTSTORM_BINDING_SETS_BASE_H_INCLUDED
+#pragma once
 
 #include <map>
 
@@ -135,5 +134,3 @@ void CRTP_ADAPTER_TYPE::update_all(controltype control) {
 
 }
 }
-
-#endif // INPUTSTORM_BINDING_SETS_BASE_H_INCLUDED

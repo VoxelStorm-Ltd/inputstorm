@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_BINDING_SETS_SCROLL_H_INCLUDED
-#define INPUTSTORM_BINDING_SETS_SCROLL_H_INCLUDED
+#pragma once
 
 #include "base.h"
 #include "inputstorm/input/scroll.h"
@@ -211,5 +210,3 @@ void scroll<T>::update_all(controltype control) {
 #undef BASE_TYPE
 
 }
-
-#endif // INPUTSTORM_BINDING_SETS_SCROLL_H_INCLUDED

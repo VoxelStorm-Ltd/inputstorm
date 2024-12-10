@@ -1,7 +1,4 @@
-#ifndef INPUTSTORM_H_INCLUDED
-#define INPUTSTORM_H_INCLUDED
+#pragma once
 
 #include "manager.h"
 #include "binding_manager.h"
-
-#endif // INPUTSTORM_H_INCLUDED

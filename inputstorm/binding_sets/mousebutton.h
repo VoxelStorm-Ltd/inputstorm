@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_BINDING_SETS_MOUSEBUTTON_H_INCLUDED
-#define INPUTSTORM_BINDING_SETS_MOUSEBUTTON_H_INCLUDED
+#pragma once
 
 #include "base.h"
 #include <unordered_set>
@@ -234,5 +233,3 @@ void mousebutton<T>::update_all(controltype control) {
 #undef BASE_TYPE
 
 }
-
-#endif // INPUTSTORM_BINDING_SETS_MOUSEBUTTON_H_INCLUDED

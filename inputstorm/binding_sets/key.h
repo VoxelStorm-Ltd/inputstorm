@@ -1,5 +1,4 @@
-#ifndef INPUTSTORM_BINDING_SETS_KEY_H_INCLUDED
-#define INPUTSTORM_BINDING_SETS_KEY_H_INCLUDED
+#pragma once
 
 #include <boost/bimap.hpp>
 #include <boost/bimap/unordered_multiset_of.hpp>
@@ -253,5 +252,3 @@ void key<T>::update_all(controltype control) {
 #undef BASE_TYPE
 
 }
-
-#endif // INPUTSTORM_BINDING_SETS_KEY_H_INCLUDED
